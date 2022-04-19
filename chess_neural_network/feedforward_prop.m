@@ -1,1 +1,0 @@
-function output_layer = feedforward_prop(theta) 
