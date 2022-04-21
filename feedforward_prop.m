@@ -13,11 +13,9 @@ a_2 = [ones(size(a_2), 1) a_2];
 
 for i = can_p,
   if can_p = 1:
-    p = sigmoid(X() * Theta2'());
+    p = sigmoid(X(i) * Theta2'(i));
   end
 
 [z p] = max(p, [], 2);   
-% =========================================================================
-
 
 end
