@@ -1,10 +1,11 @@
-function p = predict(Theta, can_p, a)
+function p = feedforward_prop_config_o_layer(p, Theta, can_p, a)
 
-for i = 1 : size(can_p, 1),
+
+
+for i = 1 : 76,
   
   if can_p(i),
-    p(i) = sigmoid(X(i) * Theta'(i));
-  
+    p(i) = sigmoid(a * Theta(:, i));
   endif
-
 end
+p
