@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from dataclasses import field
 import pieces as pc
 import random as rd
 
@@ -7,8 +6,8 @@ import random as rd
 @dataclass
 class Square:
 
+    piece: pc.Piece
     name: str
-    piece: pc.Piece = None
 
     def full(self):
         return self.piece is not None
@@ -17,17 +16,13 @@ class Square:
 @dataclass
 class Board:
 
-    white_pieces: dict = field(default_factory=dict)
-    black_pieces: dict = field(default_factory=dict)
+    white_pieces: dict
+    black_pieces: dict
 
-    squares: list = field(default_factory=list)
+    squares: list
 
     white_piece_num: int = 0
     black_piece_num: int = 0
-
-    def square(self, location):
-        if location is not None:
-            return self.squares[location[0]][location[1]]
 
     def pieces(self, colour):
         if colour:
@@ -54,84 +49,84 @@ class Board:
 
         self.squares = [
             [
-                Square("a1"), 
-                Square("a2"), 
-                Square("a3"), 
-                Square("a4"), 
-                Square("a5"), 
-                Square("a6"), 
-                Square("a7"), 
-                Square("a8")
+                Square(None, "a1"), 
+                Square(None, "a2"), 
+                Square(None, "a3"), 
+                Square(None, "a4"), 
+                Square(None, "a5"), 
+                Square(None, "a6"), 
+                Square(None, "a7"), 
+                Square(None, "a8")
             ],
             [
-                Square("b1"), 
-                Square("b2"), 
-                Square("b3"), 
-                Square("b4"), 
-                Square("b5"), 
-                Square("b6"), 
-                Square("b7"), 
-                Square("b8")
+                Square(None, "b1"), 
+                Square(None, "b2"), 
+                Square(None, "b3"), 
+                Square(None, "b4"), 
+                Square(None, "b5"), 
+                Square(None, "b6"), 
+                Square(None, "b7"), 
+                Square(None, "b8")
             ],
             [
-                Square("c1"), 
-                Square("c2"), 
-                Square("c3"), 
-                Square("c4"), 
-                Square("c5"), 
-                Square("c6"), 
-                Square("c7"), 
-                Square("c8")
+                Square(None, "c1"), 
+                Square(None, "c2"), 
+                Square(None, "c3"), 
+                Square(None, "c4"), 
+                Square(None, "c5"), 
+                Square(None, "c6"), 
+                Square(None, "c7"), 
+                Square(None, "c8")
             ],
             [
-                Square("d1"), 
-                Square("d2"), 
-                Square("d3"), 
-                Square("d4"), 
-                Square("d5"), 
-                Square("d6"), 
-                Square("d7"), 
-                Square("d8")
+                Square(None, "d1"), 
+                Square(None, "d2"), 
+                Square(None, "d3"), 
+                Square(None, "d4"), 
+                Square(None, "d5"), 
+                Square(None, "d6"), 
+                Square(None, "d7"), 
+                Square(None, "d8")
             ],
             [
-                Square("e1"), 
-                Square("e2"), 
-                Square("e3"), 
-                Square("e4"), 
-                Square("e5"), 
-                Square("e6"), 
-                Square("e7"), 
-                Square("e8")
+                Square(None, "e1"), 
+                Square(None, "e2"), 
+                Square(None, "e3"), 
+                Square(None, "e4"), 
+                Square(None, "e5"), 
+                Square(None, "e6"), 
+                Square(None, "e7"), 
+                Square(None, "e8")
             ],
             [
-                Square("f1"), 
-                Square("f2"), 
-                Square("f3"), 
-                Square("f4"), 
-                Square("f5"), 
-                Square("f6"), 
-                Square("f7"), 
-                Square("f8")
+                Square(None, "f1"), 
+                Square(None, "f2"), 
+                Square(None, "f3"), 
+                Square(None, "f4"), 
+                Square(None, "f5"), 
+                Square(None, "f6"), 
+                Square(None, "f7"), 
+                Square(None, "f8")
             ],
             [
-                Square("g1"), 
-                Square("g2"), 
-                Square("g3"), 
-                Square("g4"), 
-                Square("g5"), 
-                Square("g6"), 
-                Square("g7"), 
-                Square("g8")
+                Square(None, "g1"), 
+                Square(None, "g2"), 
+                Square(None, "g3"), 
+                Square(None, "g4"), 
+                Square(None, "g5"), 
+                Square(None, "g6"), 
+                Square(None, "g7"), 
+                Square(None, "g8")
             ],
             [
-                Square("h1"), 
-                Square("h2"), 
-                Square("h3"), 
-                Square("h4"), 
-                Square("h5"), 
-                Square("h6"), 
-                Square("h7"), 
-                Square("h8")
+                Square(None, "h1"), 
+                Square(None, "h2"), 
+                Square(None, "h3"), 
+                Square(None, "h4"), 
+                Square(None, "h5"), 
+                Square(None, "h6"), 
+                Square(None, "h7"), 
+                Square(None, "h8")
             ]
         ]
 

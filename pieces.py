@@ -1,190 +1,219 @@
 from dataclasses import dataclass
-import moptions as mo
-import move_undo as mv
-
 
 @dataclass
-class Piece():
-    colour: bool
+class Piece:
+
     location: list
-    moptions: list = []
-    moved: bool = False
-    en_passant_able: bool = False
+    colour: bool
+    centralization: int = 0
 
-    def difference_location(self, difference):
-        return mo.difference_location(self.location, difference)
+    def on_board(self, location_x, location_y):
+        return 0 <= location_x <= 7 and 0 <= location_y <= 7
 
-    def moptions_location_update(self, board):
-        for moption in self.moptions:
-            moption.location_update(self.location, board)
+    def regular_add(self, direction, output, squares):
+        location = [self.location[0] + direction[0], self.location[1] + direction[1]]
 
-    def options(self):
-        options = []
-        for moption in self.moptions:
-            options += moption.options
+        if self.on_board(location[0], location[1]):
+            square = squares[location[0]][location[1]]
 
-        return options
+            if not square.full() or square.piece.colour != self.colour:
+                output.append({"location_2": location, "type": "regular"})
+
+    def regular_extend(self, direction, output, squares):
+        location = [self.location[0] + direction[0], self.location[1] + direction[1]]
+
+        while self.on_board(location[0], location[1]):
+            square = squares[location[0]][location[1]]
+
+            if square.full():
+                if square.piece.colour == self.colour:
+                    break
+                else:
+                    output.append({"location_2": list(location), "type": "regular"})
+                    break
+            else:
+                output.append({"location_2": list(location), "type": "regular"})
+
+                location[0] += direction[0]
+                location[1] += direction[1]
+
+    def regular(self, options, squares, function):
+        output = []
+
+        for option in options:
+            function(option, output, squares)
+
+        return output
 
 
 @dataclass
 class Pawn(Piece):
+
+    en_passant_able: bool = False
+    moved: bool = False
     value: int = 1
     notation: str = ""
 
-    def setup_moptions(self, board):
-        if self.colour:
-            advance = self.difference_location([0, 1])
-            double_advance = self.difference_location([0, 2])
+    def promotion_output(self, squares, output, location):
+        for promotion in ["queen", "knight", "bishop", "rook"]:
+            output.append(
+                {"location_2": location, "type": "promotion", "promotion": promotion}
+            )
+
+    def promotion_capture_push(self, squares, output, location):
+        if self.colour and self.location[1] == 6:
+            self.promotion_output(squares, output, location)
+
+        elif not self.colour and self.location[1] == 1:
+            self.promotion_output(squares, output, location)
 
         else:
-            advance = self.difference_location([0, -1])
-            double_advance = self.difference_location([0, -2])
+            output.append({"location_2": location, "type": "regular"})
 
-        self.moptions = [
-            mo.Moption_Regular(
-                mv.Move(self.location, None, advance, None),
-            ),
-            mo.Moption_Double_Push(
-                mv.Move(self.location, None, double_advance, None),
-            ),
-            mo.Moption_En_Passant(
-                mv.Compound_Move(
-                    mv.Move(self.location, None, self.difference_location([1, 0]), None),
-                    mv.Move(self.location, None, advance, None)
-                ),
-                mv.Compound_Move(
-                    mv.Move(self.location, None, self.difference_location([-1, 0]), None),
-                    mv.Move(self.location, None, advance, None)
-                ),
+    def double_push(self, squares, output, colour_mult):
+        if not squares[self.location[0]][self.location[1] + colour_mult * 2].full():
+            if not squares[self.location[0]][self.location[1] + colour_mult].full():
+                output.append(
+                    {
+                        "location_2": [
+                            self.location[0],
+                            self.location[1] + 2 * colour_mult,
+                        ],
+                        "type": "double_push",
+                    }
+                )
+
+    def en_passant(self, squares, output, location):
+        square = squares[location[0]][self.location[1]]
+        if (
+            square.full()
+            and type(square.piece) == Pawn
+            and square.piece.en_passant_able
+            and square.piece.colour != self.colour
+        ):
+            output.append(
+                {
+                    "location_3": location,
+                    "location_2": [location[0], self.location[1]],
+                    "type": "en_passant",
+                }
             )
-        ]
 
-        self.moptions_location_update(board)
+    def options_generic_pawn(self, squares, output, colour_mult):
+        if self.on_board(self.location[0], self.location[1] + colour_mult):
+            if not self.moved:
+                self.double_push(squares, output, colour_mult)
+
+            if not squares[self.location[0]][self.location[1] + colour_mult].full():
+                self.promotion_capture_push(
+                    squares, output, [self.location[0], self.location[1] + colour_mult]
+                )
+
+        for side_mult in [1, -1]:
+
+            if self.on_board(
+                self.location[0] + side_mult, self.location[1] + colour_mult
+            ):
+                square = squares[self.location[0] + side_mult][
+                    self.location[1] + colour_mult
+                ]
+
+                if square.full() and square.piece.colour != self.colour:
+                    self.promotion_capture_push(
+                        squares,
+                        output,
+                        [self.location[0] + side_mult, self.location[1] + colour_mult],
+                    )
+
+                self.en_passant(
+                    squares,
+                    output,
+                    [self.location[0] + side_mult, self.location[1] + colour_mult],
+                )
+                
+
+    def options(self, squares):
+        output = []
+
+        if self.colour:
+            colour_mult = 1
+        else:
+            colour_mult = -1
+
+        self.options_generic_pawn(squares, output, colour_mult)
+
+        return output
 
 
 @dataclass
 class Rook(Piece):
+
+    moved: bool = False
     value: int = 5
     notation: str = "R"
-    
-    def setup_moptions(self, board):
-        self.moptions = [
-            mo.Moption_Extend(
-                [0, 1], None
-            ),
-            mo.Moption_Extend(
-                [1, 0], None
-            ),
-            mo.Moption_Extend(
-                [0, -1], None
-            ),
-            mo.Moption_Extend(
-                [-1, 0], None
-            )
-        ]
 
-        self.moptions_location_update(board)
+    def options(self, squares):
+        return self.regular(
+            [(0, 1), (1, 0), (0, -1), (-1, 0)], squares, self.regular_extend
+        )
 
 
 @dataclass
 class Knight(Piece):
+
+    moved: bool = False
     value: int = 3
     notation: str = "Kn"
 
-    def setup_moptions(self, board):
-        self.moptions = [
-            mo.Moption_Regular(
-                mv.Move(self.location, None, self.difference_location([1, 2]), None),
-                mv.Move(self.location, None, self.difference_location([2, 1]), None),
-                mv.Move(self.location, None, self.difference_location([2, -1]), None),
-                mv.Move(self.location, None, self.difference_location([1, -2]), None),
-                mv.Move(self.location, None, self.difference_location([-1, -1]), None),
-                mv.Move(self.location, None, self.difference_location([-2, -1]), None),
-                mv.Move(self.location, None, self.difference_location([-2, 1]), None),
-                mv.Move(self.location, None, self.difference_location([-1, 2]), None)
-            )
-        ]
-
-        self.moptions_location_update(board)
+    def options(self, squares):
+        return self.regular(
+            [(1, 2), (2, 1), (2, -1), (1, -2), (-1, -2), (-2, -1), (-2, 1), (-1, 2)],
+            squares,
+            self.regular_add,
+        )
 
 
 @dataclass
 class Bishop(Piece):
+
+    moved: bool = False
     value: int = 3
     notation: str = "B"
 
-    def setup_moptions(self, board):
-        self.moptions = [
-            mo.Moption_Extend(
-                [1, 1], None
-            ),
-            mo.Moption_Extend(
-                [1, -1], None
-            ),
-            mo.Moption_Extend(
-                [-1, -1], None
-            ),
-            mo.Moption_Extend(
-                [-1, 1], None
-            )
-        ]
-
-        self.moptions_location_update(board)
+    def options(self, squares):
+        return self.regular(
+            [(1, 1), (1, -1), (-1, -1), (-1, 1)], squares, self.regular_extend
+        )
 
 
 @dataclass
 class Queen(Piece):
+
+    moved: bool = False
     value: int = 9
     notation: str = "Q"
 
-    def setup_moptions(self, board):
-        self.moptions = [
-            mo.Moption_Extend(
-                [0, 1], None
-            ),
-            mo.Moption_Extend(
-                [1, 0], None
-            ),
-            mo.Moption_Extend(
-                [0, -1], None
-            ),
-            mo.Moption_Extend(
-                [-1, 0], None
-            ),
-            mo.Moption_Extend(
-                [1, 1], None
-            ),
-            mo.Moption_Extend(
-                [1, -1], None
-            ),
-            mo.Moption_Extend(
-                [-1, -1], None
-            ),
-            mo.Moption_Extend(
-                [-1, 1], None
-            )
-        ]
-
-        self.moptions_location_update(board)
+    def options(self, squares):
+        return self.regular(
+            [(0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1)],
+            squares,
+            self.regular_extend,
+        )
 
 
 @dataclass
 class King(Piece):
+
+    moved: bool = False
     value: int = 2
     notation: str = "K"
 
-    def setup_moptions(self, board):
-        self.moptions = [
-            mo.Moption_Regular(
-                mv.Move(self.location, None, self.difference_location([0, 1]), None),
-                mv.Move(self.location, None, self.difference_location([1, 0]), None),
-                mv.Move(self.location, None, self.difference_location([0, -1]), None),
-                mv.Move(self.location, None, self.difference_location([-1, 0]), None),
-                mv.Move(self.location, None, self.difference_location([1, 1]), None),
-                mv.Move(self.location, None, self.difference_location([1, -1]), None),
-                mv.Move(self.location, None, self.difference_location([-1, -1]), None),
-                mv.Move(self.location, None, self.difference_location([-1, 1]), None)
-            )
-        ]
+    def options(self, squares):
+        return self.regular(
+            [(0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1)],
+            squares,
+            self.regular_add,
+        )
 
-        self.moptions_location_update(board)
+def centralization_eval(location):
+    return 7 - abs(location[0] - 3.5) - abs(location[1] - 3.5)
