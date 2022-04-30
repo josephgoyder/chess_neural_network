@@ -20,6 +20,12 @@ class Piece:
             if not square.full() or square.piece.colour != self.colour:
                 output.append({"location_2": location, "type": "regular"})
 
+            else:
+                output.append(0)
+
+        else:
+            output.append(0)
+
     def regular_extend(self, direction, output, squares):
         location = [self.location[0] + direction[0], self.location[1] + direction[1]]
 
@@ -37,6 +43,8 @@ class Piece:
 
                 location[0] += direction[0]
                 location[1] += direction[1]
+
+        output += [0] * (7 - len(output))
 
     def regular(self, options, squares, function):
         output = []
@@ -83,6 +91,11 @@ class Pawn(Piece):
                         "type": "double_push",
                     }
                 )
+            else:
+                output.append(0)
+
+        else:
+            output.append(0)
 
     def en_passant(self, squares, output, location):
         square = squares[location[0]][self.location[1]]
@@ -100,6 +113,9 @@ class Pawn(Piece):
                 }
             )
 
+        else:
+            output.append(0)
+
     def options_generic_pawn(self, squares, output, colour_mult):
         if self.on_board(self.location[0], self.location[1] + colour_mult):
             if not self.moved:
@@ -109,6 +125,9 @@ class Pawn(Piece):
                 self.promotion_capture_push(
                     squares, output, [self.location[0], self.location[1] + colour_mult]
                 )
+
+        else:
+            output.append(0)
 
         for side_mult in [1, -1]:
 
