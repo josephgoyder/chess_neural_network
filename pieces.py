@@ -120,14 +120,20 @@ class Pawn(Piece):
         if self.on_board(self.location[0], self.location[1] + colour_mult):
             if not self.moved:
                 self.double_push(squares, output, colour_mult)
+            
+            else:
+                output.append(0)
 
             if not squares[self.location[0]][self.location[1] + colour_mult].full():
                 self.promotion_capture_push(
                     squares, output, [self.location[0], self.location[1] + colour_mult]
                 )
 
+            else:
+                output += [0]*4
+
         else:
-            output.append(0)
+            output += [0]*5
 
         for side_mult in [1, -1]:
 
@@ -145,11 +151,17 @@ class Pawn(Piece):
                         [self.location[0] + side_mult, self.location[1] + colour_mult],
                     )
 
+                else:
+                    output.append(0)
+
                 self.en_passant(
                     squares,
                     output,
                     [self.location[0] + side_mult, self.location[1] + colour_mult],
                 )
+
+            else:
+                output.append(0)
                 
 
     def options(self, squares):

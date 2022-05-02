@@ -1,3 +1,4 @@
+import move_undo as mv
 import numpy as np
 import oct2py
 from pieces import King 
@@ -21,30 +22,4 @@ def piece_and_difference(option):
 
 
 def branches_to_can_p(branches):
-    pawns = []
-    rooks = []
-    knights = []
-    bishops = []
-    queen = []
-    king = []
-    
-    for branch in branches:
-        if branch["piece_1"].notation == "":
-            if not branch["piece_1"].colour:
-                branch["location"]
-        elif branch["piece_1"].notation == "R":
-
-        elif branch["piece_1"].notation == "Kn":
-
-        elif branch["piece_1"].notation == "B":
-
-        elif branch["piece_1"].notation == "Q":
-
-        elif branch["piece_1"].notation == "K":
-
-    piece_and_difference_list = [
-
-    ]
-
-    #inefficient, fix if slow
-    return np.array([int(option in branches) for option in piece_and_difference_list])
+    return np.array([option is dict for option in branches])
