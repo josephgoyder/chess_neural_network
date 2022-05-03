@@ -1,9 +1,6 @@
-import move_undo as mv
 import engine as eg
-import game as gm
 import numpy as np
-import oct2py
-from pieces import King 
+from oct2py import octave
 import random
 
 
@@ -15,28 +12,33 @@ def board_to_X(board):
     return np.array(X)
 
 
-def piece_and_difference(option):
-    if option["type"] == "en_passant":
-        destination = option["location_3"]
-    else:
-        destination = option["location_2"]
-
-    return [option["piece_key"], [option["location_1"][0] - destination[0], option["location_1"][1] - destination[1]]]
-
-
 def branches_to_can_p(branches):
     return np.array([option is dict for option in branches])
 
 
+def output_layer_to_move(branches, output_layer):
+    return branches[np.argmax(output_layer)]
+
+
 def fight(theta1, theta2):
     engine = eg.engine_setup("regular")
-    win_lose_draw = 0
+    octave.addpath(".\feedforward_prop.m")
 
     while True:
-        win_lose_draw = engine.win_lose_draw()
-        if abs(win_lose_draw) == 1000:
+        output_layer = octave.roundtrip(board_to_X(engine.board))
+        engine.move(output_layer_to_move(output_layer))
+
+        if abs(engine.win_lose_draw()) == 1000:
+            for x in range(2):
+                engine.undo()
+
             win_lose_draw = engine.mate_eval()
 
-        
+            if win_lose_draw == 1001:
+                return theta1
 
-    if 
+            elif win_lose_draw == -1001:
+                return theta2
+
+            else:
+                return random.choice([theta1, theta2])
