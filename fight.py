@@ -23,6 +23,7 @@ def output_layer_to_move(branches, output_layer):
 def fight(theta1, theta2):
     engine = eg.engine_setup("regular")
     octave.addpath(".\feedforward_prop.m")
+    octave.addpath("\Users\076-jgoyder\AppData\Local\Programs\GNU Octave\Octave-7.1.0\mingw64\bin")
 
     while True:
         output_layer = octave.roundtrip(board_to_X(engine.board))
