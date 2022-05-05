@@ -61,7 +61,7 @@ class Game:
                 if find_piece(x, y) is not None:
                     row += abreviation(find_piece(x, y)) + " "
                 else:
-                    row += "0 "
+                    row += "- "
 
             print(row)
 
