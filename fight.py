@@ -25,21 +25,21 @@ def fight(theta1, theta2):
     octave.addpath(".\feedforward_prop.m")
     octave.addpath("\Users\076-jgoyder\AppData\Local\Programs\GNU Octave\Octave-7.1.0\mingw64\bin")
 
+    turn = True
     while True:
-        output_layer = octave.roundtrip(board_to_X(engine.board))
-        engine.move(output_layer_to_move(output_layer))
+        branches = engine.branches()
+        output_layer = octave.roundtrip(branches_to_can_p(branches), board_to_X(engine.board), 1)
+        engine.move(output_layer_to_move(branches, output_layer))
+        engine.notebook.top_lines.clear()
+        engine.search(turn, 2, branches)
 
-        if abs(engine.win_lose_draw()) == 1000:
-            for x in range(2):
-                engine.undo()
+        if engine.notebook.top_lines[0][0] == 1001:
+            return theta1
 
-            win_lose_draw = engine.mate_eval()
+        elif engine.notebook.top_lines[0][0] == -1001:
+            return theta2
 
-            if win_lose_draw == 1001:
-                return theta1
+        elif engine.win_lose_draw() == 0:
+            return random.choice([theta1, theta2])
 
-            elif win_lose_draw == -1001:
-                return theta2
-
-            else:
-                return random.choice([theta1, theta2])
+        turn = not turn 
