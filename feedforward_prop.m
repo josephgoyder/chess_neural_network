@@ -1,4 +1,6 @@
-function p = feedforward_prop(Theta1, Theta2, Theta3, can_p, X)
+function p = feedforward_prop(can_p, X, Theta)
+
+load(["/Users/joseph_chiao/Desktop/Advance Research/Machine Learning/Chess engine/chess_neural_network/engine_data/neural_net_dataset_" num2str(Theta) ".mat"])
 
 m = size(X, 1);
 
