@@ -25,7 +25,7 @@ def abreviation(piece):
     else:
         return abreviation.lower()
 
-        
+
 @dataclass
 class Notebook:
 
@@ -198,11 +198,11 @@ class Engine:
         self.history.evals_repeat_possible.append(self.eval())
         self.notebook.setup_lines(self.depth)
 
-    def illustrate(self):
-        if self.user_colour:
-            find_piece = lambda x, y: self.engine.board.squares[y][7 - x].piece
+    def illustrate(self, colour):
+        if colour:
+            find_piece = lambda x, y: self.board.squares[y][7 - x].piece
         else:
-            find_piece = lambda x, y: self.engine.board.squares[7 - y][x].piece
+            find_piece = lambda x, y: self.board.squares[7 - y][x].piece
 
         for x in range(8):
             row = ""

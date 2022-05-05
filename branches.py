@@ -100,13 +100,12 @@ def castle(board, colour, side):
                 )
 
 
-def add_to_branches(board, branches, piece, option, piece_key):
+def add_to_branches(board, branches, piece, option):
     option["location_1"] = piece.location
     option["piece_1"] = piece
     option["piece_2"] = board.squares[option["location_2"][0]][
         option["location_2"][1]
     ].piece
-    option["piece_key"] = piece_key
 
     if not option["piece_1"].moved:
         option["first_move"] = True
@@ -129,7 +128,7 @@ def reverse_branches(board, colour):
 
     captures = False
 
-    for piece_key, piece in board.pieces(colour):
+    for piece in board.pieces(colour).values():
         if piece.location is not None:
             for option in piece.options(board.squares):
 
@@ -142,17 +141,17 @@ def reverse_branches(board, colour):
 
                 if captures:
                     if is_capture:
-                        add_to_branches(board, branches, piece, option, piece_key)
+                        add_to_branches(board, branches, piece, option)
 
                 elif is_capture:
 
                     captures = True
                     branches.clear()
 
-                    add_to_branches(board, branches, piece, option, piece_key)
+                    add_to_branches(board, branches, piece, option)
 
                 else:
-                    add_to_branches(board, branches, piece, option, piece_key)
+                    add_to_branches(board, branches, piece, option)
 
     if not captures:
         for side in [True, False]:
@@ -166,10 +165,10 @@ def reverse_branches(board, colour):
 def regular_branches(board, colour):
     branches = []
 
-    for piece_key, piece in board.pieces(colour):
+    for piece in board.pieces(colour).values():
         if not piece.captured:
             for option in piece.options(board.squares):
-                add_to_branches(board, branches, piece, option, piece_key)
+                add_to_branches(board, branches, piece, option)
 
     for side in [True, False]:
         _castle = castle(board, colour, side)
