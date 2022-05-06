@@ -1,6 +1,6 @@
 function p = feedforward_prop_config_o_layer(p, Theta, can_p, a)
 
-[a, m] = size(Theta)
+[z, m] = size(Theta);
 
 for i = 1 : m;
   
