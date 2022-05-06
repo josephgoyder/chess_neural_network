@@ -101,24 +101,25 @@ def castle(board, colour, side):
 
 
 def add_to_branches(board, branches, piece, option):
-    option["location_1"] = piece.location
-    option["piece_1"] = piece
-    option["piece_2"] = board.squares[option["location_2"][0]][
-        option["location_2"][1]
-    ].piece
+    if type(option) == dict:
+        option["location_1"] = piece.location
+        option["piece_1"] = piece
+        option["piece_2"] = board.squares[option["location_2"][0]][
+            option["location_2"][1]
+        ].piece
 
-    if not option["piece_1"].moved:
-        option["first_move"] = True
-    else:
-        option["first_move"] = False
+        if not option["piece_1"].moved:
+            option["first_move"] = True
+        else:
+            option["first_move"] = False
 
-    if (
-        type(option["piece_1"]) == pc.Pawn 
-        and option["piece_1"].en_passant_able
-    ):
-        option["en_passant_expire"] = True
-    else:
-        option["en_passant_expire"] = False
+        if (
+            type(option["piece_1"]) == pc.Pawn 
+            and option["piece_1"].en_passant_able
+        ):
+            option["en_passant_expire"] = True
+        else:
+            option["en_passant_expire"] = False
 
     branches.append(option)
 
