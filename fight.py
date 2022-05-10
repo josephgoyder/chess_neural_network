@@ -20,12 +20,12 @@ def branches_to_can_p(branches):
 
 
 def output_layer_to_move(branches, output_layer):
-    return branches[np.argmax(output_layer)]
+    return branches[int(output_layer)]
 
 
 def fight(dataset1, dataset2):
     engine = eg.engine_setup("regular")
-    octave.addpath("C:\\Users\\076-jgoyder\\Chess engine\\chess_neural_network\\feedforward_prop.m")
+    octave.addpath("\\Users\\076-jgoyder\\Chess engine\\chess_neural_network\\feedforward_prop.m")
     #octave.addpath("C:\\Users\\076-jgoyder\\Chess engine\\chess_neural_network\\engine_data\\")
     #$env:path += ";C:\Users\076-jgoyder\AppData\Local\Programs\GNU Octave\Octave-7.1.0\mingw64\bin"
 
@@ -35,13 +35,15 @@ def fight(dataset1, dataset2):
         output_layer = octave.feedforward_prop(branches_to_can_p(branches), board_to_X(engine.board, turn), [dataset1, dataset2][int(turn)])
         engine.move(output_layer_to_move(branches, output_layer))
         engine.notebook.top_lines.clear()
-        engine.search(turn, 2, branches)
+        engine.recursive_search(turn, 2)
+        print("")
         engine.illustrate(turn)
+        print("")
 
-        if engine.notebook.top_lines[0][0] == 1001:
+        if engine.notebook.lines[0][0][0] == 1001:
             return dataset1
 
-        elif engine.notebook.top_lines[0][0] == -1001:
+        elif engine.notebook.lines[0][0][0] == -1001:
             return dataset2
 
         elif engine.win_lose_draw() == 0:

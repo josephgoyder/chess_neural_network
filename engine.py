@@ -135,9 +135,10 @@ class Engine:
 
         else:
             for move in self.branches(turn):
-                self.move(move)
-                self.recursive_search(not turn, depth, level = level + 1)
-                self.undo()
+                if move != 0:
+                    self.move(move)
+                    self.recursive_search(not turn, depth, level = level + 1)
+                    self.undo()
 
             self.notebook.collect_max_min(level, turn)
             self.notebook.lines[level - 1][-1][1].insert(0, self.notebook.journey[-1])
@@ -146,9 +147,10 @@ class Engine:
 
     def search(self, turn, depth, top_lines_num, considered_moves):
         for move in considered_moves:
-            self.move(move)
-            self.recursive_search(not turn, depth)
-            self.undo()
+            if move != 0:
+                self.move(move)
+                self.recursive_search(not turn, depth)
+                self.undo()
 
         self.notebook.collect_top_lines_search(
             turn, top_lines_num
