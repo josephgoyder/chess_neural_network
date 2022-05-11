@@ -2,6 +2,7 @@ import engine as eg
 import numpy as np
 from oct2py import octave
 import random
+import time as tm
 
 
 def board_to_X(board, turn):
@@ -32,7 +33,14 @@ def fight(dataset1, dataset2):
     turn = True
     while True:
         branches = engine.branches(turn)
-        output_layer = octave.feedforward_prop(branches_to_can_p(branches), board_to_X(engine.board, turn), [dataset1, dataset2][int(turn)])
+
+        tic = tm.perf_counter()
+
+        output_layer, octave_time = octave.feedforward_prop(branches_to_can_p(branches), board_to_X(engine.board, turn), [dataset1, dataset2][int(turn)], nout=2)
+
+        toc = tm.perf_counter()
+        print(toc - tic - octave_time, octave_time)
+
         engine.move(output_layer_to_move(branches, output_layer))
         engine.notebook.top_lines.clear()
         engine.recursive_search(turn, 2)
