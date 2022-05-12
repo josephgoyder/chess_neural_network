@@ -14,7 +14,7 @@ class Piece:
     def regular_add(self, direction, output, squares):
         location = [self.location[0] + direction[0], self.location[1] + direction[1]]
 
-        if self.on_board(location[0], location[1]):
+        if self.on_board(location[0], location[1]) and not self.captured:
             square = squares[location[0]][location[1]]
 
             if not square.full() or square.piece.colour != self.colour:
@@ -28,24 +28,26 @@ class Piece:
 
     def regular_extend(self, direction, output, squares):
         extention = [0] * 7
-        location = [self.location[0] + direction[0], self.location[1] + direction[1]]
-        distance = 0
 
-        while self.on_board(location[0], location[1]):
-            square = squares[location[0]][location[1]]
+        if not self.captured:
+            location = [self.location[0] + direction[0], self.location[1] + direction[1]]
+            distance = 0
 
-            if square.full():
-                if square.piece.colour == self.colour:
-                    break
+            while self.on_board(location[0], location[1]):
+                square = squares[location[0]][location[1]]
+
+                if square.full():
+                    if square.piece.colour == self.colour:
+                        break
+                    else:
+                        extention[distance] = {"location_2": list(location), "type": "regular"}
+                        break
                 else:
                     extention[distance] = {"location_2": list(location), "type": "regular"}
-                    break
-            else:
-                extention[distance] = {"location_2": list(location), "type": "regular"}
 
-                location[0] += direction[0]
-                location[1] += direction[1]
-                distance += 1
+                    location[0] += direction[0]
+                    location[1] += direction[1]
+                    distance += 1
 
         output += extention
 
@@ -120,7 +122,7 @@ class Pawn(Piece):
             output.append(0)
 
     def options_generic_pawn(self, squares, output, colour_mult):
-        if self.on_board(self.location[0], self.location[1] + colour_mult):
+        if self.on_board(self.location[0], self.location[1] + colour_mult) and not self.captured:
             if not self.moved:
                 self.double_push(squares, output, colour_mult)
             
@@ -140,8 +142,9 @@ class Pawn(Piece):
 
         for side_mult in [1, -1]:
 
-            if self.on_board(
-                self.location[0] + side_mult, self.location[1] + colour_mult
+            if (
+            self.on_board(self.location[0] + side_mult, self.location[1] + colour_mult) 
+            and not self.captured
             ):
                 square = squares[self.location[0] + side_mult][
                     self.location[1] + colour_mult

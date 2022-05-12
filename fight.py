@@ -21,7 +21,7 @@ def branches_to_can_p(branches):
 
 
 def output_layer_to_move(branches, output_layer):
-    return branches[int(output_layer)]
+    return branches[int(output_layer) - 1]
 
 
 def fight(dataset1, dataset2):
