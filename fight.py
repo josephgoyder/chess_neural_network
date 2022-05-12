@@ -33,6 +33,7 @@ def fight(dataset1, dataset2):
     turn = True
     while True:
         branches = engine.branches(turn)
+        print("len_branches:", len(branches))
 
         tic = tm.perf_counter()
 

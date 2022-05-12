@@ -175,5 +175,8 @@ def regular_branches(board, colour):
         _castle = castle(board, colour, side)
         if _castle is not None:
             branches.append(_castle)
+            
+        else:
+            branches.append(0)
 
     return branches

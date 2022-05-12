@@ -27,7 +27,9 @@ class Piece:
             output.append(0)
 
     def regular_extend(self, direction, output, squares):
+        extention = [0] * 7
         location = [self.location[0] + direction[0], self.location[1] + direction[1]]
+        distance = 0
 
         while self.on_board(location[0], location[1]):
             square = squares[location[0]][location[1]]
@@ -36,15 +38,16 @@ class Piece:
                 if square.piece.colour == self.colour:
                     break
                 else:
-                    output.append({"location_2": list(location), "type": "regular"})
+                    extention[distance] = {"location_2": list(location), "type": "regular"}
                     break
             else:
-                output.append({"location_2": list(location), "type": "regular"})
+                extention[distance] = {"location_2": list(location), "type": "regular"}
 
                 location[0] += direction[0]
                 location[1] += direction[1]
+                distance += 1
 
-        output += [0] * (7 - len(output))
+        output += extention
 
     def regular(self, options, squares, function):
         output = []
@@ -161,7 +164,7 @@ class Pawn(Piece):
                 )
 
             else:
-                output.append(0)
+                output += [0] * 2
                 
 
     def options(self, squares):
