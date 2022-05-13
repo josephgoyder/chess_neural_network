@@ -7,23 +7,17 @@ import eval as ev
 
 
 def abreviation(piece):
-    if type(piece) == pc.Pawn:
-        abreviation = "P"
-    elif type(piece) == pc.Knight:
-        abreviation = "N"
-    elif type(piece) == pc.Bishop:
-        abreviation = "B"
-    elif type(piece) == pc.Rook:
-        abreviation = "R"
-    elif type(piece) == pc.Queen:
-        abreviation = "Q"
+    if piece.notation == "":
+        notation = "P"
+    elif piece.notation == "Kn":
+        notation = "N"
     else:
-        abreviation = "K"
+        notation = piece.notation
 
     if piece.colour:
-        return abreviation
+        return notation
     else:
-        return abreviation.lower()
+        return notation.lower()
 
 
 @dataclass

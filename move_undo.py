@@ -38,16 +38,24 @@ def move_en_passant(board, move):
 
 def move_promotion(board, move):
     if move["promotion"] == "queen":
-        move["piece_1"] = pc.Queen(move["location_1"], move["piece_1"].colour)
+        move["piece_1"].powers = ["rook", "bishop"]
+        move["piece_1"].value = 9
+        move["piece_1"].notation = "Q"
 
     elif move["promotion"] == "knight":
-        move["piece_1"] = pc.Knight(move["location_1"], move["piece_1"].colour)
+        move["piece_1"].powers = ["knight"]
+        move["piece_1"].value = 3
+        move["piece_1"].notation = "Kn"
 
     elif move["promotion"] == "bishop":
-        move["piece_1"] = pc.Bishop(move["location_1"], move["piece_1"].colour)
+        move["piece_1"].powers = ["bishop"]
+        move["piece_1"].value = 3
+        move["piece_1"].notation = "B"
 
     else:
-        move["piece_1"] = pc.Rook(move["location_1"], move["piece_1"].colour)
+        move["piece_1"].powers = ["rook"]
+        move["piece_1"].value = 5
+        move["piece_1"].notation = "R"
 
     move_regular(board, move)
 
@@ -116,9 +124,10 @@ def undo_en_passant(board, move):
 
 
 def undo_promotion(board, move):
-    move["piece_1"] = pc.Pawn(
-        move["piece_1"].location, move["piece_1"].colour, True, False
-    )
+    move["piece_1"].powers = ["pawn"]
+    move["piece_1"].value = 1
+    move["piece_1"].notation = ""
+
 
     undo_regular(board, move)
 

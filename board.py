@@ -136,16 +136,20 @@ class Board:
                     self.squares[piece.location[0]][piece.location[1]].piece = piece
                     self.change_piece_num(1, colour)
 
+                if type(piece) == pc.Pawn_promotable:
+                    piece.setup()
+                    
+
     def setup_regular(self):
         white_pieces = {
-            "pawn_1": pc.Pawn([0, 1], True),
-            "pawn_2": pc.Pawn([1, 1], True),
-            "pawn_3": pc.Pawn([2, 1], True),
-            "pawn_4": pc.Pawn([3, 1], True),
-            "pawn_5": pc.Pawn([4, 1], True),
-            "pawn_6": pc.Pawn([5, 1], True),
-            "pawn_7": pc.Pawn([6, 1], True),
-            "pawn_8": pc.Pawn([7, 1], True),
+            "pawn_1": pc.Pawn_promotable([0, 1], True),
+            "pawn_2": pc.Pawn_promotable([1, 1], True),
+            "pawn_3": pc.Pawn_promotable([2, 1], True),
+            "pawn_4": pc.Pawn_promotable([3, 1], True),
+            "pawn_5": pc.Pawn_promotable([4, 1], True),
+            "pawn_6": pc.Pawn_promotable([5, 1], True),
+            "pawn_7": pc.Pawn_promotable([6, 1], True),
+            "pawn_8": pc.Pawn_promotable([7, 1], True),
             "rook_1": pc.Rook([7, 0], True),
             "rook_2": pc.Rook([0, 0], True),
             "knight_1": pc.Knight([6, 0], True),
@@ -157,14 +161,14 @@ class Board:
         }
 
         black_pieces = {
-            "pawn_1": pc.Pawn([0, 6], False),
-            "pawn_2": pc.Pawn([1, 6], False),
-            "pawn_3": pc.Pawn([2, 6], False),
-            "pawn_4": pc.Pawn([3, 6], False),
-            "pawn_5": pc.Pawn([4, 6], False),
-            "pawn_6": pc.Pawn([5, 6], False),
-            "pawn_7": pc.Pawn([6, 6], False),
-            "pawn_8": pc.Pawn([7, 6], False),
+            "pawn_1": pc.Pawn_promotable([0, 6], False),
+            "pawn_2": pc.Pawn_promotable([1, 6], False),
+            "pawn_3": pc.Pawn_promotable([2, 6], False),
+            "pawn_4": pc.Pawn_promotable([3, 6], False),
+            "pawn_5": pc.Pawn_promotable([4, 6], False),
+            "pawn_6": pc.Pawn_promotable([5, 6], False),
+            "pawn_7": pc.Pawn_promotable([6, 6], False),
+            "pawn_8": pc.Pawn_promotable([7, 6], False),
             "rook_1": pc.Rook([7, 7], False),
             "rook_2": pc.Rook([0, 7], False),
             "knight_1": pc.Knight([6, 7], False),
@@ -209,14 +213,14 @@ class Board:
             locations[x] = self.assign_location(avaliable)
 
         white_pieces = {
-            "pawn_1": pc.Pawn([0, 1], True),
-            "pawn_2": pc.Pawn([1, 1], True),
-            "pawn_3": pc.Pawn([2, 1], True),
-            "pawn_4": pc.Pawn([3, 1], True),
-            "pawn_5": pc.Pawn([4, 1], True),
-            "pawn_6": pc.Pawn([5, 1], True),
-            "pawn_7": pc.Pawn([6, 1], True),
-            "pawn_8": pc.Pawn([7, 1], True),
+            "pawn_1": pc.Pawn_promotable([0, 1], True),
+            "pawn_2": pc.Pawn_promotable([1, 1], True),
+            "pawn_3": pc.Pawn_promotable([2, 1], True),
+            "pawn_4": pc.Pawn_promotable([3, 1], True),
+            "pawn_5": pc.Pawn_promotable([4, 1], True),
+            "pawn_6": pc.Pawn_promotable([5, 1], True),
+            "pawn_7": pc.Pawn_promotable([6, 1], True),
+            "pawn_8": pc.Pawn_promotable([7, 1], True),
             "rook_1": pc.Rook([locations[7], 0], True),
             "rook_2": pc.Rook([locations[0], 0], True),
             "knight_1": pc.Knight([locations[6], 0], True),
@@ -228,14 +232,14 @@ class Board:
         }
 
         black_pieces = {
-            "pawn_1": pc.Pawn([0, 6], False),
-            "pawn_2": pc.Pawn([1, 6], False),
-            "pawn_3": pc.Pawn([2, 6], False),
-            "pawn_4": pc.Pawn([3, 6], False),
-            "pawn_5": pc.Pawn([4, 6], False),
-            "pawn_6": pc.Pawn([5, 6], False),
-            "pawn_7": pc.Pawn([6, 6], False),
-            "pawn_8": pc.Pawn([7, 6], False),
+            "pawn_1": pc.Pawn_promotable([0, 6], False),
+            "pawn_2": pc.Pawn_promotable([1, 6], False),
+            "pawn_3": pc.Pawn_promotable([2, 6], False),
+            "pawn_4": pc.Pawn_promotable([3, 6], False),
+            "pawn_5": pc.Pawn_promotable([4, 6], False),
+            "pawn_6": pc.Pawn_promotable([5, 6], False),
+            "pawn_7": pc.Pawn_promotable([6, 6], False),
+            "pawn_8": pc.Pawn_promotable([7, 6], False),
             "rook_1": pc.Rook([locations[7], 7], False),
             "rook_2": pc.Rook([locations[0], 7], False),
             "knight_1": pc.Knight([locations[6], 7], False),

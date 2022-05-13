@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from dataclasses import field
 
 @dataclass
 class Piece:
@@ -252,6 +253,38 @@ class King(Piece):
             squares,
             self.regular_add,
         )
+
+
+@dataclass
+class Pawn_promotable(Piece):
+    pieces: dict = field(default_factory=dict)
+    powers: list = field(default_factory=list)
+    moved: bool = False
+    value: int = 1
+    notation: str = ""
+
+    def setup(self):
+        self.pieces = {
+            "pawn": Pawn(self.location, self.colour, self.captured), 
+            "rook": Rook(self.location, self.colour, self.captured), 
+            "bishop": Bishop(self.location, self.colour, self.captured), 
+            "knight": Knight(self.location, self.colour, self.captured)
+        }
+
+        self.powers = ["pawn"]
+
+    def options(self, squares):
+        options = []
+        
+        for key, piece in self.pieces.items():
+            if key in self.powers:
+                options += piece.options(squares)
+
+            else:
+                options += [0] * len(piece.options(squares))
+
+        return options
+
 
 def centralization_eval(location):
     return 7 - abs(location[0] - 3.5) - abs(location[1] - 3.5)
