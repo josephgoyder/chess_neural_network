@@ -162,9 +162,9 @@ def insufficient_material(board):
 
 
 def regular_win_lose_draw(board, history):
-    if board.white_pieces["king"].location is None:
+    if board.white_pieces["king"].captured:
         return -1000
-    elif board.black_pieces["king"].location is None:
+    elif board.black_pieces["king"].captured:
         return 1000
 
     if (
