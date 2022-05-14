@@ -1,7 +1,8 @@
 function [p, time] = feedforward_prop(can_p, X, Theta)
 
 tic;
-load(["C:\\Users\\076-jgoyder\\Chess engine\\chess_neural_network\\engine_data\\neural_net_dataset_" num2str(Theta) ".mat"])
+% load(["C:\\Users\\076-jgoyder\\Chess engine\\chess_neural_network\\engine_data\\neural_net_dataset_" num2str(Theta) ".mat"])
+load(["/home/joseph/chess_neural_network/engine_data/neural_net_dataset_" num2str(Theta) ".mat"])
 
 m = size(X, 1);
 
