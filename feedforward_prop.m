@@ -22,6 +22,5 @@ p = feedforward_prop_config_o_layer(p, Theta3, can_p, a_3);
 
 [z p] = max(p, [], 2);   
 
-
 time = toc;
 end
