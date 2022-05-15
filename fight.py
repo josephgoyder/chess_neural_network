@@ -27,8 +27,8 @@ def output_layer_to_move(branches, output_layer):
 def is_stalemate(engine, turn):
     engine.notebook.lines[0].clear()
 
-    move_1 = engine.notebook.journey[-1]
-    move_2 = engine.notebook.journey[-2]
+    move_1 = engine.notebook.journey[-2]
+    move_2 = engine.notebook.journey[-1]
     engine.undo()
     engine.undo()
     engine.recursive_search(turn, 2)
@@ -48,14 +48,14 @@ def game_turn(engine, turn, dataset1, dataset2):
     tic = tm.perf_counter()
 
     output_layer, octave_time = octave.feedforward_prop(branches_to_can_p(branches), board_to_X(engine.board, turn), [dataset1, dataset2][int(turn)], nout=2)
-
+    print(output_layer)
     toc = tm.perf_counter()
     print(toc - tic - octave_time, octave_time)
 
     engine.move(output_layer_to_move(branches, output_layer))
 
     print("")
-    engine.illustrate(turn)
+    engine.illustrate(True)
     print("")
 
 
@@ -74,15 +74,18 @@ def fight(dataset1, dataset2):
 
         win_lose_draw = engine.win_lose_draw()
         if win_lose_draw == 0 or is_stalemate(engine, turn):
+            print("Draw")
             return random.choice([dataset1, dataset2])
 
         if win_lose_draw == 1000:
+            print("White_wins")
             return dataset1
 
         if win_lose_draw == -1000:
+            print("Black_wins")
             return dataset2
 
         turn = not turn 
 
 
-print(fight(1, 2))
+print(fight(6, 7))
