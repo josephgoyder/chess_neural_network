@@ -6,7 +6,7 @@ load(["/Users/joseph_chiao/Desktop/Advance Research/Machine Learning/Chess engin
 
 m = size(X, 1);
 
-p = zeros(size(X, 1), 1);
+p = zeros(1, length(can_p));
 
 X = [ones(m, 1) X];
 
@@ -19,8 +19,6 @@ a_3 = sigmoid(a_2 * Theta2);
 a_3 = [ones(size(a_3), 1) a_3];
 
 p = feedforward_prop_config_o_layer(p, Theta3, can_p, a_3);
-
-p
 
 [z p] = max(p, [], 2);   
 
