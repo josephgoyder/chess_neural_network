@@ -27,7 +27,6 @@ def output_layer_to_move(branches, output_layer):
 def fight(dataset1, dataset2):
     engine = eg.engine_setup("regular")
     octave.addpath("\\Users\\076-jgoyder\\Chess engine\\chess_neural_network\\feedforward_prop.m")
-    #octave.addpath("C:\\Users\\076-jgoyder\\Chess engine\\chess_neural_network\\engine_data\\")
     #$env:path += ";C:\Users\076-jgoyder\AppData\Local\Programs\GNU Octave\Octave-7.1.0\mingw64\bin"
 
     turn = True

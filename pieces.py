@@ -70,6 +70,7 @@ class Pawn(Piece):
     notation: str = ""
 
     def promotion_output(self, squares, output, location):
+        output.append(0)
         for promotion in ["queen", "knight", "bishop", "rook"]:
             output.append(
                 {"location_2": location, "type": "promotion", "promotion": promotion}
@@ -84,6 +85,8 @@ class Pawn(Piece):
 
         else:
             output.append({"location_2": location, "type": "regular"})
+            output += [0]*4
+
 
     def double_push(self, squares, output, colour_mult):
         if not squares[self.location[0]][self.location[1] + colour_mult * 2].full():
@@ -136,10 +139,10 @@ class Pawn(Piece):
                 )
 
             else:
-                output += [0]*4
+                output += [0]*5
 
         else:
-            output += [0]*5
+            output += [0]*6
 
         for side_mult in [1, -1]:
 
@@ -159,7 +162,7 @@ class Pawn(Piece):
                     )
 
                 else:
-                    output.append(0)
+                    output += [0]*5
 
                 self.en_passant(
                     squares,
@@ -168,7 +171,7 @@ class Pawn(Piece):
                 )
 
             else:
-                output += [0] * 2
+                output += [0]*6
                 
 
     def options(self, squares):
@@ -259,6 +262,7 @@ class King(Piece):
 class Pawn_promotable(Piece):
     pieces: dict = field(default_factory=dict)
     powers: list = field(default_factory=list)
+    en_passant_able: bool = False
     moved: bool = False
     value: int = 1
     notation: str = ""
@@ -278,6 +282,7 @@ class Pawn_promotable(Piece):
         
         for key, piece in self.pieces.items():
             if key in self.powers:
+                piece.location = self.location
                 options += piece.options(squares)
 
             else:
