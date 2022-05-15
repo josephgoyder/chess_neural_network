@@ -24,38 +24,63 @@ def output_layer_to_move(branches, output_layer):
     return branches[int(output_layer) - 1]
 
 
+def is_stalemate(engine, turn):
+    engine.notebook.lines[0].clear()
+
+    move_1 = engine.notebook.journey[-1]
+    move_2 = engine.notebook.journey[-2]
+    engine.undo()
+    engine.undo()
+    engine.recursive_search(turn, 2)
+    engine.move(move_1)
+    engine.move(move_2)
+
+    if len(engine.notebook.lines[0][0][1]) == 0 and engine.notebook.lines[0][0][0] == 0:
+        return True
+
+    else: 
+        return False
+
+
+def game_turn(engine, turn, dataset1, dataset2):
+    branches = engine.branches(turn)
+
+    tic = tm.perf_counter()
+
+    output_layer, octave_time = octave.feedforward_prop(branches_to_can_p(branches), board_to_X(engine.board, turn), [dataset1, dataset2][int(turn)], nout=2)
+
+    toc = tm.perf_counter()
+    print(toc - tic - octave_time, octave_time)
+
+    engine.move(output_layer_to_move(branches, output_layer))
+
+    print("")
+    engine.illustrate(turn)
+    print("")
+
+
 def fight(dataset1, dataset2):
     engine = eg.engine_setup("regular")
-    octave.addpath("\\Users\\076-jgoyder\\Chess engine\\chess_neural_network\\feedforward_prop.m")
     #$env:path += ";C:\Users\076-jgoyder\AppData\Local\Programs\GNU Octave\Octave-7.1.0\mingw64\bin"
 
     turn = True
+    for x in range(4):
+        game_turn(engine, turn, dataset1, dataset2)
+
+        turn = not turn
+
     while True:
-        branches = engine.branches(turn)
-        print("len_branches:", len(branches))
+        game_turn(engine, turn, dataset1, dataset2)
 
-        tic = tm.perf_counter()
+        win_lose_draw = engine.win_lose_draw()
+        if win_lose_draw == 0 or is_stalemate(engine, turn):
+            return random.choice([dataset1, dataset2])
 
-        output_layer, octave_time = octave.feedforward_prop(branches_to_can_p(branches), board_to_X(engine.board, turn), [dataset1, dataset2][int(turn)], nout=2)
-
-        toc = tm.perf_counter()
-        print(toc - tic - octave_time, octave_time)
-
-        engine.move(output_layer_to_move(branches, output_layer))
-        engine.notebook.top_lines.clear()
-        engine.recursive_search(turn, 2)
-        print("")
-        engine.illustrate(turn)
-        print("")
-
-        if engine.notebook.lines[0][0][0] == 1001:
+        if win_lose_draw == 1000:
             return dataset1
 
-        elif engine.notebook.lines[0][0][0] == -1001:
+        if win_lose_draw == -1000:
             return dataset2
-
-        elif engine.win_lose_draw() == 0:
-            return random.choice([dataset1, dataset2])
 
         turn = not turn 
 

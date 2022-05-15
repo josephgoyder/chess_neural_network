@@ -89,7 +89,10 @@ class Pawn(Piece):
 
 
     def double_push(self, squares, output, colour_mult):
-        if not squares[self.location[0]][self.location[1] + colour_mult * 2].full():
+        if (
+            self.on_board(self.location[0], self.location[1] + colour_mult * 2) 
+            and not squares[self.location[0]][self.location[1] + colour_mult * 2].full()
+        ):
             if not squares[self.location[0]][self.location[1] + colour_mult].full():
                 output.append(
                     {
