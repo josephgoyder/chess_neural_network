@@ -7,7 +7,7 @@ load(["/home/joseph/chess_neural_network/engine_data/neural_net_dataset_" num2st
 
 m = size(X, 1);
 
-p = zeros(size(X, 1), 1);
+p = zeros(1, length(can_p));
 
 X = [ones(m, 1) X];
 
