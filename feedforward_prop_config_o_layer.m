@@ -8,4 +8,3 @@ for i = 1 : m;
     p(i) = sigmoid(a * Theta(:, i));
   endif
 end
-
