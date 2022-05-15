@@ -26,13 +26,11 @@ def output_layer_to_move(branches, output_layer):
 
 def fight(dataset1, dataset2):
     engine = eg.engine_setup("regular")
-    octave.addpath("\\Users\\076-jgoyder\\Chess engine\\chess_neural_network\\feedforward_prop.m")
     #$env:path += ";C:\Users\076-jgoyder\AppData\Local\Programs\GNU Octave\Octave-7.1.0\mingw64\bin"
 
     turn = True
     while True:
         branches = engine.branches(turn)
-        print("len_branches:", len(branches))
 
         tic = tm.perf_counter()
 
@@ -48,13 +46,14 @@ def fight(dataset1, dataset2):
         engine.illustrate(turn)
         print("")
 
-        if engine.notebook.lines[0][0][0] == 1001:
+        win_lose_draw = engine.win_lose_draw()
+        if win_lose_draw == 1000 or engine.notebook.lines[0][0][0] == 1001:
             return dataset1
 
-        elif engine.notebook.lines[0][0][0] == -1001:
+        elif win_lose_draw == -1000 or engine.notebook.lines[0][0][0] == -1001:
             return dataset2
 
-        elif engine.win_lose_draw() == 0:
+        elif win_lose_draw == 0:
             return random.choice([dataset1, dataset2])
 
         turn = not turn 

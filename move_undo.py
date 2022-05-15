@@ -95,6 +95,7 @@ def undo_regular(board, move):
         board.squares[move["location_2"][0]][move["location_2"][1]].piece = move[
             "piece_2"
         ]
+        move["piece_2"].captured = False
 
     else:
         board.squares[move["location_2"][0]][move["location_2"][1]].piece = None
