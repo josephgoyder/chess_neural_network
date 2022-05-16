@@ -97,7 +97,7 @@ class History:
         self.evals.append(eval)
         if (
             move["piece_2"] is not None 
-            or type(move["piece_1"]) == pc.Pawn
+            or type(move["piece_1"]) == pc.Pawn_promotable
         ):
             self.evals_repeat_possible.clear()
 

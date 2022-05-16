@@ -88,4 +88,4 @@ def fight(dataset1, dataset2):
         turn = not turn 
 
 
-print(fight(1, 8))
+print(fight(3, 4))

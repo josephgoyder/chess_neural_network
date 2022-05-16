@@ -282,10 +282,13 @@ class Pawn_promotable(Piece):
 
     def options(self, squares):
         options = []
+
+        self.pieces["pawn"].en_passant_able = self.en_passant_able
         
         for key, piece in self.pieces.items():
             if key in self.powers:
                 piece.location = self.location
+                piece.moved = self.moved
                 options += piece.options(squares)
 
             else:
