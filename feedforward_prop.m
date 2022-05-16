@@ -1,13 +1,12 @@
 function [p, time] = feedforward_prop(can_p, X, Theta)
 
 tic;
-% load(["C:\\Users\\076-jgoyder\\Chess engine\\chess_neural_network\\engine_data\\neural_net_dataset_" num2str(Theta) ".mat"])
-% load(["/Users/joseph_chiao/Desktop/Advance Research/Machine Learning/Chess engine/chess_neural_network/engine_data/neural_net_dataset_" num2str(Theta) ".mat"])
-load(["/home/joseph/chess_neural_network/engine_data/neural_net_dataset_" num2str(Theta) ".mat"])
+load(["A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_" num2str(Theta) ".mat"])
+#A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_" num2str(Theta) ".mat
 
 m = size(X, 1);
 
-p = zeros(1, length(can_p));
+p = zeros(size(X, 1), 1);
 
 X = [ones(m, 1) X];
 
@@ -22,6 +21,7 @@ a_3 = [ones(size(a_3), 1) a_3];
 p = feedforward_prop_config_o_layer(p, Theta3, can_p, a_3);
 
 [z p] = max(p, [], 2);   
+
 
 time = toc;
 end
