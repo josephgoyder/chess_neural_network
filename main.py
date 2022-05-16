@@ -1,5 +1,5 @@
 from oct2py import octave
-#import fight 
+import fight 
 import numpy as np
 
 def theta_init(Theta_1_size, Theta_2_size, Theta_3_size, n):
@@ -13,9 +13,12 @@ def theta_init(Theta_1_size, Theta_2_size, Theta_3_size, n):
 def tournament(generation, population):
     
     winner_list = []
-    for i in population / 2:
-        winner = fight(i, i*2)
+    for i in range(int(population / 2)):
+        i += 1
+        winner = fight.fight(i, i*2)
         winner_list.append(winner)
+
+    print(winner_list)
 
 # def reproduction():
 #     octave.addpath("A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network")
@@ -25,15 +28,15 @@ def tournament(generation, population):
 
 def main():
 
-    generation = 5
+    generations = 4
+    population = 2 ** (generations - 1)
+    theta_init(np.array([98, 50.]), np.array([51, 50.]), np.array([51, 850.]), population)
 
-    theta_init(np.array([98, 500.]), np.array([501, 500.]), np.array([501, 850.]), 2*generation - 1)
-
-    # for i in generation:
-    #     living_player = 2 ** (generation - i - 1)
-    #     tournament(living_player)
-    #     reproduction(living_player)
-    #     mutaion(living_player)
+    for generation in range(generations):
+        population = (generations - 1) ** 2
+        tournament(generation, population)
+        # reproduction(living_player)
+        # mutaion(living_player)
 
 main()
 

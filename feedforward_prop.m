@@ -7,7 +7,7 @@ load(["C:\\Users\\076-jgoyder\\Chess engine\\chess_neural_network\\engine_data\\
 
 m = size(X, 1);
 
-p = zeros(1, length(can_p));
+p = zeros(size(X, 1), 1);
 
 X = [ones(m, 1) X];
 
@@ -22,6 +22,7 @@ a_3 = [ones(size(a_3), 1) a_3];
 p = feedforward_prop_config_o_layer(p, Theta3, can_p, a_3);
 
 [z p] = max(p, [], 2);   
+
 
 time = toc;
 end
