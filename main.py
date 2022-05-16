@@ -1,6 +1,7 @@
 from oct2py import octave
 import fight 
 import numpy as np
+import os
 
 def theta_init(Theta_1_size, Theta_2_size, Theta_3_size, n):
 
@@ -12,13 +13,14 @@ def theta_init(Theta_1_size, Theta_2_size, Theta_3_size, n):
 
 def tournament(generation, population):
     
-    winner_list = []
     for i in range(int(population / 2)):
         i += 1
-        winner = fight.fight(i, i*2)
-        winner_list.append(winner)
+        i *= 2
+        winner, loser = fight.fight(i, i - 1)
+        os.remove(f"A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_{loser}.mat")
+        os.rename(f"A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_{winner}.mat", f"A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_{i//2}.mat")
 
-    print(winner_list)
+    
 
 # def reproduction():
 #     octave.addpath("A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network")
