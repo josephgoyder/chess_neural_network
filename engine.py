@@ -190,8 +190,8 @@ class Engine:
 
     def default_setup(self):
         ev.initialize_centralization(self.board)
-        self.history.evals.append(self.eval())
-        self.history.evals_repeat_possible.append(self.eval())
+        self.history.states.append(self.history.state(self.board))
+        self.history.states_repeat_possible.append(self.history.state(self.board))
         self.notebook.setup_lines(self.depth)
 
     def illustrate(self, colour):
