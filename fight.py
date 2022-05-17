@@ -75,17 +75,17 @@ def fight(dataset1, dataset2):
         win_lose_draw = engine.win_lose_draw()
         if win_lose_draw == 0 or is_stalemate(engine, turn):
             print("Draw")
-            return random.choice([dataset1, dataset2])
+            datasets = [dataset1, dataset2]
+            random.shuffle(datasets)
+            return datasets[0], datasets[1]
 
         if win_lose_draw == 1000:
             print("White_wins")
-            return dataset1
+            return dataset1, dataset2
 
         if win_lose_draw == -1000:
             print("Black_wins")
-            return dataset2
+            return dataset2, dataset1
 
         turn = not turn 
 
-
-print(fight(4, 3))
