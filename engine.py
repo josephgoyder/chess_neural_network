@@ -76,14 +76,14 @@ class Engine:
     def move(self, move):
         mo_un.move(move, self.board)
         self.notebook.journey.append(move)
-        self.history.record(move, self.board, self.eval())
+        self.history.record(move, self.board)
         self.update_centralization(move["piece_1"])
 
     def undo(self):
         move = self.notebook.journey[-1]
 
         mo_un.undo(move, self.board)
-        self.history.unrecord()
+        self.history.unrecord(move, self.board)
         self.notebook.journey.pop(-1)
         self.update_centralization(move["piece_1"])
         if move["piece_2"] is not None:
@@ -124,7 +124,7 @@ class Engine:
 
         elif level == depth:
             self.notebook.lines[level - 1].append(
-                [self.history.evals[-1], [self.notebook.journey[-1]]]
+                [self.eval(), [self.notebook.journey[-1]]]
             )
 
         else:

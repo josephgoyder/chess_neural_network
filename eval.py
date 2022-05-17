@@ -40,35 +40,23 @@ class History:
 
     def state(self, board):
         state = {
-            "white_rooks": [
-                board.white_pieces["rook_1"].location,
-                board.white_pieces["rook_2"].location,
-            ],
-            "white_knights": [
-                board.white_pieces["knight_1"].location,
-                board.white_pieces["knight_2"].location,
-            ],
-            "white_bishops": [
-                board.white_pieces["bishop_1"].location,
-                board.white_pieces["bishop_2"].location,
-            ],
-            "white_queen": [board.white_pieces["queen"].location],
-            "white_king": [board.white_pieces["king"].location],
-            "black_rooks": [
-                board.black_pieces["rook_1"].location,
-                board.black_pieces["rook_2"].location,
-            ],
-            "black_knights": [
-                board.black_pieces["knight_1"].location,
-                board.black_pieces["knight_2"].location,
-            ],
-            "black_bishops": [
-                board.black_pieces["bishop_1"].location,
-                board.black_pieces["bishop_2"].location,
-            ],
-            "black_queen": [board.black_pieces["queen"].location],
-            "black_king": [board.black_pieces["king"].location],
+            "w": [],
+            "wR": [],
+            "wKn": [],
+            "wB": [],
+            "wQ": [],
+            "wK": [],
+            "b": [],
+            "bR": [],
+            "bKn": [],
+            "bB": [],
+            "bQ": [],
+            "bK": [],
         }
+
+        for pieces, abreviation in zip([board.white_pieces.values(), board.black_pieces.values()], ["w", "b"]):
+            for piece in pieces:
+                state[abreviation + piece.notation].append(piece.location)
 
         for locations in state.values():
             if len(locations) > 1:
@@ -86,7 +74,7 @@ class History:
             board.change_piece_num(-1, move["piece_2"].colour)
             self.states_repeat_possible.clear()
 
-        elif type(move["piece_1"]) == pc.Pawn:
+        elif move["piece_1"].notation == "":
             self.states_repeat_possible.clear()
 
         self.moves.append(mo_un.notation(move, board))
@@ -193,105 +181,4 @@ def koth_win_lose_draw(board, history):
         return regular_win_lose_draw(board, history)
 
 
-@dataclass
-class History:
 
-    states: list
-    states_repeat_possible: list
-    moves: list
-
-    def fifty_move(self):
-        return len(self.states_repeat_possible) >= 51
-
-    def threefold(self):
-        for state in self.states_repeat_possible:
-            if self.states_repeat_possible.count(state) >= 3:
-                return True
-
-        return False
-
-    def states_repeat_possible_pull(self):
-        self.moves.reverse()
-        self.states.reverse()
-
-        for i in range(len(self.moves)):
-            self.states_repeat_possible.insert(0, self.states[i])
-            if "x" in self.moves[i] or self.moves[i][0] not in ["R", "K", "B", "Q"]:
-                break
-
-        self.moves.reverse()
-        self.states.reverse()
-
-    def location_sort_criteria(self, location):
-        if location is not None:
-            return location[0] * 8 + location[1]
-        else:
-            return -1
-
-    def state(self, board):
-        state = {
-            "white_rooks": [
-                board.white_pieces["rook_1"].location,
-                board.white_pieces["rook_2"].location,
-            ],
-            "white_knights": [
-                board.white_pieces["knight_1"].location,
-                board.white_pieces["knight_2"].location,
-            ],
-            "white_bishops": [
-                board.white_pieces["bishop_1"].location,
-                board.white_pieces["bishop_2"].location,
-            ],
-            "white_queen": [board.white_pieces["queen"].location],
-            "white_king": [board.white_pieces["king"].location],
-            "black_rooks": [
-                board.black_pieces["rook_1"].location,
-                board.black_pieces["rook_2"].location,
-            ],
-            "black_knights": [
-                board.black_pieces["knight_1"].location,
-                board.black_pieces["knight_2"].location,
-            ],
-            "black_bishops": [
-                board.black_pieces["bishop_1"].location,
-                board.black_pieces["bishop_2"].location,
-            ],
-            "black_queen": [board.black_pieces["queen"].location],
-            "black_king": [board.black_pieces["king"].location],
-        }
-
-        for locations in state.values():
-            if len(locations) > 1:
-                locations.sort(key = self.location_sort_criteria)
-
-        return state
-
-    def initialize_state(self, board):
-        state = self.state(board)
-        self.states.append(state)
-        self.states_repeat_possible.append(state)
-
-    def record(self, move, board):
-        if move["piece_2"] is not None:
-            board.change_piece_num(-1, move["piece_2"].colour)
-            self.states_repeat_possible.clear()
-
-        elif type(move["piece_1"]) == pc.Pawn:
-            self.states_repeat_possible.clear()
-
-        self.moves.append(mo_un.notation(move, board))
-        state = self.state(board)
-        self.states.append(state)
-        self.states_repeat_possible.append(state)
-
-    def unrecord(self, move, board):
-        if move["piece_2"] is not None:
-            board.change_piece_num(1, move["piece_2"].colour)
-
-        self.states_repeat_possible.pop(-1)
-
-        if len(self.states_repeat_possible) == 0:
-            self.states_repeat_possible_pull()
-
-        self.states.pop(-1)
-        self.moves.pop(-1)
