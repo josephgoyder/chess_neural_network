@@ -14,12 +14,10 @@ def theta_init(Theta_1_size, Theta_2_size, Theta_3_size, n):
 def tournament(generation, population):
     
     for i in range(int(population / 2)):
-        i += 1
-        i *= 2
+        i = (i + 1) * 2
         winner, loser = fight.fight(i, i - 1)
         os.remove(f"A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_{loser}.mat")
         os.rename(f"A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_{winner}.mat", f"A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_{i//2}.mat")
-
     
 
 def reproduction(population):
@@ -47,5 +45,3 @@ def main():
         mutation(population, 1000)
 
 main()
-
-
