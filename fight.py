@@ -77,15 +77,15 @@ def fight(dataset1, dataset2):
             print("Draw")
             datasets = [dataset1, dataset2]
             random.shuffle(datasets)
-            return datasets[0], datasets[1]
+            return datasets[0], datasets[1], False
 
         if win_lose_draw == 1000:
             print("White_wins")
-            return dataset1, dataset2
+            return dataset1, dataset2, True
 
         if win_lose_draw == -1000:
             print("Black_wins")
-            return dataset2, dataset1
+            return dataset2, dataset1, True
 
         turn = not turn 
 

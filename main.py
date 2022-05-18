@@ -11,7 +11,16 @@ def theta_init(Theta_1_size, Theta_2_size, Theta_3_size, n):
     n = octave.rand_init_thetas(Theta_1_size, Theta_2_size, Theta_3_size, n)
 
 
-def tournament(generation, population):
+def new_theta_init(Theta_1_size, Theta_2_size, Theta_3_size, n):
+
+    octave.addpath("A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network")
+    
+    while datasets < n:
+        a = octave.rand_init_thetas(Theta_1_size, Theta_2_size, Theta_3_size, 2)
+
+
+
+def tournament(population):
     
     for i in range(int(population / 2)):
         i = (i + 1) * 2
@@ -40,8 +49,9 @@ def main():
 
     for generation in range(generations):
         population = (generation - 1) ** 2
-        tournament(generation, population)
+        tournament(population)
         reproduction(population)
         mutation(population, 1000)
+
 
 main()
