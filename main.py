@@ -43,7 +43,7 @@ def reproduction(population):
 
 
 def mutation(population, mutation_rate):
-    for dataset in range(population):
+    for dataset in range(population//2):
         n = octave.mutation(dataset + 1, mutation_rate)
 
 def main(generations):
@@ -58,4 +58,4 @@ def main(generations):
         mutation(population, 1000)
 
 
-main(4)
+main(6)

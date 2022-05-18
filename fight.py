@@ -75,7 +75,7 @@ def fight(dataset1, dataset2):
         print("Move number ", move_n)
         move_n += 1
         win_lose_draw = engine.win_lose_draw()
-        if win_lose_draw == 0 or is_stalemate(engine, turn):
+        if win_lose_draw == 0 or is_stalemate(engine, turn) or move_n > 200:
             print("Draw")
             datasets = [dataset1, dataset2]
             random.shuffle(datasets)
