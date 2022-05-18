@@ -30,9 +30,9 @@ def reproduction(population):
         n = octave.reproduction(dataset_1, dataset_2)
 
 
-# def mutation(population):
-#     for dataset in range(population):
-#         n = octave.mutation(dataset)
+def mutation(population, mutation_rate):
+    for dataset in range(population):
+        n = octave.mutation(dataset, mutation_rate)
 
 def main():
 
@@ -44,7 +44,7 @@ def main():
         population = (generation - 1) ** 2
         tournament(generation, population)
         reproduction(population)
-        # mutaion(population)
+        mutation(population, 1000)
 
 main()
 

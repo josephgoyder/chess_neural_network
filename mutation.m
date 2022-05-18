@@ -1,15 +1,41 @@
-function [new_theta] = mutation(Theta, mutation_rate)
+function [n] = mutation(dataset, mutation_rate)
 
-new_theta = reshape(Theta, 1, []);
+disp(["Mutating dataset ", num2str(dataset), "......"])
 
-m = length(new_theta);
+load(["A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_" num2str(dataset) ".mat"])
 
-a = randi(mutation_rate * 10, 1, 10);
+new_theta_1 = reshape(Theta1, 1, []);
+new_theta_2 = reshape(Theta2, 1, []);
+new_theta_3 = reshape(Theta3, 1, []);
 
-for i = 1:10,
-  if a(i)<=m,
-    new_theta(a(i)) = 1 - new_theta(a(i));
+m1 = length(new_theta_1);
+m2 = length(new_theta_2);
+m3 = length(new_theta_3);
+
+a1 = randi(mutation_rate * 50, 1, 50);
+a2 = randi(mutation_rate * 50, 1, 50);
+a3 = randi(mutation_rate * 50, 1, 50);
+
+for i = 1:50,
+
+  if a1(i) <= m1,
+    new_theta_1(a1(i)) = 1 - new_theta_1(a1(i));
   endif
+  
+  if a2(i) <= m2,
+    new_theta_2(a2(i)) = 1 - new_theta_2(a2(i));
+  endif
+
+  if a3(i) <= m3,
+    new_theta_3(a3(i)) = 1 - new_theta_3(a3(i));
+  endif
+
 end
 
-new_theta = reshape(new_theta, [size(Theta)]);
+Theta1 = reshape(new_theta_1, [size(Theta1)]);
+Theta2 = reshape(new_theta_2, [size(Theta2)]);
+Theta3 = reshape(new_theta_3, [size(Theta3)]);
+
+save(["A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_" num2str(dataset) ".mat"], "Theta1", "Theta2", "Theta3");
+
+n = 0;
