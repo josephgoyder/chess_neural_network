@@ -69,9 +69,11 @@ def fight(dataset1, dataset2):
 
         turn = not turn
 
+    move_n = 1
     while True:
         game_turn(engine, turn, dataset1, dataset2)
-
+        print("Move number ", move_n)
+        move_n += 1
         win_lose_draw = engine.win_lose_draw()
         if win_lose_draw == 0 or is_stalemate(engine, turn):
             print("Draw")
