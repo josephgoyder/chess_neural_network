@@ -24,9 +24,9 @@ class History:
         self.moves.reverse()
         self.states.reverse()
 
-        for i in range(len(self.moves)):
-            self.states_repeat_possible.insert(0, self.states[i])
-            if "x" in self.moves[i] or self.moves[i][0] not in ["R", "K", "B", "Q"]:
+        for move, state in zip(self.moves, self.states):
+            self.states_repeat_possible.insert(0, state)
+            if "x" in move or move[0] not in ["R", "K", "B", "Q"]:
                 break
 
         self.moves.reverse()
@@ -87,12 +87,11 @@ class History:
             board.change_piece_num(1, move["piece_2"].colour)
 
         self.states_repeat_possible.pop(-1)
+        self.states.pop(-1)
+        self.moves.pop(-1)
 
         if len(self.states_repeat_possible) == 0:
             self.states_repeat_possible_pull()
-
-        self.states.pop(-1)
-        self.moves.pop(-1)
 
 
 def initialize_centralization(board):
