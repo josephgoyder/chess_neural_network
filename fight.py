@@ -24,7 +24,10 @@ def output_layer_to_move(branches, output_layer):
     return branches[int(output_layer) - 1]
 
 
-def is_stalemate(engine, turn):
+def is_stalemate(engine, turn, move_n):
+    if move_n < 4:
+        return False
+
     engine.notebook.lines[0].clear()
 
     move_1 = engine.notebook.journey[-2]
@@ -63,19 +66,13 @@ def fight(dataset1, dataset2):
     engine = eg.engine_setup("regular")
     #$env:path += ";C:\Users\076-jgoyder\AppData\Local\Programs\GNU Octave\Octave-7.1.0\mingw64\bin"
 
-    turn = True
-    for x in range(4):
-        game_turn(engine, turn, dataset1, dataset2)
-
-        turn = not turn
-
     move_n = 1
     while True:
         game_turn(engine, turn, dataset1, dataset2)
         print("Move number ", move_n)
         move_n += 1
         win_lose_draw = engine.win_lose_draw()
-        if win_lose_draw == 0 or is_stalemate(engine, turn) or move_n > 200:
+        if win_lose_draw == 0 or is_stalemate(engine, turn, move_n) or move_n > 200:
             print("Draw")
             datasets = [dataset1, dataset2]
             random.shuffle(datasets)
