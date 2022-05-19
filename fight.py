@@ -76,7 +76,9 @@ def fight(dataset1, dataset2):
         if win_lose_draw == 0 or is_stalemate(engine, turn, move_n) or move_n > 200:
             print("Draw")
             datasets = [dataset1, dataset2]
-            random.shuffle(datasets)
+            if engine.eval() < 0:
+                datasets.reverse()
+                
             return datasets[0], datasets[1], False
 
         if win_lose_draw == 1000:
@@ -88,3 +90,5 @@ def fight(dataset1, dataset2):
             return dataset2, dataset1, True
 
         turn = not turn 
+
+print(fight(18, 17))
