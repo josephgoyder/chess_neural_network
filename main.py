@@ -29,6 +29,9 @@ def tournament(population):
     
     for i in range(int(population / 2)):
         i = (i + 1) * 2
+
+        print(i, " vs ", (i - 1))
+
         winner, loser, win_state = fight.fight(i, i - 1)
         os.remove(f"A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_{loser}.mat")
         os.rename(f"A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_{winner}.mat", f"A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_{i//2}.mat")
@@ -51,11 +54,13 @@ def main(generations):
     population = 2 ** (generations - 1)
     theta_init(np.array([98, 50.]), np.array([51, 50.]), np.array([51, 850.]), population)
 
-    for generation in range(generations):
+    for generation in range(generations - 1):
         population = (generations - generation - 1) ** 2
         tournament(population)
         reproduction(population)
         mutation(population, 1000)
+    
+    tournament(2)
 
 
 main(6)

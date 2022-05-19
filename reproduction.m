@@ -1,6 +1,6 @@
 function [n] = reproduction(dataset_1, dataset_2)
 
-disp(["Reproducing between dataset", num2str(dataset_1)," and dataset " num2str(dataset_2)])
+disp(["Reproducing between dataset ", num2str(dataset_1)," and dataset " num2str(dataset_2)])
 tic
 
 load(["A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_" num2str(dataset_1) ".mat"])

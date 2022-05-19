@@ -66,6 +66,7 @@ def fight(dataset1, dataset2):
     engine = eg.engine_setup("regular")
     #$env:path += ";C:\Users\076-jgoyder\AppData\Local\Programs\GNU Octave\Octave-7.1.0\mingw64\bin"
 
+    turn = True
     move_n = 1
     while True:
         game_turn(engine, turn, dataset1, dataset2)
@@ -87,4 +88,3 @@ def fight(dataset1, dataset2):
             return dataset2, dataset1, True
 
         turn = not turn 
-
