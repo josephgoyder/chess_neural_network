@@ -90,5 +90,3 @@ def fight(dataset1, dataset2):
             return dataset2, dataset1, True
 
         turn = not turn 
-
-print(fight(18, 17))
