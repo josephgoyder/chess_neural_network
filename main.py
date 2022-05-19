@@ -2,6 +2,7 @@ from oct2py import octave
 import fight 
 import numpy as np
 import os
+import time
 
 def theta_init(Theta_1_size, Theta_2_size, Theta_3_size, n):
 
@@ -27,7 +28,7 @@ def new_theta_init(Theta_1_size, Theta_2_size, Theta_3_size, population):
 
 def tournament(population):
     
-    for i in range(int(population / 2)):
+    for i in range((population // 2)):
         i = (i + 1) * 2
 
         print(i, " vs ", (i - 1))
@@ -51,16 +52,22 @@ def mutation(population, mutation_rate):
 
 def main(generations):
 
+    tic = time.perf_counter()
     population = 2 ** (generations - 1)
     theta_init(np.array([98, 50.]), np.array([51, 50.]), np.array([51, 850.]), population)
+    octave.addpath("A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network")
 
-    for generation in range(generations - 1):
-        population = (generations - generation - 1) ** 2
+    for generation in range(generations - 2):
+        population = 2 ** (generations - generation - 1)
+        print("Current population: ", population)
         tournament(population)
         reproduction(population)
         mutation(population, 1000)
     
     tournament(2)
 
+    toc = time.perf_counter()
 
-main(6)
+    print(toc - tic)
+
+main(8)
