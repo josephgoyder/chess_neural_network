@@ -2,6 +2,7 @@ from oct2py import octave
 import fight 
 import numpy as np
 import os
+import random
 import time
 
 def theta_init(Theta_1_size, Theta_2_size, Theta_3_size, n):
@@ -36,7 +37,28 @@ def tournament(population):
         winner, loser, win_state = fight.fight(i, i - 1)
         os.remove(f"A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_{loser}.mat")
         os.rename(f"A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_{winner}.mat", f"A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_{i//2}.mat")
-    
+
+
+def multi_tournament(population, heats):
+
+    fight_sequense = random.shuffle(range(1, population + 1))
+    fight_info = {fight_sequense[i]: 0 for i in range(len(fight_sequense))}
+
+    for heat in heats:
+        for round in range(population):
+            player_1 = fight_sequense[round]
+            
+            if round + 2 ** heat < population:
+                player_2 = fight_sequense[round + 2 ** heat]
+            else:
+                player_2 = fight_sequense[round + 2 ** heat - population]
+
+            winner, loser, win_state = fight.fight(player_1, player_2)
+
+            if win_state:
+                
+
+
 
 def reproduction(population):
     octave.addpath("A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network")
