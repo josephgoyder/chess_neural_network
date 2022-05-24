@@ -18,6 +18,14 @@ def move_regular(board, move):
     ]
     board.squares[move["location_1"][0]][move["location_1"][1]].piece = None
 
+    if type(move["piece_1"]) == pc.Pawn_promotable:
+        move["piece_1"].pieces["pawn"].en_passant_able = move["piece_1"].en_passant_able
+        
+        for piece in move["piece_1"].pieces.values():
+            piece.location = move["piece_1"].location
+            piece.moved = move["piece_1"].moved
+            piece.captured = move["piece_1"].captured
+
 
 def move_en_passant(board, move):
     move["piece_2"].captured = True
@@ -103,6 +111,14 @@ def undo_regular(board, move):
     board.squares[move["location_1"][0]][move["location_1"][1]].piece = move[
         "piece_1"
     ]
+
+    if type(move["piece_1"]) == pc.Pawn_promotable:
+        move["piece_1"].pieces["pawn"].en_passant_able = move["piece_1"].en_passant_able
+        
+        for piece in move["piece_1"].pieces.values():
+            piece.location = move["piece_1"].location
+            piece.moved = move["piece_1"].moved
+            piece.captured = move["piece_1"].captured
 
 
 def undo_en_passant(board, move):
