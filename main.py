@@ -4,6 +4,7 @@ import numpy as np
 import os
 import random
 import time
+import shutil
 
 def theta_init(Theta_1_size, Theta_2_size, Theta_3_size, n):
 
@@ -39,16 +40,17 @@ def tournament(population):
         os.rename(f"A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_{winner}.mat", f"A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_{i//2}.mat")
 
 
-def multi_tournament(population, heats):
+def multi_tournament(population, heats, survivability):
 
-    fight_sequense = random.shuffle(range(1, population + 1))
+    fight_sequense = [i for i in range(1, population + 1)]
+    random.shuffle(fight_sequense)
     fight_info = {fight_sequense[i]: 0 for i in range(len(fight_sequense))}
 
-    for heat in heats:
+    for heat in range(heats):
         for round in range(population):
             player_1 = fight_sequense[round]
             
-            if round + 2 ** heat < population:
+            if (round + 2 ** heat) < population:
                 player_2 = fight_sequense[round + 2 ** heat]
             else:
                 player_2 = fight_sequense[round + 2 ** heat - population]
@@ -56,8 +58,18 @@ def multi_tournament(population, heats):
             winner, loser, win_state = fight.fight(player_1, player_2)
 
             if win_state:
-                
+                fight_info[winner] += 1
+                fight_info[loser] -= 1
+    
+    result_population = 1
+    for player in fight_sequense:
+        if fight_info[player] < survivability:
+            os.remove(f"A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_{fight_sequense[player]}.mat")
+        else:
+            os.rename(f"A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_{fight_sequense[player]}.mat", f"A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_{n}.mat")
+            result_population += 1
 
+    return result_population
 
 
 def reproduction(population):
@@ -68,6 +80,24 @@ def reproduction(population):
         n = octave.reproduction(dataset_1, dataset_2)
 
 
+def multi_reproduction(population, goal_population):
+    
+    source = 'A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data'
+    destination = 'A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\parent_engine_data'
+  
+    allfiles = os.listdir(source)
+  
+    for f in allfiles:
+        shutil.move(source + f, destination + f)
+
+    current_population = 0
+    while current_population < goal_population:
+        parent_1 = random.randint(1, population + 1)
+        parent_2 = random.randint(1, population + 1)
+        n = octave.reproduction(parent_1, parent_2)
+        current_population += 1
+
+
 def mutation(population, mutation_rate):
     for dataset in range(population//2):
         n = octave.mutation(dataset + 1, mutation_rate)
@@ -76,20 +106,22 @@ def main(generations):
 
     tic = time.perf_counter()
     population = 2 ** (generations - 1)
-    theta_init(np.array([98, 50.]), np.array([51, 50.]), np.array([51, 850.]), population)
+    # theta_init(np.array([98, 50.]), np.array([51, 50.]), np.array([51, 850.]), population)
     octave.addpath("A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network")
-
-    for generation in range(generations - 2):
-        population = 2 ** (generations - generation - 1)
-        print("Current population: ", population)
-        tournament(population)
-        reproduction(population)
-        mutation(population, 1000)
     
-    tournament(2)
+    multi_tournament(population, 3, 3)
+
+    # for generation in range(generations - 2):
+    #     population = 2 ** (generations - generation - 1)
+    #     print("Current population: ", population)
+    #     tournament(population)
+    #     reproduction(population)
+    #     mutation(population, 1000)
+    
+    # tournament(2)
 
     toc = time.perf_counter()
 
     print(toc - tic)
 
-main(8)
+main(6)

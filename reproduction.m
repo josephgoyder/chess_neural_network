@@ -3,13 +3,13 @@ function [n] = reproduction(dataset_1, dataset_2)
 disp(["Reproducing between dataset ", num2str(dataset_1)," and dataset " num2str(dataset_2)])
 tic
 
-load(["A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_" num2str(dataset_1) ".mat"])
+load(["A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\parent_engine_data\\neural_net_dataset_" num2str(dataset_1) ".mat"])
 Theta1_1 = reshape(Theta1, 1, []);
 Theta2_1 = reshape(Theta2, 1, []);
 Theta3_1 = reshape(Theta3, 1, []);
 
 
-load(["A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_" num2str(dataset_2) ".mat"])
+load(["A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\parent_engine_data\\neural_net_dataset_" num2str(dataset_2) ".mat"])
 Theta1_2 = reshape(Theta1, 1, []);
 Theta2_2 = reshape(Theta2, 1, []);
 Theta3_2 = reshape(Theta3, 1, []);
