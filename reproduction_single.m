@@ -45,4 +45,6 @@ save(["A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neur
 
 
 toc
+n = 0
 end
+
