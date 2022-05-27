@@ -17,7 +17,7 @@ for i = 1 : n,
 
   a = 1;
 
-  save(["A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network\\engine_data\\neural_net_dataset_" num2str(i+0.1) ".mat"], "Theta1", "Theta2", "Theta3");
+  save(["C:\\Users\\076-jchiao\\chess_neural_network\\engine_data\\neural_net_dataset_" num2str(i+0.1) ".mat"], "Theta1", "Theta2", "Theta3");
   toc
 
 end
