@@ -90,3 +90,12 @@ def fight(dataset1, dataset2):
             return dataset2, dataset1, True
 
         turn = not turn 
+
+        if move_n == 200:
+            return True, dataset1, dataset2, 
+
+for i in range(20):
+    fight_stuff = fight((i + 1) * 2 - 1, (i + 1) * 2)
+
+    if fight_stuff[0]:
+        print(fight_stuff[1], fight_stuff[2])
