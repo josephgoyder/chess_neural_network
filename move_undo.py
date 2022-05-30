@@ -18,15 +18,6 @@ def move_regular(board, move):
     ]
     board.squares[move["location_1"][0]][move["location_1"][1]].piece = None
 
-    for piece in [move["piece_1"], move["piece_2"]]:
-        if type(piece) == pc.Pawn_promotable:
-            piece.pieces["pawn"].en_passant_able = piece.en_passant_able
-            
-            for piece in piece.pieces.values():
-                piece.location = piece.location
-                piece.moved = piece.moved
-                piece.captured = piece.captured
-
 
 def move_en_passant(board, move):
     move["piece_2"].captured = True
@@ -88,7 +79,16 @@ def move(move, board):
         move_en_passant(board, move)
 
     if move["piece_2"] is not None:
-            board.change_piece_num(-1, move["piece_2"].colour)
+        board.change_piece_num(-1, move["piece_2"].colour)
+
+    for piece in [move["piece_1"], move["piece_2"]]:
+        if type(piece) == pc.Pawn_promotable:
+            piece.pieces["pawn"].en_passant_able = piece.en_passant_able
+            
+            for sub_piece in piece.pieces.values():
+                sub_piece.location = piece.location
+                sub_piece.moved = piece.moved
+                sub_piece.captured = piece.captured
 
 
 def undo_regular(board, move):
@@ -112,15 +112,6 @@ def undo_regular(board, move):
     board.squares[move["location_1"][0]][move["location_1"][1]].piece = move[
         "piece_1"
     ]
-
-    for piece in [move["piece_1"], move["piece_2"]]:
-        if type(piece) == pc.Pawn_promotable:
-            piece.pieces["pawn"].en_passant_able = piece.en_passant_able
-            
-            for piece in piece.pieces.values():
-                piece.location = piece.location
-                piece.moved = piece.moved
-                piece.captured = piece.captured
 
 
 def undo_en_passant(board, move):
@@ -170,7 +161,16 @@ def undo(move, board):
         undo_en_passant(board, move)
 
     if move["piece_2"] is not None:
-            board.change_piece_num(1, move["piece_2"].colour)
+        board.change_piece_num(1, move["piece_2"].colour)
+
+    for piece in [move["piece_1"], move["piece_2"]]:
+        if type(piece) == pc.Pawn_promotable:
+            piece.pieces["pawn"].en_passant_able = piece.en_passant_able
+            
+            for sub_piece in piece.pieces.values():
+                sub_piece.location = piece.location
+                sub_piece.moved = piece.moved
+                sub_piece.captured = piece.captured
 
 
 def notation(move, board):
