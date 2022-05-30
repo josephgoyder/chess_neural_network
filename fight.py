@@ -11,13 +11,13 @@ def board_to_X(board, turn):
         for piece in pieces.values():
             X += [piece.location[0] / 8, piece.location[1] / 8, int(piece.captured)]
 
-    X.append(int(turn))
+    X.append(int(turn) * 2 - 1)
 
     return np.array(X)
 
 
 def branches_to_can_p(branches):
-    return np.array([int(type(option) == dict) * 2 - 1 for option in branches])
+    return np.array([int(type(option) == dict) for option in branches])
 
 
 def output_layer_to_move(branches, output_layer):
