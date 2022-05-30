@@ -131,38 +131,39 @@ def main(init_population, elite_size, descend_generations):
     octave.addpath("/home/joseph/Desktop/chess_neural_network")
 
     #Genetic algorithm sequence
-
-    for i in range(3):
-        multi_tournament(3, 3, 6)
-        multi_reproduction(40)
+    multi_tournament(4,3, 10)
+    multi_reproduction(80)
+    # for i in range(3):
+    #     multi_tournament(3, 3, 6)
+    #     multi_reproduction(40)
     
-    for i in range(2):
-        multi_tournament(3, 4, 6)
-        multi_reproduction(init_population)
+    # for i in range(2):
+    #     multi_tournament(3, 4, 6)
+    #     multi_reproduction(init_population)
     
-    for i in range(2):
-        multi_tournament(4, 7, 6)
-        multi_reproduction(elite_size)
+    # for i in range(2):
+    #     multi_tournament(4, 7, 6)
+    #     multi_reproduction(elite_size)
     
-    multi_tournament(4, 7, 6)
+    # multi_tournament(4, 7, 6)
 
-    descend_init_population = 2 ** (descend_generations - 1)
-    multi_reproduction(descend_init_population)
+    # descend_init_population = 2 ** (descend_generations - 1)
+    # multi_reproduction(descend_init_population)
     
-    for generation in range(descend_generations - 2):
-        current_generation = descend_generations - generation
-        if current_generation > 4:
-            multi_tournament(3, 4, 6)
-            multi_reproduction(2 ** (current_generation - 1))
-        elif current_generation <= 4 and current_generation > 2:
-            multi_tournament(2, 2, 4)
-            multi_reproduction(2 ** (current_generation - 1))
+    # for generation in range(descend_generations - 2):
+    #     current_generation = descend_generations - generation
+    #     if current_generation > 4:
+    #         multi_tournament(3, 4, 6)
+    #         multi_reproduction(2 ** (current_generation - 1))
+    #     elif current_generation <= 4 and current_generation > 2:
+    #         multi_tournament(2, 2, 4)
+    #         multi_reproduction(2 ** (current_generation - 1))
 
-        elif current_generation == 2:
-            tournament()
+    #     elif current_generation == 2:
+    #         tournament()
 
-    toc = time.perf_counter()
+    # toc = time.perf_counter()
 
-    print(toc - tic)
+    # print(toc - tic)
 
-main(40, 16, 16)
+main(80, 16, 16)
