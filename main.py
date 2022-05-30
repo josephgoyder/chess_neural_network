@@ -8,27 +8,27 @@ import shutil
 
 def theta_init(Theta_1_size, Theta_2_size, Theta_3_size, n):
 
-    octave.addpath("C:\\Users\\076-jchiao\\chess_neural_network")
+    octave.addpath("/home/joseph/Desktop/chess_neural_network")
     #\\Users\\076-jgoyder\\Chess engine\\chess_neural_network
     #A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network
     n = octave.rand_init_thetas(Theta_1_size, Theta_2_size, Theta_3_size, n)
 
 
 def tournament():
-    population = len(allfiles = os.listdir('C:\\Users\\076-jchiao\\chess_neural_network\\engine_data'))
+    population = len(allfiles = os.listdir('/home/joseph/Desktop/chess_neural_network/engine_data'))
     for i in range((population // 2)):
         i = (i + 1) * 2
 
         print(i, " vs ", (i - 1))
 
         winner, loser, win_state = fight.fight(i, i - 1)
-        os.remove(f"C:\\Users\\076-jchiao\\chess_neural_network\\engine_data\\neural_net_dataset_{loser}.mat")
-        os.rename(f"C:\\Users\\076-jchiao\\chess_neural_network\\engine_data\\neural_net_dataset_{winner}.mat", f"C:\\Users\\076-jchiao\\chess_neural_network\\engine_data\\neural_net_dataset_{i//2}.mat")
+        os.remove(f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{loser}.mat")
+        os.rename(f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{winner}.mat", f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{i//2}.mat")
 
 
 def multi_tournament(heats, survivability, min_player):
 
-    population = len(os.listdir('C:\\Users\\076-jchiao\\chess_neural_network\\engine_data'))
+    population = len(os.listdir('/home/joseph/Desktop/chess_neural_network/engine_data'))
     print("Current population: ", population)
 
     fight_sequense = list(range(1, population + 1))
@@ -76,7 +76,7 @@ def multi_tournament(heats, survivability, min_player):
         n += 1
     
 def reproduction(population):
-    octave.addpath("C:\\Users\\076-jchiao\\chess_neural_network")
+    octave.addpath("/home/joseph/Desktop/chess_neural_network")
     for datasets in range(population // 4):
         dataset_1 = (datasets + 1) * 2
         dataset_2 = dataset_1 - 1
@@ -85,7 +85,7 @@ def reproduction(population):
 
 def multi_reproduction(goal_population):
     
-    folder = 'C:\\Users\\076-jchiao\\chess_neural_network\\parent_engine_data\\'
+    folder = '/home/joseph/Desktop/chess_neural_network/parent_engine_data'
     for filename in os.listdir(folder):
         file_path = os.path.join(folder, filename)
         try:
@@ -96,8 +96,8 @@ def multi_reproduction(goal_population):
         except Exception as e:
             print('Failed to delete %s. Reason: %s' % (file_path, e))
 
-    source = 'C:\\Users\\076-jchiao\\chess_neural_network\\engine_data\\'
-    destination = 'C:\\Users\\076-jchiao\\chess_neural_network\\parent_engine_data\\'
+    source = '/home/joseph/Desktop/chess_neural_network/engine_data'
+    destination = '/home/joseph/Desktop/chess_neural_network/parent_engine_data'
   
     allfiles = os.listdir(source)
     population = len(allfiles)
@@ -128,7 +128,7 @@ def main(init_population, elite_size, descend_generations):
 
     tic = time.perf_counter()
     theta_init(np.array([98, 50.]), np.array([51, 50.]), np.array([51, 850.]), init_population)
-    octave.addpath("C:\\Users\\076-jchiao\\chess_neural_network")
+    octave.addpath("/home/joseph/Desktop/chess_neural_network")
 
     #Genetic algorithm sequence
 
