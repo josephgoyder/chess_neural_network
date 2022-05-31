@@ -85,8 +85,11 @@ def multi_tournament(heats, survivability, min_player):
             if fight_info[player] == (survivability - n):
                 death.remove(player)
                 survivors.append(player)
+                result_population += 1
         n += 1
     
+    print("number of survivors: ", len(survivors))
+
     for player in death:
         os.remove(f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{player}.mat")
     
