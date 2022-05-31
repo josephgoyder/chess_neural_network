@@ -158,27 +158,20 @@ def mutation(population, mutation_rate):
     for dataset in range(population//2):
         n = octave.mutation(dataset + 1, mutation_rate)
 
-def main(init_population, elite_size, descend_generations):
+def main(init_population, descend_generations):
 
     tic = time.perf_counter()
-    theta_init(np.array([98, 50.]), np.array([51, 50.]), np.array([51, 850.]), init_population)
+    theta_init(np.array([98, 250.]), np.array([251, 250.]), np.array([251, 850.]), init_population)
     octave.addpath("/home/joseph/Desktop/chess_neural_network")
 
-    #Genetic algorithm sequence
+    multi_tournament(1, 1, 2)
+    # Genetic algorithm sequence
 
-    for i in range(4):
-        multi_tournament(2, 2, 8)
-        multi_reproduction(50)
-    
-    # for i in range(2):
-    #     multi_tournament(3, 4, 6)
+    # for i in range(4):
+    #     multi_tournament(3, 2, 10)
     #     multi_reproduction(init_population)
     
-    # for i in range(2):
-    #     multi_tournament(4, 7, 6)
-    #     multi_reproduction(elite_size)
-    
-    # multi_tournament(4, 7, 6)
+    # multi_tournament(4, 3, 10)
 
     # descend_init_population = 2 ** (descend_generations - 1)
     # multi_reproduction(descend_init_population)
@@ -195,8 +188,7 @@ def main(init_population, elite_size, descend_generations):
     #     elif current_generation == 2:
     #         tournament()
 
-    # toc = time.perf_counter()
+    toc = time.perf_counter()
+    print(toc - tic)
 
-    # print(toc - tic)
-
-main(40, 16, 16)
+main(100, 16)
