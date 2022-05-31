@@ -189,7 +189,6 @@ def main(init_population, descend_generations):
     #         tournament()
 
     toc = time.perf_counter()
-
-    # print(toc - tic)
+    print(toc - tic)
 
 main(100, 16)
