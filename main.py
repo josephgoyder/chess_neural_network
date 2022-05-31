@@ -70,7 +70,7 @@ def multi_tournament(heats, survivability, min_player):
     while result_population < min_player:
         n = 1
         for player in death:
-            if fight_info[player] == survivability - n:
+            if fight_info[player] == (survivability - n):
                 death.remove(player)
                 survivors.append(player)
         n += 1
@@ -127,15 +127,14 @@ def mutation(population, mutation_rate):
 def main(init_population, elite_size, descend_generations):
 
     tic = time.perf_counter()
-    theta_init(np.array([98, 50.]), np.array([51, 50.]), np.array([51, 850.]), init_population)
+    theta_init(np.array([98, 150.]), np.array([151, 150.]), np.array([151, 850.]), init_population)
     octave.addpath("/home/joseph/Desktop/chess_neural_network")
 
     #Genetic algorithm sequence
-    multi_tournament(4,3, 10)
-    multi_reproduction(80)
-    # for i in range(3):
-    #     multi_tournament(3, 3, 6)
-    #     multi_reproduction(40)
+
+    for i in range(4):
+        multi_tournament(4, 4, 8)
+        multi_reproduction(100)
     
     # for i in range(2):
     #     multi_tournament(3, 4, 6)
@@ -166,4 +165,4 @@ def main(init_population, elite_size, descend_generations):
 
     # print(toc - tic)
 
-main(80, 16, 16)
+main(400, 16, 16)
