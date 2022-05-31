@@ -128,6 +128,17 @@ def multi_reproduction(goal_population):
 
     current_population = 0
 
+    folder = '/home/joseph/Desktop/chess_neural_network/engine_data/'
+    for filename in os.listdir(folder):
+        file_path = os.path.join(folder, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
+        except Exception as e:
+            print('Failed to delete %s. Reason: %s' % (file_path, e))
+    
     while current_population < goal_population:
 
         parent_1 = random.randint(1, population)
@@ -147,14 +158,14 @@ def mutation(population, mutation_rate):
 def main(init_population, elite_size, descend_generations):
 
     tic = time.perf_counter()
-    theta_init(np.array([98, 150.]), np.array([151, 150.]), np.array([151, 850.]), init_population)
+    theta_init(np.array([98, 50.]), np.array([51, 50.]), np.array([51, 850.]), init_population)
     octave.addpath("/home/joseph/Desktop/chess_neural_network")
 
     #Genetic algorithm sequence
 
     for i in range(4):
-        multi_tournament(4, 4, 8)
-        multi_reproduction(100)
+        multi_tournament(2, 2, 8)
+        multi_reproduction(50)
     
     # for i in range(2):
     #     multi_tournament(3, 4, 6)
@@ -185,4 +196,4 @@ def main(init_population, elite_size, descend_generations):
 
     # print(toc - tic)
 
-main(400, 16, 16)
+main(40, 16, 16)
