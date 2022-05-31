@@ -75,6 +75,14 @@ def multi_tournament(heats, survivability, min_player):
                 survivors.append(player)
         n += 1
     
+    for player in death:
+        os.remove(f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{player}.mat")
+    
+    n = 1
+    for player in survivors:
+        os.rename(f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{player}.mat", f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{n}.mat")
+        n += 1
+
 def reproduction(population):
     octave.addpath("/home/joseph/Desktop/chess_neural_network")
     for datasets in range(population // 4):
@@ -85,7 +93,7 @@ def reproduction(population):
 
 def multi_reproduction(goal_population):
     
-    folder = '/home/joseph/Desktop/chess_neural_network/parent_engine_data'
+    folder = '/home/joseph/Desktop/chess_neural_network/parent_engine_data/'
     for filename in os.listdir(folder):
         file_path = os.path.join(folder, filename)
         try:
@@ -96,8 +104,8 @@ def multi_reproduction(goal_population):
         except Exception as e:
             print('Failed to delete %s. Reason: %s' % (file_path, e))
 
-    source = '/home/joseph/Desktop/chess_neural_network/engine_data'
-    destination = '/home/joseph/Desktop/chess_neural_network/parent_engine_data'
+    source = '/home/joseph/Desktop/chess_neural_network/engine_data/'
+    destination = '/home/joseph/Desktop/chess_neural_network/parent_engine_data/'
   
     allfiles = os.listdir(source)
     population = len(allfiles)
