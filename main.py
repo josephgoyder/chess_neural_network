@@ -9,6 +9,18 @@ import shutil
 def theta_init(Theta_1_size, Theta_2_size, Theta_3_size, n):
 
     octave.addpath("/home/joseph/Desktop/chess_neural_network")
+
+    folder = '/home/joseph/Desktop/chess_neural_network/engine_data/'
+    for filename in os.listdir(folder):
+        file_path = os.path.join(folder, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
+        except Exception as e:
+            print('Failed to delete %s. Reason: %s' % (file_path, e))
+
     #\\Users\\076-jgoyder\\Chess engine\\chess_neural_network
     #A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network
     n = octave.rand_init_thetas(Theta_1_size, Theta_2_size, Theta_3_size, n)
