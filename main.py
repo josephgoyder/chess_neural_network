@@ -44,6 +44,7 @@ def multi_tournament(heats, survivability, min_player):
     print("Current population: ", population)
 
     fight_sequense = list(range(1, population + 1))
+    random.shuffle(fight_sequense)
     fight_info = {fight_sequense[i]: 0 for i in range(len(fight_sequense))}
 
     for heat in range(heats):
@@ -88,6 +89,7 @@ def multi_tournament(heats, survivability, min_player):
                 result_population += 1
         n += 1
     
+    print(survivors)
     print("number of survivors: ", len(survivors))
 
     for player in death:
