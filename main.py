@@ -156,17 +156,23 @@ def multi_reproduction(goal_population):
         current_population += 1
 
 
-def mutation(population, mutation_rate):
+def mutation(mutation_rate):
+
+    allfiles = os.listdir('/home/joseph/Desktop/chess_neural_network/engine_data/')
+    population = len(allfiles)
+
     for dataset in range(population//2):
         n = octave.mutation(dataset + 1, mutation_rate)
 
 def main(init_population, descend_generations):
 
     tic = time.perf_counter()
-    theta_init(np.array([98, 250.]), np.array([251, 250.]), np.array([251, 850.]), init_population)
+    # theta_init(np.array([98, 100.]), np.array([101, 100.]), np.array([101, 850.]), init_population)
     octave.addpath("/home/joseph/Desktop/chess_neural_network")
-
-    multi_tournament(1, 1, 2)
+    for i in range(10):
+        multi_tournament(2, 2, 10)
+        multi_reproduction(250)
+        mutation(200)
     # Genetic algorithm sequence
 
     # for i in range(4):
@@ -193,4 +199,4 @@ def main(init_population, descend_generations):
     toc = time.perf_counter()
     print(toc - tic)
 
-main(100, 16)
+main(250, 16)

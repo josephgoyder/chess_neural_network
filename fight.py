@@ -45,17 +45,21 @@ def is_stalemate(engine, turn, move_n):
         return False
 
 
-def game_turn(engine, turn, dataset1, dataset2):
+def nn_move(engine, turn, dataset):
     branches = engine.branches(turn)
 
     tic = tm.perf_counter()
 
-    output_layer, octave_time = octave.feedforward_prop(branches_to_can_p(branches), board_to_X(engine.board, turn), [dataset1, dataset2][int(turn)], nout=2)
+    output_layer, octave_time = octave.feedforward_prop(branches_to_can_p(branches), board_to_X(engine.board, turn), dataset, nout=2)
     print(output_layer)
     toc = tm.perf_counter()
     print(toc - tic - octave_time, octave_time)
 
-    engine.move(output_layer_to_move(branches, output_layer))
+    return output_layer_to_move(branches, output_layer)
+
+
+def game_turn(engine, turn, dataset1, dataset2):
+    engine.move(nn_move(engine, turn, [dataset1, dataset2][int(turn)]))
 
     print("")
     engine.illustrate(True)
