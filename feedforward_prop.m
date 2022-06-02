@@ -21,7 +21,17 @@ a_3 = [ones(size(a_3), 1) a_3];
 
 p = feedforward_prop_config_o_layer(p, Theta3, can_p, a_3);
 
-[z p] = max(p, [], 2);   
+maxes = zeroes(1, 3)
+for i = 1:size(p),
+    for k = 1:3,
+        if p(i) > maxes[k],
+            maxes[k] = i
+            break;
+    endfor
+end
+
+choice = randi(3)
+p = maxes[choice]
 
 
 time = toc;
