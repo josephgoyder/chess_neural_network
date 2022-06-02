@@ -102,5 +102,5 @@ def fight(dataset1, dataset2):
 
         turn = not turn 
 
-for i in range(10):
-    print(fight(i + 1,32))
+
+print(fight(10,32))
