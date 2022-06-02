@@ -37,7 +37,7 @@ end
 size(p)
 
 choice = randi(n);
-p = maxes(choice);
+p = maxes_i(choice);
 
 
 time = toc;
