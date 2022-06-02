@@ -88,6 +88,19 @@ class Engine:
         self.update_centralization(move["piece_1"])
         if move["piece_2"] is not None:
             self.update_centralization(move["piece_2"])
+
+    def check(self):
+        self.engine.recursive_search()
+        if abs(self.engine.lines[0][0][0]) == 1000:
+            return True
+
+        return False
+
+    def move_to_check(self, move):
+        self.move(move)
+        check = self.check()
+        self.undo()
+        return check
         
     def mate_eval(self, turn):
         for move in br.regular_branches(self.board, not turn):

@@ -24,25 +24,32 @@ def output_layer_to_move(branches, output_layer):
     return branches[int(output_layer) - 1]
 
 
+def engine_mate_eval(engine, turn):
+    engine.notebook.lines[0].clear()
+
+    engine.recursive_search(turn, 2)
+    
+
+    if len(engine.notebook.lines[0][0][1]) == 0:
+        return engine.notebook.lines[0][0][0]
+
+
 def is_stalemate(engine, turn, move_n):
     if move_n < 4:
         return False
-
-    engine.notebook.lines[0].clear()
 
     move_1 = engine.notebook.journey[-2]
     move_2 = engine.notebook.journey[-1]
     engine.undo()
     engine.undo()
-    engine.recursive_search(turn, 2)
+    win_lose_draw = engine_mate_eval(engine, turn)
     engine.move(move_1)
     engine.move(move_2)
 
-    if len(engine.notebook.lines[0][0][1]) == 0 and engine.notebook.lines[0][0][0] == 0:
+    if win_lose_draw == 0:
         return True
-
-    else: 
-        return False
+    
+    return False
 
 
 def nn_move(engine, turn, dataset):

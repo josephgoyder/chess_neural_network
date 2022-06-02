@@ -68,8 +68,14 @@ class Game:
             print(row)
 
     def win_lose_draw_update(self):
-        win_lose_draw = self.engine.win_lose_draw()
+        if len(self.engine.history.states) < 5:
+            return
 
+        if self.engine.win_lose_draw() == 0:
+            self.draw = True
+            return
+
+        win_lose_draw = ft.engine_mate_eval(self.engine, self.turn)
         if win_lose_draw is not None:
             if win_lose_draw > 0:
                 self.white_win = True
@@ -90,8 +96,18 @@ class Game:
 
         options = []
         for branch in branches:
-            if type(branch) == dict:
+            if type(branch) == dict and not self.check(branch):
                 options.append(branch)
+
+        if len(options) == 0:
+            if self.check():
+                if self.turn:
+                    self.white_win = True
+                else:
+                    self.black_win = True
+
+            else:
+                self.draw = True
 
         moves = [mo_un.notation(option, self.engine.board) for option in options]
 
@@ -166,13 +182,13 @@ def get_colour(user_colour_choice):
 
 
 def game_start():
-    mode = get_input([
-        "regular", 
-        "chess 960", 
-        "reverse chess", 
-        "king of the hill"
-    ], "Gamemode: ")
-    print("")
-    user_colour_choice = get_input(["white", "black", "random"], "User colour: ")
+    # mode = get_input([
+    #     "regular", 
+    #     "chess 960", 
+    #     "reverse chess", 
+    #     "king of the hill"
+    # ], "Gamemode: ")
+    # print("")
+    # user_colour_choice = get_input(["white", "black", "random"], "User colour: ")
 
-    return Game(eg.engine_setup(mode), get_colour(user_colour_choice))
+    return Game(eg.engine_setup("regular"), get_colour("white"))
