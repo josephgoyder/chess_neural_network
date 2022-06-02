@@ -250,7 +250,7 @@ class Queen(Piece):
 class King(Piece):
 
     moved: bool = False
-    value: int = 2
+    value: int = 100
     notation: str = "K"
 
     def options(self, squares):
