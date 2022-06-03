@@ -21,11 +21,10 @@ a_3 = [ones(size(a_3), 1) a_3];
 
 p = feedforward_prop_config_o_layer(p, Theta3, can_p, a_3);
 
-n = 2;
-maxes_i = zeros(1, n);
-maxes = zeros(1, n);
+maxes_i = zeros(1, 2);
+maxes = zeros(1, 2);
 for i = 1:length(p),
-    for k = 1:n,
+    for k = 1:2,
         if p(i) > maxes(k),
             maxes_i(k) = i;
             maxes(k) = p(i);
@@ -34,11 +33,16 @@ for i = 1:length(p),
     endfor
 end
 
-size(p)
+choice_ratio = maxes(2) / (maxes(1) + maxes(2));
+choice = rand;
 
-choice = randi(n);
-p = maxes_i(choice);
+if choice > choice_ratio,
+    p = maxes_i(1);
+endif
 
+if choice < choice_ratio,
+    p = maxes_i(2);
+endif
 
 time = toc;
 end
