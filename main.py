@@ -64,11 +64,27 @@ def multi_tournament(heats, survivability, min_player):
                 fight_info[winner] += 1
                 fight_info[loser] -= 1
             else:
-                fight_info[winner] += 0.5
-                fight_info[loser] -= 0.5
+                fight_info[winner] += 0.1
+                fight_info[loser] -= 0.1
     
     print(fight_info)
 
+    strongest = max(fight_info, key = fight_info.get)
+    folder = '/home/joseph/Desktop/chess_neural_network/elite_data/'
+    for filename in os.listdir(folder):
+        file_path = os.path.join(folder, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
+        except Exception as e:
+            print('Failed to delete %s. Reason: %s' % (file_path, e))
+
+    n = 1
+    for i in strongest:
+        shutil.copyfile(f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{i}.mat', f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{n}.mat')
+        n += 1
     survivors = []
     death = []
 
@@ -164,15 +180,25 @@ def mutation(mutation_rate):
     for dataset in range(population//2):
         n = octave.mutation(dataset + 1, mutation_rate)
 
+def generation_sequence(heats, survivability, min_player, goal_population, mutation_rate):
+    multi_tournament(heats, survivability, min_player)
+    multi_reproduction(goal_population)
+    mutation(mutation_rate)
+    source = '/home/joseph/Desktop/chess_neural_network/elite_data/'
+    destination = '/home/joseph/Desktop/chess_neural_network/engine_data/'
+  
+    allfiles = os.listdir(source)
+  
+    for f in allfiles:
+        shutil.move(source + f, destination + f)
+
 def main(init_population, descend_generations):
 
     tic = time.perf_counter()
-    # theta_init(np.array([98, 100.]), np.array([101, 100.]), np.array([101, 850.]), init_population)
+    theta_init(np.array([98, 250.]), np.array([251, 250.]), np.array([251, 850.]), init_population)
     octave.addpath("/home/joseph/Desktop/chess_neural_network")
-    for i in range(10):
-        multi_tournament(2, 2, 10)
-        multi_reproduction(250)
-        mutation(200)
+    for i in range(1000):
+        generation_sequence(2, 3, 25, 2000, 200)
     # Genetic algorithm sequence
 
     # for i in range(4):
@@ -199,4 +225,4 @@ def main(init_population, descend_generations):
     toc = time.perf_counter()
     print(toc - tic)
 
-main(250, 16)
+main(2000, 16)

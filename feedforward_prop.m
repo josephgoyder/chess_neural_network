@@ -7,7 +7,7 @@ load(["/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_
 
 m = size(X, 1);
 
-p = zeros(size(X, 1), 1);
+p = zeros(1, 850);
 
 X = [ones(m, 1) X];
 
@@ -21,18 +21,28 @@ a_3 = [ones(size(a_3), 1) a_3];
 
 p = feedforward_prop_config_o_layer(p, Theta3, can_p, a_3);
 
-maxes = zeroes(1, 3)
-for i = 1:size(p),
-    for k = 1:3,
-        if p(i) > maxes[k],
-            maxes[k] = i
+maxes_i = zeros(1, 2);
+maxes = zeros(1, 2);
+for i = 1:length(p),
+    for k = 1:2,
+        if p(i) > maxes(k),
+            maxes_i(k) = i;
+            maxes(k) = p(i);
             break;
+        endif
     endfor
 end
 
-choice = randi(3)
-p = maxes[choice]
+choice_ratio = maxes(2) / (maxes(1) + maxes(2));
+choice = rand;
 
+if choice > choice_ratio,
+    p = maxes_i(1);
+endif
+
+if choice < choice_ratio,
+    p = maxes_i(2);
+endif
 
 time = toc;
 end

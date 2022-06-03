@@ -102,4 +102,14 @@ def fight(dataset1, dataset2):
 
         turn = not turn 
 
+win = 0
+lost = 0
+for j in range(10):
+    for i in range(10):
+        winner, loser, stats = fight(32, j + 1)
+        if winner == 32:
+            win += 1
+        if loser == 32:
+            lost += 1
 
+print(win, lost)
