@@ -6,6 +6,26 @@ import comb_pieces as pc
 import comb_eval as ev
 
 
+def abreviation(piece):
+    if type(piece) == pc.Pawn:
+        abreviation = "P"
+    elif type(piece) == pc.Knight:
+        abreviation = "N"
+    elif type(piece) == pc.Bishop:
+        abreviation = "B"
+    elif type(piece) == pc.Rook:
+        abreviation = "R"
+    elif type(piece) == pc.Queen:
+        abreviation = "Q"
+    else:
+        abreviation = "K"
+
+    if piece.colour:
+        return abreviation
+    else:
+        return abreviation.lower()
+
+
 @dataclass
 class Notebook:
 
@@ -171,6 +191,22 @@ class Engine:
                 )
 
             print(eval, notation)
+
+    def illustrate(self, colour):
+        if colour:
+            find_piece = lambda x, y: self.board.squares[y][7 - x].piece
+        else:
+            find_piece = lambda x, y: self.board.squares[7 - y][x].piece
+
+        for x in range(8):
+            row = ""
+            for y in range(8):
+                if find_piece(x, y) is not None:
+                    row += abreviation(find_piece(x, y)) + " "
+                else:
+                    row += "- "
+
+            print(row)
 
     def default_setup(self):
         ev.initialize_centralization(self.board)

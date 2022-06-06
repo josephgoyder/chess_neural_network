@@ -1,8 +1,10 @@
 import engine as eg
-import numpy as np
-from oct2py import octave
+import comb_engine as cb_eg
+# import numpy as np
+# from oct2py import octave
 import random
 import time as tm
+import move_undo as mo_un
 
 
 def board_to_X(board, turn):
@@ -74,22 +76,30 @@ def game_turn_nn(engine, turn, dataset1, dataset2):
 
 
 def game_turn_comb_engine_train_nn(engine, turn, dataset1, dataset2):
-    engine.notebook.lines[0].clear()
-    engine.recursive_search(turn, 3)
-    engine.move(engine.notebook.lines[0][0][1][0])
+    engine.notebook.top_lines.clear()
+    engine.search(turn, 3, 1, engine.branches(turn))
+    engine.move(engine.notebook.top_lines[0][1][0])
 
-    X = board_to_X(engine.board, turn)
-    y = [branch == engine.notebook.lines[0][0][1][0] for branch in engine.branches(turn)]
+    print(mo_un.notation(engine.notebook.top_lines[0][1][0], engine.board))
+
+    # X = board_to_X(engine.board, turn)
+    # y = [branch == engine.notebook.top_lines_search[0][1][0] for branch in engine.branches(turn)]
 
     print("")
     engine.illustrate(True)
     print("")
 
 
-def fight(dataset1, dataset2, game_turn = game_turn_nn):
-    engine = eg.engine_setup("regular")
-    #$env:path += ";C:\Users\076-jgoyder\AppData\Local\Programs\GNU Octave\Octave-7.1.0\mingw64\bin"
+def fight(dataset1, dataset2, mode = "GA"):
+    if mode == "GA":
+        engine = eg.engine_setup("regular")
+        game_turn = game_turn_nn
 
+    elif mode == "Training":
+        engine = cb_eg.engine_setup("regular")
+        game_turn = game_turn_comb_engine_train_nn
+
+    #$env:path += ";C:\Users\076-jgoyder\AppData\Local\Programs\GNU Octave\Octave-7.1.0\mingw64\bin"
     turn = True
     move_n = 1
     while True:
