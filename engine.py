@@ -128,7 +128,7 @@ class Engine:
                 line[1].pop(-1)
 
 
-    def recursive_search(self, turn, depth, level = 1):
+    def recursive_search(self, turn, depth, level = 0):
         win_lose_draw = self.win_lose_draw()
         if win_lose_draw is not None:
             self.notebook.lines[level - 1].append(
@@ -147,9 +147,10 @@ class Engine:
                     self.recursive_search(not turn, depth, level = level + 1)
                     self.undo()
 
-            self.notebook.collect_max_min(level, turn)
-            self.notebook.lines[level - 1][-1][1].insert(0, self.notebook.journey[-1])
-            self.mate_check(turn, self.notebook.lines[level - 1][-1])
+            if level != 0:
+                self.notebook.collect_max_min(level, turn)
+                self.notebook.lines[level - 1][-1][1].insert(0, self.notebook.journey[-1])
+                self.mate_check(turn, self.notebook.lines[level - 1][-1])
 
 
     def search(self, turn, depth, top_lines_num, considered_moves):

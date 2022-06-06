@@ -65,7 +65,7 @@ def nn_move(engine, turn, dataset):
     return output_layer_to_move(branches, output_layer)
 
 
-def game_turn(engine, turn, dataset1, dataset2):
+def game_turn_nn(engine, turn, dataset1, dataset2):
     engine.move(nn_move(engine, turn, [dataset1, dataset2][int(turn)]))
 
     print("")
@@ -73,7 +73,20 @@ def game_turn(engine, turn, dataset1, dataset2):
     print("")
 
 
-def fight(dataset1, dataset2):
+def game_turn_comb_engine_train_nn(engine, turn, dataset1, dataset2):
+    engine.notebook.lines[0].clear()
+    engine.recursive_search(turn, 3)
+    engine.move(engine.notebook.lines[0][0][1][0])
+
+    X = board_to_X(engine.board, turn)
+    y = [branch == engine.notebook.lines[0][0][1][0] for branch in engine.branches(turn)]
+
+    print("")
+    engine.illustrate(True)
+    print("")
+
+
+def fight(dataset1, dataset2, game_turn = game_turn_nn):
     engine = eg.engine_setup("regular")
     #$env:path += ";C:\Users\076-jgoyder\AppData\Local\Programs\GNU Octave\Octave-7.1.0\mingw64\bin"
 
@@ -102,14 +115,16 @@ def fight(dataset1, dataset2):
 
         turn = not turn 
 
-win = 0
-lost = 0
-for j in range(10):
-    for i in range(10):
-        winner, loser, stats = fight(32, j + 1)
-        if winner == 32:
-            win += 1
-        if loser == 32:
-            lost += 1
+# win = 0
+# lost = 0
+# for j in range(10):
+#     for i in range(10):
+#         winner, loser, stats = fight(32, j + 1)
+#         if winner == 32:
+#             win += 1
+#         if loser == 32:
+#             lost += 1
 
-print(win, lost)
+# print(win, lost)
+
+# fight(1, 2)
