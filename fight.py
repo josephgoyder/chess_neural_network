@@ -1,7 +1,7 @@
 import engine as eg
 import comb_engine as cb_eg
-# import numpy as np
-# from oct2py import octave
+import numpy as np
+from oct2py import octave
 import random
 import time as tm
 import move_undo as mo_un
@@ -82,8 +82,10 @@ def game_turn_comb_engine_train_nn(engine, turn, dataset1, dataset2):
 
     print(mo_un.notation(engine.notebook.top_lines[0][1][0], engine.board))
 
-    # X = board_to_X(engine.board, turn)
-    # y = [branch == engine.notebook.top_lines_search[0][1][0] for branch in engine.branches(turn)]
+    X = board_to_X(engine.board, turn)
+    y = np.array([branch == engine.notebook.top_lines_search[0][1][0] for branch in engine.branches(turn)])
+
+    J = octave.nnCostFunction(1, X, y, 1)
 
     print("")
     engine.illustrate(True)
