@@ -1,4 +1,4 @@
-function [J, grad] = nnCostFunction(Theta, X, y, lambda)
+function [J] = nnCostFunction(Theta, X, y, lambda)
 
   load(["/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_" num2str(Theta) ".mat"])
   
@@ -27,17 +27,13 @@ h_x = feedforward_prop_config_o_layer(p, Theta3, can_p, a_3);
 
 J = (1/m) * sum(sum((-y.*log(h_x))-((1-y).*log(1-h_x))));
 
-
-  %%%%%% WORKING: Backpropogation (Vectorized Implementation) %%%%%%%
-  % Here X is including 1 column at begining
-  A1 = X; % 5000 x 401
+  A1 = X;
+  Z2 = A1 * Theta1; 
+  A2 = sigmoid(Z2); 
+  A2 = [ones(size(A2,1),1), A2]; 
   
-  Z2 = A1 * Theta1;  % m x hidden_layer_size == 5000 x 25
-  A2 = sigmoid(Z2); % m x hidden_layer_size == 5000 x 25
-  A2 = [ones(size(A2,1),1), A2]; % Adding 1 as first column in z = (Adding bias unit) % m x (hidden_layer_size + 1) == 5000 x 26
-  
-  Z3 = A2 * Theta2;  % m x num_labels == 5000 x 10
-  A3 = sigmoid(Z3); % m x num_labels == 5000 x 10
+  Z3 = A2 * Theta2;  
+  A3 = sigmoid(Z3); 
   A3 = [ones(size(A3,1),1), A3];
   
   Z4 = A3 * Theta3;
@@ -45,34 +41,28 @@ J = (1/m) * sum(sum((-y.*log(h_x))-((1-y).*log(1-h_x))));
 
   DELTA4 = A4 - y;
   DELTA3 = (DELTA4 * Theta3') .* [ones(size(Z3,1),1) sigmoidGradient(Z3)];
-  DELTA3 = DELTA3(:,2:end); % 5000 x 25 %Removing delta2 for bias node
-  DELTA2 = (DELTA3 * Theta2') .* [ones(size(Z2,1),1) sigmoidGradient(Z2)]; % 5000 x 26
-  DELTA2 = DELTA2(:,2:end); % 5000 x 25 %Removing delta2 for bias node
+  DELTA3 = DELTA3(:,2:end); 
+  DELTA2 = (DELTA3 * Theta2') .* [ones(size(Z2,1),1) sigmoidGradient(Z2)]; 
+  DELTA2 = DELTA2(:,2:end); 
   
-  Theta1_grad = (1/m) * (DELTA2' * A1); % 25 x 401
-  Theta2_grad = (1/m) * (DELTA3' * A2); % 10 x 26  
+  Theta1_grad = (1/m) * (DELTA2' * A1); 
+  Theta2_grad = (1/m) * (DELTA3' * A2); 
   Theta3_grad = (1/m) * (DELTA4' * A3);
   
-  %%%%%%%%%%%% Part 3: Adding Regularisation term in J and Theta_grad %%%%%%%%%%%%%
   reg_term = (lambda/(2*m)) * (sum(sum(Theta1'(:,2:end).^2)) + sum(sum(Theta2'(:,2:end).^2)) + sum(sum(Theta3'(:,2:end).^2)));
   
-  %Costfunction With regularization
   J = J + reg_term;
   
-  %Calculating gradients for the regularization
-  Theta1_grad_reg_term = (lambda/m) * [zeros(size(Theta1', 1), 1) Theta1'(:,2:end)]; % 25 x 401
-  Theta2_grad_reg_term = (lambda/m) * [zeros(size(Theta2', 1), 1) Theta2'(:,2:end)]; % 10 x 26
-  Theta3_grad_reg_term = (lambda/m) * [zeros(size(Theta3', 1), 1) Theta3'(:,2:end)]; % 10 x 26
+  Theta1_grad_reg_term = (lambda/m) * [zeros(size(Theta1', 1), 1) Theta1'(:,2:end)]; 
+  Theta2_grad_reg_term = (lambda/m) * [zeros(size(Theta2', 1), 1) Theta2'(:,2:end)];
+  Theta3_grad_reg_term = (lambda/m) * [zeros(size(Theta3', 1), 1) Theta3'(:,2:end)];
 
   
-  %Adding regularization term to earlier calculated Theta_grad
+
   Theta1_grad = Theta1_grad + Theta1_grad_reg_term;
   Theta2_grad = Theta2_grad + Theta2_grad_reg_term;
   Theta3_grad = Theta3_grad + Theta3_grad_reg_term;
     
-  % =========================================================================
-  
-  % Unroll gradients
   grad = [Theta1_grad(:) ; Theta2_grad(:) ; Theta3_grad(:)];
 
   initial_nn_params = [Theta1(:) ; Theta2(:) ; Theta3(:)]
