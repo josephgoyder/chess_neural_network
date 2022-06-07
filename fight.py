@@ -67,51 +67,52 @@ def nn_move(engine, turn, dataset):
     return output_layer_to_move(branches, output_layer)
 
 
-def game_turn_nn(engine, turn, dataset1, dataset2):
-    engine.move(nn_move(engine, turn, [dataset1, dataset2][int(turn)]))
+def game_turn_nn(engine_nn, engine_cb, turn, dataset1, dataset2):
+    engine_nn.move(nn_move(engine_nn, turn, [dataset1, dataset2][int(turn)]))
 
     print("")
-    engine.illustrate(True)
+    engine_nn.illustrate(True)
     print("")
 
 
-def game_turn_comb_engine_train_nn(engine, turn, dataset1, dataset2):
-    engine.notebook.top_lines.clear()
-    engine.search(turn, 3, 1, engine.branches(turn))
-    engine.move(engine.notebook.top_lines[0][1][0])
+def game_turn_comb_engine_train_nn(engine_nn, engine_cb, turn, dataset1, dataset2):
+    engine_cb.notebook.top_lines.clear()
+    engine_cb.search(turn, 3, 1, engine_cb.branches(turn))
+    engine_cb.move(engine_cb.notebook.top_lines[0][1][0])
 
-    print(mo_un.notation(engine.notebook.top_lines[0][1][0], engine.board))
+    print(mo_un.notation(engine_cb.notebook.top_lines[0][1][0], engine_cb.board))
 
     print("")
-    engine.illustrate(True)
+    engine_cb.illustrate(True)
     print("")
 
-    X = board_to_X(engine.board, turn)
-    y = np.array([branch == engine.notebook.top_lines[0][1][0] for branch in engine.branches(turn)])
-    # J = octave.nnCostFunction(1, X, y, 1)
+    X = board_to_X(engine_cb.board, turn)
+    y = np.array([branch == engine_cb.notebook.top_lines[0][1][0] for branch in engine_nn.branches(turn)])
+    J = octave.back_prop(1, X, y, 1, branches_to_can_p(engine_nn.branches(turn)))
 
 
 def fight(dataset1, dataset2, mode = "GA"):
+    engine_nn = eg.engine_setup("regular")
+    engine_cb = cb_eg.engine_setup("regular")
+
     if mode == "GA":
-        engine = eg.engine_setup("regular")
         game_turn = game_turn_nn
 
     elif mode == "Training":
-        engine = cb_eg.engine_setup("regular")
         game_turn = game_turn_comb_engine_train_nn
 
     #$env:path += ";C:\Users\076-jgoyder\AppData\Local\Programs\GNU Octave\Octave-7.1.0\mingw64\bin"
     turn = True
     move_n = 1
     while True:
-        game_turn(engine, turn, dataset1, dataset2)
+        game_turn(engine_nn, engine_cb, turn, dataset1, dataset2)
         print("Move number ", move_n)
         move_n += 1
-        win_lose_draw = engine.win_lose_draw()
-        if win_lose_draw == 0 or is_stalemate(engine, turn, move_n) or move_n > 200:
+        win_lose_draw = engine_nn.win_lose_draw()
+        if win_lose_draw == 0 or is_stalemate(engine_nn, turn, move_n) or move_n > 200:
             print("Draw")
             datasets = [dataset1, dataset2]
-            if engine.eval() < 0:
+            if engine_nn.eval() < 0:
                 datasets.reverse()
                 
             return datasets[0], datasets[1], False
