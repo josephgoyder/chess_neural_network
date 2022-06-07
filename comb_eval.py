@@ -114,7 +114,7 @@ class History:
 def initialize_centralization(board):
     for pieces in [board.white_pieces.values(), board.black_pieces.values()]:
         for piece in pieces:
-            if piece.location is not None:
+            if not piece.captured:
                 piece.centralization = pc.centralization_eval(piece.location)
 
 
@@ -122,12 +122,12 @@ def regular_eval(material_value, centralization_value, board):
     material = 0
     centralization = 0
     for piece in board.white_pieces.values():
-        if piece.location is not None:
+        if not piece.captured:
             material += piece.value 
             centralization += piece.centralization
 
     for piece in board.black_pieces.values():
-        if piece.location is not None:
+        if not piece.captured:
             material -=  piece.value 
             centralization -= piece.centralization
 
@@ -150,7 +150,7 @@ def insufficient_material(board):
             return False
 
         for piece in board.pieces(colour).values():
-            if piece.location is not None:
+            if not piece.captured:
                 if (
                     type(piece) == pc.Pawn
                     or type(piece) == pc.Rook
@@ -162,9 +162,9 @@ def insufficient_material(board):
 
 
 def regular_win_lose_draw(board, history):
-    if board.white_pieces["king"].location is None:
+    if board.white_pieces["king"].captured:
         return -1000
-    elif board.black_pieces["king"].location is None:
+    elif board.black_pieces["king"].captured:
         return 1000
 
     if (
@@ -177,7 +177,7 @@ def regular_win_lose_draw(board, history):
 
 def koth_win_lose_draw(board, history):
     if (
-        board.white_pieces["king"].location is not None
+        not board.white_pieces["king"].captured
         and board.white_pieces["king"].location[0] >= 3
         and board.white_pieces["king"].location[0] <= 4
         and board.white_pieces["king"].location[1] >= 3
@@ -185,7 +185,7 @@ def koth_win_lose_draw(board, history):
     ):
         return 1001
     elif (
-        board.black_pieces["king"].location is not None
+        not board.black_pieces["king"].captured
         and board.black_pieces["king"].location[0] >= 3
         and board.black_pieces["king"].location[0] <= 4
         and board.black_pieces["king"].location[1] >= 3

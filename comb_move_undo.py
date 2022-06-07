@@ -11,7 +11,7 @@ def move_regular(board, move):
 
     move["piece_1"].location = move["location_2"]
     if move["piece_2"] is not None:
-        move["piece_2"].location = None
+        move["piece_2"].captured = True
 
     board.squares[move["location_2"][0]][move["location_2"][1]].piece = move[
         "piece_1"
@@ -20,7 +20,7 @@ def move_regular(board, move):
 
 
 def move_en_passant(board, move):
-    move["piece_2"].location = None
+    move["piece_2"].captured = True
     board.squares[move["location_2"][0]][move["location_2"][1]].piece = None
 
     move_regular(
@@ -87,6 +87,7 @@ def undo_regular(board, move):
         board.squares[move["location_2"][0]][move["location_2"][1]].piece = move[
             "piece_2"
         ]
+        move["piece_2"].captured = False
 
     else:
         board.squares[move["location_2"][0]][move["location_2"][1]].piece = None
