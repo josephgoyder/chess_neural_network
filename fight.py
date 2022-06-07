@@ -78,7 +78,7 @@ def game_turn_nn(engine_nn, engine_cb, turn, dataset1, dataset2):
 def game_turn_comb_engine_train_nn(engine_nn, engine_cb, turn, dataset1, dataset2):
     engine_cb.notebook.top_lines.clear()
     engine_cb.search(turn, 3, 1, engine_cb.branches(turn))
-    engine_cb.move(engine_cb.notebook.top_lines[0][1][0])
+    engine_nn.move(engine_cb.notebook.top_lines[0][1][0])
 
     print(mo_un.notation(engine_cb.notebook.top_lines[0][1][0], engine_cb.board))
 
@@ -88,12 +88,13 @@ def game_turn_comb_engine_train_nn(engine_nn, engine_cb, turn, dataset1, dataset
 
     X = board_to_X(engine_cb.board, turn)
     y = np.array([branch == engine_cb.notebook.top_lines[0][1][0] for branch in engine_nn.branches(turn)])
-    J = octave.back_prop(1, X, y, 1, branches_to_can_p(engine_nn.branches(turn)))
+    # J = octave.back_prop(1, X, y, 1, branches_to_can_p(engine_nn.branches(turn)))
 
 
 def fight(dataset1, dataset2, mode = "GA"):
     engine_nn = eg.engine_setup("regular")
     engine_cb = cb_eg.engine_setup("regular")
+    engine_cb.board = engine_nn.board
 
     if mode == "GA":
         game_turn = game_turn_nn
@@ -126,17 +127,3 @@ def fight(dataset1, dataset2, mode = "GA"):
             return dataset2, dataset1, True
 
         turn = not turn 
-
-# win = 0
-# lost = 0
-# for j in range(10):
-#     for i in range(10):
-#         winner, loser, stats = fight(32, j + 1)
-#         if winner == 32:
-#             win += 1
-#         if loser == 32:
-#             lost += 1
-
-# print(win, lost)
-
-# fight(1, 2)
