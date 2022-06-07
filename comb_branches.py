@@ -2,9 +2,9 @@ import comb_pieces as pc
 
 
 def can_castle(squares, king, rook):
-    if king.moved or king.location is None:
+    if king.moved or king.captured:
         return False
-    if rook.moved or rook.location is None:
+    if rook.moved or rook.captured:
         return False
 
     castling_range = [king.location[0], rook.location[0]]
@@ -129,7 +129,7 @@ def reverse_branches(board, colour):
     captures = False
 
     for piece in board.pieces(colour).values():
-        if piece.location is not None:
+        if not piece.captured:
             for option in piece.options(board.squares):
 
                 is_capture = (
@@ -166,7 +166,7 @@ def regular_branches(board, colour):
     branches = []
 
     for piece in board.pieces(colour).values():
-        if piece.location is not None:
+        if not piece.captured:
             for option in piece.options(board.squares):
                 add_to_branches(board, branches, piece, option)
 

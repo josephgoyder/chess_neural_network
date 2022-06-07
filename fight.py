@@ -82,14 +82,13 @@ def game_turn_comb_engine_train_nn(engine, turn, dataset1, dataset2):
 
     print(mo_un.notation(engine.notebook.top_lines[0][1][0], engine.board))
 
-    X = board_to_X(engine.board, turn)
-    y = np.array([branch == engine.notebook.top_lines_search[0][1][0] for branch in engine.branches(turn)])
-
-    J = octave.nnCostFunction(1, X, y, 1)
-
     print("")
     engine.illustrate(True)
     print("")
+
+    X = board_to_X(engine.board, turn)
+    y = np.array([branch == engine.notebook.top_lines[0][1][0] for branch in engine.branches(turn)])
+    # J = octave.nnCostFunction(1, X, y, 1)
 
 
 def fight(dataset1, dataset2, mode = "GA"):

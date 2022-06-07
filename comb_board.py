@@ -132,7 +132,7 @@ class Board:
 
         for colour in [True, False]:
             for piece in self.pieces(colour).values():
-                if piece.location is not None:
+                if not piece.captured:
                     self.squares[piece.location[0]][piece.location[1]].piece = piece
                     self.change_piece_num(1, colour)
 

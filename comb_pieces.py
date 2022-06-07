@@ -5,6 +5,7 @@ class Piece:
 
     location: list
     colour: bool
+    captured: bool = False
     centralization: int = 0
 
     def on_board(self, location_x, location_y):
