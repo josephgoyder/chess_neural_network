@@ -5,6 +5,8 @@ from oct2py import octave
 import random
 import time as tm
 import move_undo as mo_un
+import pieces as pc
+import comb_pieces as cb_pc
 
 
 def board_to_X(board, turn):
@@ -75,9 +77,20 @@ def game_turn_nn(engine_nn, engine_cb, turn, dataset1, dataset2):
     print("")
 
 
+def move_cb_to_nn(move_cb):
+    move_nn = dict(move_cb)
+    for piece in ["piece_1", "piece_2"]:
+        if type(move_nn[piece]) == pc.Pawn_promotable:
+            move_nn[piece] = cb_pc.Pawn(piece.location, piece.colour, piece)
+
+            
 def game_turn_comb_engine_train_nn(engine_nn, engine_cb, turn, dataset1, dataset2):
     engine_cb.notebook.top_lines.clear()
     engine_cb.search(turn, 3, 1, engine_cb.branches(turn))
+    move_cb = engine_cb.notebook.top_lines[0][1][0]
+    move_nn = dict(move_cb)
+
+    move_nn["piece_1"]
     engine_nn.move(engine_cb.notebook.top_lines[0][1][0])
 
     print(mo_un.notation(engine_cb.notebook.top_lines[0][1][0], engine_cb.board))
@@ -94,7 +107,6 @@ def game_turn_comb_engine_train_nn(engine_nn, engine_cb, turn, dataset1, dataset
 def fight(dataset1, dataset2, mode = "GA"):
     engine_nn = eg.engine_setup("regular")
     engine_cb = cb_eg.engine_setup("regular")
-    engine_cb.board = engine_nn.board
 
     if mode == "GA":
         game_turn = game_turn_nn
