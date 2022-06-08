@@ -5,6 +5,7 @@ from oct2py import octave
 import random
 import time as tm
 import move_undo as mo_un
+import comb_move_undo as cb_mo_un
 import pieces as pc
 import comb_pieces as cb_pc
 
@@ -77,30 +78,31 @@ def game_turn_nn(engine_nn, engine_cb, turn, dataset1, dataset2):
     print("")
 
 
-def move_cb_to_nn(move_cb):
-    move_nn = dict(move_cb)
-    for piece in ["piece_1", "piece_2"]:
-        if type(move_nn[piece]) == pc.Pawn_promotable:
-            move_nn[piece] = cb_pc.Pawn(piece.location, piece.colour, piece)
+def move_cb_to_nn(move_cb, nn_branches, engine_nn, engine_cb):
+    for move_nn in nn_branches:
+        if type(move_nn) == dict and cb_mo_un.notation(move_cb, engine_cb.board) == mo_un.notation(move_nn, engine_nn.board):
+            return move_nn
 
             
 def game_turn_comb_engine_train_nn(engine_nn, engine_cb, turn, dataset1, dataset2):
     engine_cb.notebook.top_lines.clear()
     engine_cb.search(turn, 3, 1, engine_cb.branches(turn))
+    nn_branches = engine_nn.branches(turn)
+
     move_cb = engine_cb.notebook.top_lines[0][1][0]
-    move_nn = dict(move_cb)
+    move_nn = move_cb_to_nn(move_cb, nn_branches, engine_nn, engine_cb)
 
-    move_nn["piece_1"]
-    engine_nn.move(engine_cb.notebook.top_lines[0][1][0])
+    engine_nn.move(move_nn)
+    engine_cb.move(move_cb)
 
-    print(mo_un.notation(engine_cb.notebook.top_lines[0][1][0], engine_cb.board))
+    print(cb_mo_un.notation(move_cb, engine_cb.board))
 
     print("")
     engine_cb.illustrate(True)
     print("")
 
     X = board_to_X(engine_cb.board, turn)
-    y = np.array([branch == engine_cb.notebook.top_lines[0][1][0] for branch in engine_nn.branches(turn)])
+    y = np.array([branch == move_nn for branch in nn_branches])
     # J = octave.back_prop(1, X, y, 1, branches_to_can_p(engine_nn.branches(turn)))
 
 
