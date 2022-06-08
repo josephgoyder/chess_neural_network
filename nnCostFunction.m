@@ -1,4 +1,4 @@
-function [J, grad] = nnCostFunction(Theta, X, y, lambda, can_p)
+function [J, grad] = nnCostFunction(nn_params, Theta, X, y, lambda, can_p)
 
   load(["/home/joseph/Desktop/chess_neural_network/backprop_data/neural_net_dataset_" num2str(Theta) ".mat"])
   

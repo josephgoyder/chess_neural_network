@@ -8,7 +8,7 @@ function[J] = back_prop(Theta, X, y, lambda, can_p)
   Theta3 = Theta3';
   nn_params = [Theta1(:); Theta2(:); Theta3(:)];
 
-  costfunction = @(p)nnCostFunction(p, X, y, lambda, can_p);
+  costfunction = @(p)nnCostFunction(p, Theta, X, y, lambda, can_p);
 
   initial_nn_params = [Theta1(:) ; Theta2(:) ; Theta3(:)];
 
