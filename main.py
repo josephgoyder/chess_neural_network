@@ -81,10 +81,8 @@ def multi_tournament(heats, survivability, min_player):
         except Exception as e:
             print('Failed to delete %s. Reason: %s' % (file_path, e))
 
-    n = 1
-    for i in strongest:
-        shutil.copyfile(f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{i}.mat', f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{n}.mat')
-        n += 1
+
+    shutil.copyfile(f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{strongest}.mat', f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{1}.mat')
     survivors = []
     death = []
 
@@ -99,7 +97,7 @@ def multi_tournament(heats, survivability, min_player):
     while result_population < min_player:
         n = 1
         for player in death:
-            if fight_info[player] == (survivability - n):
+            if fight_info[player] >= (survivability - n):
                 death.remove(player)
                 survivors.append(player)
                 result_population += 1
@@ -115,16 +113,6 @@ def multi_tournament(heats, survivability, min_player):
     for player in survivors:
         os.rename(f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{player}.mat", f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{n}.mat")
         n += 1
-
-def reproduction(population):
-    octave.addpath("/home/joseph/Desktop/chess_neural_network")
-    for datasets in range(population // 4):
-        dataset_1 = (datasets + 1) * 2
-        dataset_2 = dataset_1 - 1
-        n = octave.reproduction(dataset_1, dataset_2, dataset_1, dataset_2)
-
-
-def multi_reproduction(goal_population):
     
     folder = '/home/joseph/Desktop/chess_neural_network/parent_engine_data/'
     for filename in os.listdir(folder):
@@ -146,6 +134,15 @@ def multi_reproduction(goal_population):
   
     for f in allfiles:
         shutil.move(source + f, destination + f)
+
+def reproduction(population):
+    octave.addpath("/home/joseph/Desktop/chess_neural_network")
+    for datasets in range(population // 4):
+        dataset_1 = (datasets + 1) * 2
+        dataset_2 = dataset_1 - 1
+        n = octave.reproduction(dataset_1, dataset_2, dataset_1, dataset_2)
+
+def multi_reproduction(goal_population):
 
     current_population = 0
 
@@ -191,14 +188,14 @@ def generation_sequence(heats, survivability, min_player, goal_population, mutat
   
     for f in allfiles:
         shutil.move(source + f, destination + f)
-
+    
 def main(init_population, descend_generations):
 
     tic = time.perf_counter()
-    theta_init(np.array([98, 250.]), np.array([251, 250.]), np.array([251, 850.]), init_population)
+    # theta_init(np.array([98, 250.]), np.array([251, 250.]), np.array([251, 850.]), init_population)
     octave.addpath("/home/joseph/Desktop/chess_neural_network")
     for i in range(1000):
-        generation_sequence(2, 3, 25, 2000, 200)
+        generation_sequence(2, 3, 100, 2000, 5)
     # Genetic algorithm sequence
 
     # for i in range(4):
