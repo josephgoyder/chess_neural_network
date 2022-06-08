@@ -8,6 +8,10 @@ function [J, grad] = nnCostFunction(nn_params, Theta, X, y, lambda, can_p)
   Theta2 = reshape(nn_params(((size(Theta1)(1) * size(Theta1)(2)) + 1):(size(Theta1)(1) * size(Theta1)(2)) + (size(Theta2)(1) * size(Theta2)(2))), size(Theta2));
   Theta3 = reshape(nn_params(end - (size(Theta3)(1) * size(Theta3)(2)) + 1:end), size(Theta3));
 
+  Theta1 = Theta1'
+  Theta2 = Theta2'
+  Theta3 = Theta3'
+
   J = 0;
   Theta1_grad = zeros(size(Theta1)); 
   Theta2_grad = zeros(size(Theta2));
