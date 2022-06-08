@@ -3,9 +3,12 @@ function [J, grad] = nnCostFunction(Theta, X, y, lambda, can_p)
   load(["/home/joseph/Desktop/chess_neural_network/backprop_data/neural_net_dataset_" num2str(Theta) ".mat"])
   
   options = optimset('MaxIter', 50);
-
+  
+  Theta1 = reshape(nn_params(1:(size(Theta1)(1) * size(Theta1)(2))), size(Theta1));
   Theta1 = Theta1';
+  Theta2 = reshape(nn_params(((size(Theta1)(1) * size(Theta1)(2)) + 1):(size(Theta1)(1) * size(Theta1)(2)) + (size(Theta2)(1) * size(Theta2)(2))), size(Theta2));
   Theta2 = Theta2';
+  Theta3 = reshape(nn_params(end - (size(Theta2)(1) * size(Theta2)(2)) + 1:end), size(Theta3));
   Theta3 = Theta3';
 
   J = 0;
@@ -62,25 +65,10 @@ J = (1/m) * sum(sum((-y.*log(h_x))-((1-y).*log(1-h_x))));
   Theta2_grad_reg_term = (lambda/m) * [zeros(size(Theta2, 1), 1) Theta2(:,2:end)];
   Theta3_grad_reg_term = (lambda/m) * [zeros(size(Theta3, 1), 1) Theta3(:,2:end)];
 
-  
-
   Theta1_grad = Theta1_grad + Theta1_grad_reg_term;
   Theta2_grad = Theta2_grad + Theta2_grad_reg_term;
   Theta3_grad = Theta3_grad + Theta3_grad_reg_term;
     
   grad = [Theta1_grad(:) ; Theta2_grad(:) ; Theta3_grad(:)];
-
-  initial_nn_params = [Theta1(:) ; Theta2(:) ; Theta3(:)];
-
-  [nn_params, cost] = fmincg(J, grad, initial_nn_params, options);
-
-  Theta1 = reshape(nn_params(1:(size(Theta1)(1) * size(Theta1)(2))), size(Theta1));
-  Theta1 = Theta1';
-  Theta2 = reshape(nn_params(((size(Theta1)(1) * size(Theta1)(2)) + 1):(size(Theta1)(1) * size(Theta1)(2)) + (size(Theta2)(1) * size(Theta2)(2))), size(Theta2));
-  Theta2 = Theta2';
-  Theta3 = reshape(nn_params(end - (size(Theta2)(1) * size(Theta2)(2)) + 1:end), size(Theta3));
-  Theta3 = Theta3';
-
-  save(["/home/joseph/Desktop/chess_neural_network/backprop_data/neural_net_dataset_" num2str(Theta) ".mat"], Theta1, Theta2, Theta3)
 
 end
