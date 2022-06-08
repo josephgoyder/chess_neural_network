@@ -113,16 +113,6 @@ def multi_tournament(heats, survivability, min_player):
     for player in survivors:
         os.rename(f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{player}.mat", f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{n}.mat")
         n += 1
-
-def reproduction(population):
-    octave.addpath("/home/joseph/Desktop/chess_neural_network")
-    for datasets in range(population // 4):
-        dataset_1 = (datasets + 1) * 2
-        dataset_2 = dataset_1 - 1
-        n = octave.reproduction(dataset_1, dataset_2, dataset_1, dataset_2)
-
-
-def multi_reproduction(goal_population):
     
     folder = '/home/joseph/Desktop/chess_neural_network/parent_engine_data/'
     for filename in os.listdir(folder):
@@ -144,6 +134,15 @@ def multi_reproduction(goal_population):
   
     for f in allfiles:
         shutil.move(source + f, destination + f)
+
+def reproduction(population):
+    octave.addpath("/home/joseph/Desktop/chess_neural_network")
+    for datasets in range(population // 4):
+        dataset_1 = (datasets + 1) * 2
+        dataset_2 = dataset_1 - 1
+        n = octave.reproduction(dataset_1, dataset_2, dataset_1, dataset_2)
+
+def multi_reproduction(goal_population):
 
     current_population = 0
 
