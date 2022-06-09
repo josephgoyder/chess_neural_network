@@ -70,7 +70,7 @@ def nn_move(engine, turn, dataset):
     return output_layer_to_move(branches, output_layer)
 
 
-def game_turn_nn(engine_nn, engine_cb, turn, dataset1, dataset2):
+def game_turn_nn(engine_nn, engine_cb, turn, dataset1, dataset2, engine_choices, move_n):
     engine_nn.move(nn_move(engine_nn, turn, [dataset1, dataset2][int(turn)]))
 
     print("")
@@ -78,19 +78,35 @@ def game_turn_nn(engine_nn, engine_cb, turn, dataset1, dataset2):
     print("")
 
 
+def nn_branches_first_move(nn_branches):
+    for move in nn_branches:
+        if type(move) == dict:
+            return move
+
+
 def move_cb_to_nn(move_cb, nn_branches, engine_nn, engine_cb):
     for move_nn in nn_branches:
         if type(move_nn) == dict and cb_mo_un.notation(move_cb, engine_cb.board) == mo_un.notation(move_nn, engine_nn.board):
             return move_nn
 
-            
-def game_turn_comb_engine_train_nn(engine_nn, engine_cb, turn, dataset1, dataset2):
-    engine_cb.notebook.top_lines.clear()
-    engine_cb.search(turn, 3, 1, engine_cb.branches(turn))
-    nn_branches = engine_nn.branches(turn)
+    print("No move found.")
+    return nn_branches_first_move(nn_branches)
 
-    move_cb = engine_cb.notebook.top_lines[0][1][0]
+            
+def game_turn_comb_engine_train_nn(engine_nn, engine_cb, turn, dataset1, dataset2, engine_choices, move_n):
+    engine_cb.notebook.top_lines.clear()
+    engine_cb.search(turn, 2, 5, engine_cb.branches(turn))
+    nn_branches = engine_nn.branches(turn)
+    
+    if move_n <= 10:
+        engine_choice = engine_choices[move_n - 1]
+    else:
+        engine_choice = 0
+
+    move_cb = engine_cb.notebook.top_lines[engine_choice][1][0]
     move_nn = move_cb_to_nn(move_cb, nn_branches, engine_nn, engine_cb)
+
+    
 
     engine_nn.move(move_nn)
     engine_cb.move(move_cb)
@@ -105,8 +121,7 @@ def game_turn_comb_engine_train_nn(engine_nn, engine_cb, turn, dataset1, dataset
     y = np.array([branch == move_nn for branch in nn_branches])
     J = octave.back_prop(1, X, y, 1, branches_to_can_p(engine_nn.branches(turn)))
 
-
-def fight(dataset1, dataset2, mode = "GA"):
+def fight(dataset1, dataset2, mode = "GA", engine_choices = [0] * 10):
     engine_nn = eg.engine_setup("regular")
     engine_cb = cb_eg.engine_setup("regular")
 
@@ -120,7 +135,7 @@ def fight(dataset1, dataset2, mode = "GA"):
     turn = True
     move_n = 1
     while True:
-        game_turn(engine_nn, engine_cb, turn, dataset1, dataset2)
+        game_turn(engine_nn, engine_cb, turn, dataset1, dataset2, engine_choices, move_n)
         print("Move number ", move_n)
         move_n += 1
         win_lose_draw = engine_nn.win_lose_draw()
