@@ -8,10 +8,6 @@ function[J] = back_prop(Theta, X, y, lambda, can_p)
   Theta3 = Theta3';
   nn_params = [Theta1(:); Theta2(:); Theta3(:)];
 
-  J = nnCostFunction(nn_params, Theta, X, y, lambda, can_p)
-  
-  pause
-
   costfunction = @(p)nnCostFunction(p, Theta, X, y, lambda, can_p);
 
   initial_nn_params = [Theta1(:) ; Theta2(:) ; Theta3(:)];

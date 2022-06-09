@@ -31,7 +31,7 @@ a_3 = sigmoid(a_2 * Theta2');
 
 a_3 = [ones(size(a_3), 1) a_3];
 
-h_x = sigmoid(a_3 * Theta3')
+h_x = sigmoid(a_3 * Theta3');
 
 J = (1/m) * sum(sum((-y.*log(h_x))-((1-y).*log(1-h_x))));
 
