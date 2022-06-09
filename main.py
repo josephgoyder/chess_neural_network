@@ -103,6 +103,7 @@ def multi_tournament(heats, survivability, min_player):
                 result_population += 1
         n += 1
     
+    print(death)
     print(survivors)
     print("number of survivors: ", len(survivors))
 
@@ -192,10 +193,10 @@ def generation_sequence(heats, survivability, min_player, goal_population, mutat
 def main(init_population, descend_generations):
 
     tic = time.perf_counter()
-    # theta_init(np.array([98, 250.]), np.array([251, 250.]), np.array([251, 850.]), init_population)
+    theta_init(np.array([98, 25.]), np.array([26, 25.]), np.array([26, 850.]), init_population)
     octave.addpath("/home/joseph/Desktop/chess_neural_network")
-    for i in range(1000):
-        generation_sequence(2, 3, 100, 2000, 5)
+    for i in range(1):
+        generation_sequence(2, 3, 10, 200, 5)
     # Genetic algorithm sequence
 
     # for i in range(4):
@@ -222,4 +223,4 @@ def main(init_population, descend_generations):
     toc = time.perf_counter()
     print(toc - tic)
 
-main(2000, 16)
+main(200, 16)

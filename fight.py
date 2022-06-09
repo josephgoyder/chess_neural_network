@@ -103,7 +103,7 @@ def game_turn_comb_engine_train_nn(engine_nn, engine_cb, turn, dataset1, dataset
 
     X = board_to_X(engine_cb.board, turn)
     y = np.array([branch == move_nn for branch in nn_branches])
-    # J = octave.back_prop(1, X, y, 1, branches_to_can_p(engine_nn.branches(turn)))
+    J = octave.back_prop(1, X, y, 1, branches_to_can_p(engine_nn.branches(turn)))
 
 
 def fight(dataset1, dataset2, mode = "GA"):
