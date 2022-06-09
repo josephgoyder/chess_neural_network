@@ -1,11 +1,11 @@
 function [similarity_total] = similarity(dataset_1, dataset_2)
 
-load(["D:\\parent_engine_data\\neural_net_dataset_" num2str(dataset_1) ".mat"])
+load(["/home/joseph/Desktop/chess_neural_network/backprop_data/neural_net_dataset_" num2str(dataset_1) ".mat"])
 Theta1_1 = Theta1;
 Theta1_2 = Theta2;
 Theta1_3 = Theta3;
 
-load(["D:\\parent_engine_data\\neural_net_dataset_" num2str(dataset_2) ".mat"])
+load(["/home/joseph/Desktop/chess_neural_network/backprop_data/neural_net_dataset_" num2str(dataset_2) ".mat"])
 Theta2_1 = Theta1;
 Theta2_2 = Theta2;
 Theta2_3 = Theta3;
