@@ -101,25 +101,24 @@ def castle(board, colour, side):
 
 
 def add_to_branches(board, branches, piece, option):
-    if type(option) == dict:
-        option["location_1"] = piece.location
-        option["piece_1"] = piece
-        option["piece_2"] = board.squares[option["location_2"][0]][
-            option["location_2"][1]
-        ].piece
+    option["location_1"] = piece.location
+    option["piece_1"] = piece
+    option["piece_2"] = board.squares[option["location_2"][0]][
+        option["location_2"][1]
+    ].piece
 
-        if not option["piece_1"].moved:
-            option["first_move"] = True
-        else:
-            option["first_move"] = False
+    if not option["piece_1"].moved:
+        option["first_move"] = True
+    else:
+        option["first_move"] = False
 
-        if (
-            type(option["piece_1"]) == pc.Pawn 
-            and option["piece_1"].en_passant_able
-        ):
-            option["en_passant_expire"] = True
-        else:
-            option["en_passant_expire"] = False
+    if (
+        type(option["piece_1"]) == pc.Pawn 
+        and option["piece_1"].en_passant_able
+    ):
+        option["en_passant_expire"] = True
+    else:
+        option["en_passant_expire"] = False
 
     branches.append(option)
 
@@ -167,15 +166,13 @@ def regular_branches(board, colour):
     branches = []
 
     for piece in board.pieces(colour).values():
-        for option in piece.options(board.squares):
-            add_to_branches(board, branches, piece, option)
+        if piece.location is not None:
+            for option in piece.options(board.squares):
+                add_to_branches(board, branches, piece, option)
 
     for side in [True, False]:
         _castle = castle(board, colour, side)
         if _castle is not None:
             branches.append(_castle)
-
-        else:
-            branches.append(0)
 
     return branches

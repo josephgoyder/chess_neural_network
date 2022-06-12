@@ -5,10 +5,9 @@ import engine as eg
 import pieces as pc
 import move_undo as mo_un
 import random
-import fight as ft
 
 def abreviation(piece):
-    if type(piece) == pc.Pawn_promotable:
+    if type(piece) == pc.Pawn:
         abreviation = "P"
     elif type(piece) == pc.Knight:
         abreviation = "N"
@@ -33,7 +32,6 @@ class Game:
     engine: eg.Engine
     user_colour: bool
 
-    engine_dataset: int = 1
     white_time: int = 0
     black_time: int = 0
 
@@ -68,14 +66,8 @@ class Game:
             print(row)
 
     def win_lose_draw_update(self):
-        if len(self.engine.history.states) < 5:
-            return
+        win_lose_draw = self.engine.win_lose_draw()
 
-        if self.engine.win_lose_draw() == 0:
-            self.draw = True
-            return
-
-        win_lose_draw = ft.engine_mate_eval(self.engine, self.turn)
         if win_lose_draw is not None:
             if win_lose_draw > 0:
                 self.white_win = True
@@ -92,23 +84,7 @@ class Game:
         self.turn = not self.turn
 
     def user_move(self, user_move):
-        branches = self.engine.branches(self.turn)
-
-        options = []
-        for branch in branches:
-            if type(branch) == dict and not self.check(branch):
-                options.append(branch)
-
-        if len(options) == 0:
-            if self.check():
-                if self.turn:
-                    self.white_win = True
-                else:
-                    self.black_win = True
-
-            else:
-                self.draw = True
-
+        options = [option for option in self.engine.branches(self.turn)]
         moves = [mo_un.notation(option, self.engine.board) for option in options]
 
         for move, option in zip(moves, options):
@@ -150,15 +126,20 @@ class Game:
             print("")
 
     def engine_turn(self):
-        engine_move = ft.nn_move(self.engine, self.turn, self.engine_dataset)
+        self.engine.explore(self.turn)
+
+        engine_move = self.engine.notebook.top_lines[0][1][0]
         self.move(engine_move)
-        
         self.win_lose_draw_update()
         print(f"Engine: {mo_un.notation(engine_move, self.engine.board)}")
 
         print("")
         self.illustrate()
         print("")
+
+        if self.lines_on:
+            self.engine.top_lines_show(3)
+            print("")
 
 
 def get_input(valid_inputs, input_message):
@@ -182,13 +163,13 @@ def get_colour(user_colour_choice):
 
 
 def game_start():
-    # mode = get_input([
-    #     "regular", 
-    #     "chess 960", 
-    #     "reverse chess", 
-    #     "king of the hill"
-    # ], "Gamemode: ")
-    # print("")
-    # user_colour_choice = get_input(["white", "black", "random"], "User colour: ")
+    mode = get_input([
+        "regular", 
+        "chess 960", 
+        "reverse chess", 
+        "king of the hill"
+    ], "Gamemode: ")
+    print("")
+    user_colour_choice = get_input(["white", "black", "random"], "User colour: ")
 
-    return Game(eg.engine_setup("regular"), get_colour("white"))
+    return Game(eg.engine_setup(mode), get_colour(user_colour_choice))

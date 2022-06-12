@@ -6,20 +6,6 @@ import pieces as pc
 import eval as ev
 
 
-def abreviation(piece):
-    if piece.notation == "":
-        notation = "P"
-    elif piece.notation == "Kn":
-        notation = "N"
-    else:
-        notation = piece.notation
-
-    if piece.colour:
-        return notation
-    else:
-        return notation.lower()
-
-
 @dataclass
 class Notebook:
 
@@ -76,31 +62,18 @@ class Engine:
     def move(self, move):
         mo_un.move(move, self.board)
         self.notebook.journey.append(move)
-        self.history.record(move, self.board)
+        self.history.record(move, self.board, self.eval())
         self.update_centralization(move["piece_1"])
 
     def undo(self):
         move = self.notebook.journey[-1]
 
         mo_un.undo(move, self.board)
-        self.history.unrecord(move, self.board)
+        self.history.unrecord()
         self.notebook.journey.pop(-1)
         self.update_centralization(move["piece_1"])
         if move["piece_2"] is not None:
             self.update_centralization(move["piece_2"])
-
-    def check(self):
-        self.engine.recursive_search()
-        if abs(self.engine.lines[0][0][0]) == 1000:
-            return True
-
-        return False
-
-    def move_to_check(self, move):
-        self.move(move)
-        check = self.check()
-        self.undo()
-        return check
         
     def mate_eval(self, turn):
         for move in br.regular_branches(self.board, not turn):
@@ -128,7 +101,7 @@ class Engine:
                 line[1].pop(-1)
 
 
-    def recursive_search(self, turn, depth, level = 0):
+    def recursive_search(self, turn, depth, level = 1):
         win_lose_draw = self.win_lose_draw()
         if win_lose_draw is not None:
             self.notebook.lines[level - 1].append(
@@ -137,28 +110,25 @@ class Engine:
 
         elif level == depth:
             self.notebook.lines[level - 1].append(
-                [self.eval(), [self.notebook.journey[-1]]]
+                [self.history.evals[-1], [self.notebook.journey[-1]]]
             )
 
         else:
             for move in self.branches(turn):
-                if move != 0:
-                    self.move(move)
-                    self.recursive_search(not turn, depth, level = level + 1)
-                    self.undo()
+                self.move(move)
+                self.recursive_search(not turn, depth, level = level + 1)
+                self.undo()
 
-            if level != 0:
-                self.notebook.collect_max_min(level, turn)
-                self.notebook.lines[level - 1][-1][1].insert(0, self.notebook.journey[-1])
-                self.mate_check(turn, self.notebook.lines[level - 1][-1])
+            self.notebook.collect_max_min(level, turn)
+            self.notebook.lines[level - 1][-1][1].insert(0, self.notebook.journey[-1])
+            self.mate_check(turn, self.notebook.lines[level - 1][-1])
 
 
     def search(self, turn, depth, top_lines_num, considered_moves):
         for move in considered_moves:
-            if move != 0:
-                self.move(move)
-                self.recursive_search(not turn, depth)
-                self.undo()
+            self.move(move)
+            self.recursive_search(not turn, depth)
+            self.undo()
 
         self.notebook.collect_top_lines_search(
             turn, top_lines_num
@@ -204,25 +174,9 @@ class Engine:
 
     def default_setup(self):
         ev.initialize_centralization(self.board)
-        self.history.states.append(self.history.state(self.board))
-        self.history.states_repeat_possible.append(self.history.state(self.board))
+        self.history.evals.append(self.eval())
+        self.history.evals_repeat_possible.append(self.eval())
         self.notebook.setup_lines(self.depth)
-
-    def illustrate(self, colour):
-        if colour:
-            find_piece = lambda x, y: self.board.squares[y][7 - x].piece
-        else:
-            find_piece = lambda x, y: self.board.squares[7 - y][x].piece
-
-        for x in range(8):
-            row = ""
-            for y in range(8):
-                if find_piece(x, y) is not None:
-                    row += abreviation(find_piece(x, y)) + " "
-                else:
-                    row += "- "
-
-            print(row)
         
 
 @dataclass
@@ -293,7 +247,7 @@ class Engine_koth(Engine):
         self.default_setup()
 
 
-def engine_setup(mode, depth = 4, top_lines_filters = [0.75, 0.25], material_value = 10.0, centralization_value = 1.0):
+def engine_setup(mode, depth = 4, top_lines_filters = [1, 1], material_value = 10.0, centralization_value = 1.0):
     if mode == "regular":
         engine = Engine_regular(
             ev.History([], [], []), 

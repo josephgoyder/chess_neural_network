@@ -1,3 +1,4 @@
+
 import board as bd
 import pieces as pc
 
@@ -11,7 +12,7 @@ def move_regular(board, move):
 
     move["piece_1"].location = move["location_2"]
     if move["piece_2"] is not None:
-        move["piece_2"].captured = True
+        move["piece_2"].location = None
 
     board.squares[move["location_2"][0]][move["location_2"][1]].piece = move[
         "piece_1"
@@ -20,7 +21,7 @@ def move_regular(board, move):
 
 
 def move_en_passant(board, move):
-    move["piece_2"].captured = True
+    move["piece_2"].location = None
     board.squares[move["location_2"][0]][move["location_2"][1]].piece = None
 
     move_regular(
@@ -38,24 +39,16 @@ def move_en_passant(board, move):
 
 def move_promotion(board, move):
     if move["promotion"] == "queen":
-        move["piece_1"].powers = ["rook", "bishop"]
-        move["piece_1"].value = 9
-        move["piece_1"].notation = "Q"
+        move["piece_1"] = pc.Queen(move["location_1"], move["piece_1"].colour)
 
     elif move["promotion"] == "knight":
-        move["piece_1"].powers = ["knight"]
-        move["piece_1"].value = 3
-        move["piece_1"].notation = "Kn"
+        move["piece_1"] = pc.Knight(move["location_1"], move["piece_1"].colour)
 
     elif move["promotion"] == "bishop":
-        move["piece_1"].powers = ["bishop"]
-        move["piece_1"].value = 3
-        move["piece_1"].notation = "B"
+        move["piece_1"] = pc.Bishop(move["location_1"], move["piece_1"].colour)
 
     else:
-        move["piece_1"].powers = ["rook"]
-        move["piece_1"].value = 5
-        move["piece_1"].notation = "R"
+        move["piece_1"] = pc.Rook(move["location_1"], move["piece_1"].colour)
 
     move_regular(board, move)
 
@@ -79,16 +72,7 @@ def move(move, board):
         move_en_passant(board, move)
 
     if move["piece_2"] is not None:
-        board.change_piece_num(-1, move["piece_2"].colour)
-
-    for piece in [move["piece_1"], move["piece_2"]]:
-        if type(piece) == pc.Pawn_promotable:
-            piece.pieces["pawn"].en_passant_able = piece.en_passant_able
-            
-            for sub_piece in piece.pieces.values():
-                sub_piece.location = piece.location
-                sub_piece.moved = piece.moved
-                sub_piece.captured = piece.captured
+            board.change_piece_num(-1, move["piece_2"].colour)
 
 
 def undo_regular(board, move):
@@ -104,7 +88,6 @@ def undo_regular(board, move):
         board.squares[move["location_2"][0]][move["location_2"][1]].piece = move[
             "piece_2"
         ]
-        move["piece_2"].captured = False
 
     else:
         board.squares[move["location_2"][0]][move["location_2"][1]].piece = None
@@ -134,10 +117,9 @@ def undo_en_passant(board, move):
 
 
 def undo_promotion(board, move):
-    move["piece_1"].powers = ["pawn"]
-    move["piece_1"].value = 1
-    move["piece_1"].notation = ""
-
+    move["piece_1"] = pc.Pawn(
+        move["piece_1"].location, move["piece_1"].colour, True, False
+    )
 
     undo_regular(board, move)
 
@@ -161,16 +143,7 @@ def undo(move, board):
         undo_en_passant(board, move)
 
     if move["piece_2"] is not None:
-        board.change_piece_num(1, move["piece_2"].colour)
-
-    for piece in [move["piece_1"], move["piece_2"]]:
-        if type(piece) == pc.Pawn_promotable:
-            piece.pieces["pawn"].en_passant_able = piece.en_passant_able
-            
-            for sub_piece in piece.pieces.values():
-                sub_piece.location = piece.location
-                sub_piece.moved = piece.moved
-                sub_piece.captured = piece.captured
+            board.change_piece_num(1, move["piece_2"].colour)
 
 
 def notation(move, board):
