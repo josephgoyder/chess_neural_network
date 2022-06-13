@@ -1,12 +1,11 @@
+# %%
 from dataclasses import dataclass
-from dataclasses import field
 
 @dataclass
 class Piece:
 
     location: list
     colour: bool
-    captured: bool = False
     centralization: int = 0
 
     def on_board(self, location_x, location_y):
@@ -15,42 +14,29 @@ class Piece:
     def regular_add(self, direction, output, squares):
         location = [self.location[0] + direction[0], self.location[1] + direction[1]]
 
-        if self.on_board(location[0], location[1]) and not self.captured:
+        if self.on_board(location[0], location[1]):
             square = squares[location[0]][location[1]]
 
             if not square.full() or square.piece.colour != self.colour:
                 output.append({"location_2": location, "type": "regular"})
 
-            else:
-                output.append(0)
-
-        else:
-            output.append(0)
-
     def regular_extend(self, direction, output, squares):
-        extention = [0] * 7
+        location = [self.location[0] + direction[0], self.location[1] + direction[1]]
 
-        if not self.captured:
-            location = [self.location[0] + direction[0], self.location[1] + direction[1]]
-            distance = 0
+        while self.on_board(location[0], location[1]):
+            square = squares[location[0]][location[1]]
 
-            while self.on_board(location[0], location[1]):
-                square = squares[location[0]][location[1]]
-
-                if square.full():
-                    if square.piece.colour == self.colour:
-                        break
-                    else:
-                        extention[distance] = {"location_2": list(location), "type": "regular"}
-                        break
+            if square.full():
+                if square.piece.colour == self.colour:
+                    break
                 else:
-                    extention[distance] = {"location_2": list(location), "type": "regular"}
+                    output.append({"location_2": list(location), "type": "regular"})
+                    break
+            else:
+                output.append({"location_2": list(location), "type": "regular"})
 
-                    location[0] += direction[0]
-                    location[1] += direction[1]
-                    distance += 1
-
-        output += extention
+                location[0] += direction[0]
+                location[1] += direction[1]
 
     def regular(self, options, squares, function):
         output = []
@@ -70,7 +56,6 @@ class Pawn(Piece):
     notation: str = ""
 
     def promotion_output(self, squares, output, location):
-        output.append(0)
         for promotion in ["queen", "knight", "bishop", "rook"]:
             output.append(
                 {"location_2": location, "type": "promotion", "promotion": promotion}
@@ -85,14 +70,9 @@ class Pawn(Piece):
 
         else:
             output.append({"location_2": location, "type": "regular"})
-            output += [0]*4
-
 
     def double_push(self, squares, output, colour_mult):
-        if (
-            self.on_board(self.location[0], self.location[1] + colour_mult * 2) 
-            and not squares[self.location[0]][self.location[1] + colour_mult * 2].full()
-        ):
+        if not squares[self.location[0]][self.location[1] + colour_mult * 2].full():
             if not squares[self.location[0]][self.location[1] + colour_mult].full():
                 output.append(
                     {
@@ -103,11 +83,6 @@ class Pawn(Piece):
                         "type": "double_push",
                     }
                 )
-            else:
-                output.append(0)
-
-        else:
-            output.append(0)
 
     def en_passant(self, squares, output, location):
         square = squares[location[0]][self.location[1]]
@@ -125,33 +100,20 @@ class Pawn(Piece):
                 }
             )
 
-        else:
-            output.append(0)
-
     def options_generic_pawn(self, squares, output, colour_mult):
-        if self.on_board(self.location[0], self.location[1] + colour_mult) and not self.captured:
+        if self.on_board(self.location[0], self.location[1] + colour_mult):
             if not self.moved:
                 self.double_push(squares, output, colour_mult)
-            
-            else:
-                output.append(0)
 
             if not squares[self.location[0]][self.location[1] + colour_mult].full():
                 self.promotion_capture_push(
                     squares, output, [self.location[0], self.location[1] + colour_mult]
                 )
 
-            else:
-                output += [0]*5
-
-        else:
-            output += [0]*6
-
         for side_mult in [1, -1]:
 
-            if (
-            self.on_board(self.location[0] + side_mult, self.location[1] + colour_mult) 
-            and not self.captured
+            if self.on_board(
+                self.location[0] + side_mult, self.location[1] + colour_mult
             ):
                 square = squares[self.location[0] + side_mult][
                     self.location[1] + colour_mult
@@ -164,17 +126,11 @@ class Pawn(Piece):
                         [self.location[0] + side_mult, self.location[1] + colour_mult],
                     )
 
-                else:
-                    output += [0]*5
-
                 self.en_passant(
                     squares,
                     output,
                     [self.location[0] + side_mult, self.location[1] + colour_mult],
                 )
-
-            else:
-                output += [0]*6
                 
 
     def options(self, squares):
@@ -250,7 +206,7 @@ class Queen(Piece):
 class King(Piece):
 
     moved: bool = False
-    value: int = 100
+    value: int = 2
     notation: str = "K"
 
     def options(self, squares):
@@ -260,38 +216,6 @@ class King(Piece):
             self.regular_add,
         )
 
-
-@dataclass
-class Pawn_promotable(Piece):
-    pieces: dict = field(default_factory=dict)
-    powers: list = field(default_factory=list)
-    en_passant_able: bool = False
-    moved: bool = False
-    value: int = 1
-    notation: str = ""
-
-    def setup(self):
-        self.pieces = {
-            "pawn": Pawn(self.location, self.colour, self.captured), 
-            "rook": Rook(self.location, self.colour, self.captured), 
-            "bishop": Bishop(self.location, self.colour, self.captured), 
-            "knight": Knight(self.location, self.colour, self.captured)
-        }
-
-        self.powers = ["pawn"]
-
-    def options(self, squares):
-        options = []
-        
-        for key, piece in self.pieces.items():
-            if key in self.powers:
-                options += piece.options(squares)
-
-            else:
-                options += [0] * len(piece.options(squares))
-
-        return options
-
-
 def centralization_eval(location):
     return 7 - abs(location[0] - 3.5) - abs(location[1] - 3.5)
+

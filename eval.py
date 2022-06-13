@@ -1,97 +1,132 @@
 from dataclasses import dataclass
 import pieces as pc
 import move_undo as mo_un
+from oct2py import octave
+import numpy as np
+
+
+def board_to_X(board, turn):
+    X = [[[0] * 8] * 8] * 12
+    types = [pc.Pawn, pc.Rook, pc.Knight, pc.Bishop, pc.Queen, pc.King]
+    for piece in board.white_pieces.values():
+        if piece.location is not None:
+            X[types.index(type(piece))][piece.location[0]][piece.location[1]] = 1
+
+    for piece in board.black_pieces.values():
+        if piece.location is not None:
+            X[types.index(type(piece)) + 6][piece.location[0]][piece.location[1]] = 1
+
+    X.append(int(turn) * 2 - 1)
+
+    return np.array(X)
 
 
 @dataclass
 class History:
 
-    states: list
-    states_repeat_possible: list
+    evals: list
+    evals_repeat_possible: list
     moves: list
 
     def fifty_move(self):
-        return len(self.states_repeat_possible) >= 51
+        return len(self.evals_repeat_possible) >= 51
+
+    def add_move(self, group, move):
+        if move[0] in group.keys():
+            group[move[0]].append(move[4:])
+        else:
+            group[move[0]] = [move[1:3]]
+
+    def is_repeat(self, group):
+        for move_group in group.values():
+            if len(move_group) == 1 or move_group[0] != move_group[-1]:
+                return False
+
+        return True
+
+    def indexes(self, eval):
+        indexes = []
+        for x in range(len(self.evals)):
+            if eval == self.evals[x]:
+                indexes.append(x)
+        
+        return indexes
+
+    def triad_state_repeat(self, i1, i2, i3):
+        for start, stop in [(i1, i2), (i2, i3)]:
+            moves = self.moves[start:stop]
+            group = {}
+            for move in moves:
+                self.add_move(group, move)
+
+            if not self.is_repeat(group):
+                return False
+
+        return True
+
+    def move_based_state_repeat(self, eval):
+        indexes = self.indexes(eval)
+        for i1 in indexes:
+            for i2 in indexes:
+                for i3 in indexes:
+                    if i1 < i2 and i2 < i3:
+                        if self.triad_state_repeat(i1, i2, i3):
+                            return True
+
+        return False
+
+    def eval_triple_repeats(self):
+        tier_1 = []
+        tier_2 = []
+        tier_3 = []
+
+        for eval in self.evals_repeat_possible:
+            if eval not in tier_1:
+                tier_1.append(eval)
+
+            elif eval not in tier_2:
+                tier_2.append(eval)
+
+            elif eval not in tier_3:
+                tier_3.append(eval)
+
+        return tier_3
 
     def threefold(self):
-        for state in self.states_repeat_possible:
-            if self.states_repeat_possible.count(state) >= 3:
+        for eval in self.eval_triple_repeats():
+            if self.move_based_state_repeat(eval):
                 return True
 
         return False
 
-    def states_repeat_possible_pull(self):
+    def evals_repeat_possible_pull(self):
+        self.evals.reverse()
         self.moves.reverse()
-        self.states.reverse()
-
-        for move, state in zip(self.moves, self.states):
-            self.states_repeat_possible.insert(0, state)
-            if "x" in move or move[0] not in ["R", "K", "B", "Q"]:
+        for eval, move in zip(self.evals, self.moves):
+            self.evals_repeat_possible.append(eval)
+            if move[2] == "-" or "x" in move:
                 break
 
+        self.evals.reverse()
         self.moves.reverse()
-        self.states.reverse()
 
-    def location_sort_criteria(self, location):
-        if location is not None:
-            return location[0] * 8 + location[1]
-        else:
-            return -1
-
-    def state(self, board):
-        state = {
-            "w": [],
-            "wR": [],
-            "wKn": [],
-            "wB": [],
-            "wQ": [],
-            "wK": [],
-            "b": [],
-            "bR": [],
-            "bKn": [],
-            "bB": [],
-            "bQ": [],
-            "bK": [],
-        }
-
-        for pieces, abreviation in zip([board.white_pieces.values(), board.black_pieces.values()], ["w", "b"]):
-            for piece in pieces:
-                state[abreviation + piece.notation].append(piece.location)
-
-        for locations in state.values():
-            if len(locations) > 1:
-                locations.sort(key = self.location_sort_criteria)
-
-        return state
-
-    def initialize_state(self, board):
-        state = self.state(board)
-        self.states.append(state)
-        self.states_repeat_possible.append(state)
-
-    def record(self, move, board):
-        if move["piece_2"] is not None:
-            board.change_piece_num(-1, move["piece_2"].colour)
-            self.states_repeat_possible.clear()
-
-        elif move["piece_1"].notation == "":
-            self.states_repeat_possible.clear()
-
+    def record(self, move, board, eval):
         self.moves.append(mo_un.notation(move, board))
-        state = self.state(board)
-        self.states.append(state)
-        self.states_repeat_possible.append(state)
+        self.evals.append(eval)
+        if (
+            move["piece_2"] is not None 
+            or type(move["piece_1"]) == pc.Pawn
+        ):
+            self.evals_repeat_possible.clear()
 
-    def unrecord(self, move, board):
-        if move["piece_2"] is not None:
-            board.change_piece_num(1, move["piece_2"].colour)
-
-        self.states_repeat_possible.pop(-1)
-        self.states.pop(-1)
+        self.evals_repeat_possible.append(eval)
+        
+    def unrecord(self):
+        self.evals.pop(-1)
         self.moves.pop(-1)
-
-        if len(self.states_repeat_possible) == 0:
-            self.states_repeat_possible_pull()
+        self.evals_repeat_possible.pop(-1)
+        if len(self.evals_repeat_possible) == 0:
+            self.evals_repeat_possible_pull()
 
 
 def initialize_centralization(board):
@@ -115,6 +150,12 @@ def regular_eval(material_value, centralization_value, board):
             centralization -= piece.centralization
 
     return material * material_value + centralization * centralization_value
+
+
+def nn_eval(material_value, centralization_value, board, turn):
+    octave = octave.Oct2Py()
+
+    return octave.feedforward_prop(board_to_X(board, turn), int(turn) + 1)
 
 
 def reverse_win_lose_draw(board, history):
@@ -145,9 +186,9 @@ def insufficient_material(board):
 
 
 def regular_win_lose_draw(board, history):
-    if board.white_pieces["king"].captured:
+    if board.white_pieces["king"].location is None:
         return -1000
-    elif board.black_pieces["king"].captured:
+    elif board.black_pieces["king"].location is None:
         return 1000
 
     if (
@@ -178,6 +219,3 @@ def koth_win_lose_draw(board, history):
 
     else:
         return regular_win_lose_draw(board, history)
-
-
-
