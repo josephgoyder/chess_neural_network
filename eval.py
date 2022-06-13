@@ -7,14 +7,15 @@ import numpy as np
 
 def board_to_X(board, turn):
     X = [[[0] * 8] * 8] * 12
+
     types = [pc.Pawn, pc.Rook, pc.Knight, pc.Bishop, pc.Queen, pc.King]
     for piece in board.white_pieces.values():
         if piece.location is not None:
-            X[types.index(type(piece))][piece.location[0]][piece.location[1]] = 1
+            X[types.index(type(piece))][piece.location[1]][piece.location[0]] = 1
 
     for piece in board.black_pieces.values():
         if piece.location is not None:
-            X[types.index(type(piece)) + 6][piece.location[0]][piece.location[1]] = 1
+            X[types.index(type(piece)) + 6][piece.location[1]][piece.location[0]] = 1
 
     X.append(int(turn) * 2 - 1)
 
