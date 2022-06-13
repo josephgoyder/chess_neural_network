@@ -1,6 +1,7 @@
 import game as gm
 import pieces as pc
 import eval as ev
+import numpy as np
 
             
 def fight():
@@ -27,4 +28,6 @@ def fight():
         eval = 0.5
 
     y = [eval] * move_n 
+
+    return np.array(X), y
 
