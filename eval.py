@@ -3,10 +3,11 @@ import pieces as pc
 import move_undo as mo_un
 from oct2py import octave
 import numpy as np
+import copy
 
 
 def board_to_X(board, turn):
-    X = [[[0] * 8] * 8] * 12
+    X = [copy.copy([copy.copy([copy.copy(0) for x in range(8)]) for x in range(8)]) for x in range(12)]
 
     types = [pc.Pawn, pc.Rook, pc.Knight, pc.Bishop, pc.Queen, pc.King]
     for piece in board.white_pieces.values():
