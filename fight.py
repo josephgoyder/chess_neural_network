@@ -1,27 +1,10 @@
 import game as gm
-# import numpy as np
-# from oct2py import octave
 import pieces as pc
-
-
-def board_to_X(board, turn):
-    X = [[[0] * 8] * 8] * 12
-    types = [pc.Pawn, pc.Rook, pc.Knight, pc.Bishop, pc.Queen, pc.King]
-    for piece in board.white_pieces.values():
-        if piece.location is not None:
-            X[types.index(type(piece))][piece.location[0]][piece.location[1]] = 1
-
-    for piece in board.black_pieces.values():
-        if piece.location is not None:
-            X[types.index(type(piece)) + 6][piece.location[0]][piece.location[1]] = 1
-
-    X.append(int(turn) * 2 - 1)
-
-    return np.array(X)
+import eval as ev
 
             
 def fight():
-    game = gm.game_start()
+    game = gm.game_start_nn()
     X = []
     move_n = 0
 

@@ -59,10 +59,10 @@ class Engine:
         piece.centralization = pc.centralization_eval(piece.location)
 
 
-    def move(self, move):
+    def move(self, move, turn):
         mo_un.move(move, self.board)
         self.notebook.journey.append(move)
-        self.history.record(move, self.board, self.eval())
+        self.history.record(move, self.board, self.eval(turn))
         self.update_centralization(move["piece_1"])
 
     def undo(self):
@@ -115,7 +115,7 @@ class Engine:
 
         else:
             for move in self.branches(turn):
-                self.move(move)
+                self.move(move, turn)
                 self.recursive_search(not turn, depth, level = level + 1)
                 self.undo()
 
@@ -126,7 +126,7 @@ class Engine:
 
     def search(self, turn, depth, top_lines_num, considered_moves):
         for move in considered_moves:
-            self.move(move)
+            self.move(move, turn)
             self.recursive_search(not turn, depth)
             self.undo()
 
@@ -172,10 +172,10 @@ class Engine:
 
             print(eval, notation)
 
-    def default_setup(self):
+    def default_setup(self, turn):
         ev.initialize_centralization(self.board)
-        self.history.evals.append(self.eval())
-        self.history.evals_repeat_possible.append(self.eval())
+        self.history.evals.append(self.eval(turn))
+        self.history.evals_repeat_possible.append(self.eval(turn))
         self.notebook.setup_lines(self.depth)
         
 
@@ -188,12 +188,12 @@ class Engine_regular(Engine):
     def win_lose_draw(self):
         return ev.regular_win_lose_draw(self.board, self.history)
 
-    def eval(self):
+    def eval(self, turn):
         return ev.regular_eval(self.material_value, self.centralization_value, self.board)
 
-    def setup(self):
+    def setup(self, turn):
         self.board.setup_regular()
-        self.default_setup()
+        self.default_setup(turn)
         
 
 @dataclass
@@ -205,12 +205,12 @@ class Engine_960(Engine):
     def win_lose_draw(self):
         return ev.regular_win_lose_draw(self.board, self.history)
 
-    def eval(self):
+    def eval(self, turn):
         return ev.regular_eval(self.material_value, self.centralization_value, self.board)
 
-    def setup(self):
+    def setup(self, turn):
         self.board.setup_960()
-        self.default_setup()
+        self.default_setup(turn)
 
 
 @dataclass
@@ -222,12 +222,12 @@ class Engine_reverse(Engine):
     def win_lose_draw(self):
         return ev.reverse_win_lose_draw(self.board, self.history)
 
-    def eval(self):
+    def eval(self, turn):
         return -ev.regular_eval(self.material_value, self.centralization_value, self.board)
 
-    def setup(self):
+    def setup(self, turn):
         self.board.setup_regular()
-        self.default_setup()
+        self.default_setup(turn)
 
 
 @dataclass
@@ -239,12 +239,30 @@ class Engine_koth(Engine):
     def win_lose_draw(self):
         return ev.koth_win_lose_draw(self.board, self.history)
 
-    def eval(self):
+    def eval(self, turn):
         return ev.regular_eval(self.material_value, self.centralization_value, self.board)
 
-    def setup(self):
+    def setup(self, turn):
         self.board.setup_regular()
-        self.default_setup()
+        self.default_setup(turn)
+
+
+@dataclass
+class Engine_nn(Engine):
+    thetaset: int = 0
+
+    def branches(self, colour):
+        return br.regular_branches(self.board, colour)
+
+    def win_lose_draw(self):
+        return ev.regular_win_lose_draw(self.board, self.history)
+
+    def eval(self, turn):
+        return ev.nn_eval(self.material_value, self.centralization_value, self.board, turn)
+
+    def setup(self, turn):
+        self.board.setup_regular()
+        self.default_setup(turn)
 
 
 def engine_setup(mode, depth = 4, top_lines_filters = [1, 1], material_value = 10.0, centralization_value = 1.0):
@@ -292,6 +310,17 @@ def engine_setup(mode, depth = 4, top_lines_filters = [1, 1], material_value = 1
             centralization_value
     )
 
-    engine.setup()
+    elif mode == "nn":
+        engine = Engine_nn(
+            ev.History([], [], []), 
+            Notebook([], [], []), 
+            bd.Board({}, {}, []), 
+            depth, 
+            top_lines_filters, 
+            material_value, 
+            centralization_value,
+    )
+
+    engine.setup(True)
 
     return engine

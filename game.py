@@ -79,7 +79,7 @@ class Game:
                 self.draw = True
 
     def move(self, move):
-        self.engine.move(move)
+        self.engine.move(move, self.turn)
         self.engine.notebook.journey.clear()
         self.turn = not self.turn
 
@@ -173,3 +173,7 @@ def game_start():
     user_colour_choice = get_input(["white", "black", "random"], "User colour: ")
 
     return Game(eg.engine_setup(mode), get_colour(user_colour_choice))
+
+
+def game_start_nn():
+    return Game(eg.engine_setup("nn"), get_colour("white"))
