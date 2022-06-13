@@ -1,4 +1,4 @@
-function[J] = back_prop(Theta, X, y, lambda, can_p)
+function[J] = back_prop(Theta, X, y, lambda)
 
   load(["/home/joseph/Desktop/chess_neural_network/backprop_data/neural_net_dataset_" num2str(Theta) ".mat"])
   options = optimset('MaxIter', 50);
