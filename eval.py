@@ -153,7 +153,6 @@ def regular_eval(material_value, centralization_value, board):
 
 
 def nn_eval(material_value, centralization_value, board, turn):
-    octave = octave.Oct2Py()
 
     return octave.feedforward_prop(board_to_X(board, turn), int(turn) + 1)
 
