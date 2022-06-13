@@ -11,7 +11,7 @@ def fight():
 
     while not game.concluded():
         game.engine_turn()
-        # X.append(board_to_X(game.engine.board, game.turn))
+        X.append(ev.board_to_X(game.engine.board, game.turn))
         move_n += 1
 
     print("")
