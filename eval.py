@@ -18,9 +18,17 @@ def board_to_X(board, turn):
         if piece.location is not None:
             X[types.index(type(piece)) + 6][piece.location[1]][piece.location[0]] = 1
 
-    X.append(int(turn) * 2 - 1)
+    X_unravel_1 = []
+    for view in X:
+        X_unravel_1 += view
 
-    return np.array(X)
+    X_unravel_2 = []
+    for view in X_unravel_1:
+        X_unravel_2 += view
+
+    X_unravel_2.append(int(turn) * 2 - 1)
+
+    return np.array(X_unravel_2)
 
 
 @dataclass
