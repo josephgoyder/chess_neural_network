@@ -77,7 +77,7 @@ class Engine:
         
     def mate_eval(self, turn):
         for move in br.regular_branches(self.board, not turn):
-            self.move(move)
+            self.move(move, turn)
             win_lose_draw = self.win_lose_draw()
             self.undo()
 
@@ -265,7 +265,7 @@ class Engine_nn(Engine):
         self.default_setup(turn)
 
 
-def engine_setup(mode, depth = 2, top_lines_filters = [1, 1], material_value = 10.0, centralization_value = 1.0):
+def engine_setup(mode, depth = 4, top_lines_filters = [1, 1], material_value = 10.0, centralization_value = 1.0):
     if mode == "regular":
         engine = Engine_regular(
             ev.History([], [], []), 
