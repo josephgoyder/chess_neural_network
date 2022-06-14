@@ -29,5 +29,5 @@ def fight():
 
     y = [eval] * move_n 
 
-    return np.array(X), y
+    return np.array(X), np.array(y)
 
