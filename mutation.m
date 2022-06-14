@@ -13,29 +13,24 @@ m1 = length(new_theta_1);
 m2 = length(new_theta_2);
 m3 = length(new_theta_3);
 
-a1 = randi(mutation_rate * 50, 1, 50);
-a2 = randi(mutation_rate * 50, 1, 50);
-a3 = randi(mutation_rate * 50, 1, 50);
+a1 = randi(m1, 1, floor(1/mutation_rate * m1));
+a2 = randi(m2, 1, floor(1/mutation_rate * m2));
+a3 = randi(m3, 1, floor(1/mutation_rate * m3));
 
+for a = a1,
+  epsilon_init = sqrt(6)/(sqrt(m1));
+  new_theta_1(a) = - epsilon_init + rand(1) * 2 * epsilon_init ;
+endfor  
 
-for i = 1:50,
+for a = a2,
+  epsilon_init = sqrt(6)/(sqrt(m2));
+  new_theta_2(a) = - epsilon_init + rand(1) * 2 * epsilon_init ;
+endfor  
 
-  if a1(i) <= m1,
-    x = rand;
-    new_theta_1(a1(i)) = log(x / (1 - x));
-  endif
-  
-  if a2(i) <= m2,
-    x = rand;
-    new_theta_2(a2(i)) = log(x / (1 - x));
-  endif
-
-  if a3(i) <= m3,
-    x = rand;
-    new_theta_3(a3(i)) = log(x / (1 - x));
-  endif
-
-end
+for a = a3,
+  epsilon_init = sqrt(6)/(sqrt(m3));
+  new_theta_3(a) = - epsilon_init + rand(1) * 2 * epsilon_init ;
+endfor  
 
 Theta1 = reshape(new_theta_1, [size(Theta1)]);
 Theta2 = reshape(new_theta_2, [size(Theta2)]);
