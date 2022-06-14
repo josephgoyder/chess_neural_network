@@ -14,6 +14,7 @@ def fight():
         X.append(ev.board_to_X(game.engine.board, game.turn))
         move_n += 1
         print("Move: ", move_n)
+        print("X size:", np.shape(X))
 
     print("")
     if game.white_win:
