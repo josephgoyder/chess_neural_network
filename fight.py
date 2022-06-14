@@ -13,6 +13,7 @@ def fight():
         game.engine_turn()
         X.append(ev.board_to_X(game.engine.board, game.turn))
         move_n += 1
+        print("Move: ", move_n)
 
     print("")
     if game.white_win:
