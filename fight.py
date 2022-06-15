@@ -39,7 +39,6 @@ def fight():
             game.draw = True
 
         print("Move: ", move_n)
-        print("X size:", np.shape(X))
 
     print("")
     if game.white_win:
@@ -56,5 +55,6 @@ def fight():
 
     y_nn = [eval] * move_n 
 
-    return np.array(X), np.array(y)
+    print(y_comb)
+    return np.array(X_nn + X_comb), np.array(y_nn + y_comb)
 
