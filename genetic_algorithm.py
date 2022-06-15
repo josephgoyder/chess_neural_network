@@ -23,7 +23,7 @@ def theta_init(Theta_1_size, Theta_2_size, Theta_3_size, n):
 
     #\\Users\\076-jgoyder\\Chess engine\\chess_neural_network
     #A:\\BLK2-MULZET-AD12\\076-JCHIAO\\chess_neural_network
-    n = octave.rand_init_thetas(Theta_1_size, Theta_2_size, Theta_3_size, n)
+    n = octave.random_init_weights(Theta_1_size, Theta_2_size, Theta_3_size, n)
 
 
 def tournament():
