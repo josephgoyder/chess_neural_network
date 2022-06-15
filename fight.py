@@ -17,6 +17,8 @@ def fight():
         1.0
     )
 
+    game.engine.depth = 2
+
     X_nn = []
     X_comb = []
     y_comb = []
@@ -28,14 +30,14 @@ def fight():
 
         engine_comb.explore(game.turn)
         move_comb = engine_comb.notebook.top_lines[0][1][0]
-        for branch in game.engine.branches():
+        for branch in game.engine.branches(game.turn):
             game.engine.move(branch, game.turn)
             X_comb.append(ev.board_to_X(game.engine.board, game.turn))
-            y_comb.append(branch == move_comb)
+            y_comb.append(int((branch == move_comb) == game.turn))
             game.engine.undo()
 
         move_n += 1
-        if move_n == 200:
+        if move_n == 2:
             game.draw = True
 
         print("Move: ", move_n)
@@ -55,6 +57,5 @@ def fight():
 
     y_nn = [eval] * move_n 
 
-    print(y_comb)
     return np.array(X_nn + X_comb), np.array(y_nn + y_comb)
 
