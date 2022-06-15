@@ -6,14 +6,19 @@ function[J] = back_prop(Theta, X, y, lambda)
   Theta1 = Theta1';
   Theta2 = Theta2';
   Theta3 = Theta3';
-  nn_params = (Theta1(:); Theta2(:); Theta3(:))
+  nn_params = [Theta1(:); Theta2(:); Theta3(:)]
 
-  X = X';
   y = y';
+
+  J = nnCostFunction(nn_params, Theta, X, y, lambda)
 
   costfunction = @(p)nnCostFunction(p, Theta, X, y, lambda);
 
-  initial_nn_params = [Theta1(:) ; Theta2(:) ; Theta3(:)];
+  newTheta1 = randInitializeWeights(size(Theta1))
+  newTheta2 = randInitializeWeights(size(Theta2))
+  newTheta3 = randInitializeWeights(size(Theta3))
+
+  initial_nn_params = [newTheta1(:) ; newTheta2(:) ; newTheta3(:)];
 
   [nn_params, cost] = fmincg(costfunction, initial_nn_params, options);
 
