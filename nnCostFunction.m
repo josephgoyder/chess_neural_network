@@ -6,9 +6,6 @@ function [J, grad] = nnCostFunction(nn_params, input_layer_size, hidden_layer_si
   Theta2 = reshape(nn_params((hidden_layer_size * (input_layer_size + 1) + 1 ): (hidden_layer_2_size * (hidden_layer_size + 1)) + (hidden_layer_size * (input_layer_size + 1))), hidden_layer_2_size, (hidden_layer_size + 1));
   Theta3 = reshape(nn_params(length(nn_params) - ((hidden_layer_2_size + 1) * output_layer_size) + 1:end), output_layer_size, (hidden_layer_2_size + 1));
 
-  Theta1 = Theta1';
-  Theta2 = Theta2';
-  Theta3 = Theta3';
 
   J = 0;
   Theta1_grad = zeros(size(Theta1)); 
