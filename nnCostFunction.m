@@ -1,12 +1,10 @@
-function [J, grad] = nnCostFunction(nn_params, Theta, X, y, lambda)
-
-  load(["/home/joseph/Desktop/chess_neural_network/backprop_data/neural_net_dataset_" num2str(Theta) ".mat"])
+function [J, grad] = nnCostFunction(nn_params, input_layer_size, hidden_layer_size, hidden_layer_2_size, output_layer_size, X, y, lambda)
   
   options = optimset('MaxIter', 50);
   
-  Theta1 = reshape(nn_params(1:(size(Theta1)(1) * size(Theta1)(2))), size(Theta1));
-  Theta2 = reshape(nn_params(((size(Theta1)(1) * size(Theta1)(2)) + 1):(size(Theta1)(1) * size(Theta1)(2)) + (size(Theta2)(1) * size(Theta2)(2))), size(Theta2));
-  Theta3 = reshape(nn_params(end - (size(Theta3)(1) * size(Theta3)(2)) + 1:end), size(Theta3));
+  Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)), hidden_layer_size, (input_layer_size + 1));
+  Theta2 = reshape(nn_params(hidden_layer_size * (input_layer_size + 1) + 1 : (hidden_layer_2_size * (hidden_layer_size + 1))), hidden_layer_2_size, (hidden_layer_size + 1));
+  Theta3 = reshape(nn_params((1 + (hidden_layer_2_size * (hidden_layer_size + 1))):end), num_labels, (hidden_layer_2_size + 1));
 
   Theta1 = Theta1';
   Theta2 = Theta2';
