@@ -7,7 +7,7 @@ import shutil
 octave.addpath("/home/joseph/Desktop/chess_neural_network")
 
 for x in range(10):
-    n = octave.mutation(2, 100)
+    n = octave.mutation(2, 75)
     X, y = ft.fight()
     n = octave.back_prop(1, X, y, 1)
     shutil.copyfile('/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_1.mat', '/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_2.mat')
