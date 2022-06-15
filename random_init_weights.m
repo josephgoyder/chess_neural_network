@@ -15,7 +15,7 @@ for i = 1 : n,
 
   a = 1;
 
-  save(["/home/joseph/Desktop/chess_neural_network/backprop_data/neural_net_dataset_" num2str(i) ".mat"], "Theta1", "Theta2", "Theta3");
+  save(["/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_" num2str(i) ".mat"], "Theta1", "Theta2", "Theta3");
   toc
 
 end

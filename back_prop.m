@@ -4,14 +4,15 @@ function[J] = back_prop(Theta, X, y, lambda)
   options = optimset('MaxIter', 50);
 
 
-  input_layer_size = size(Theta1)(1)
+  input_layer_size = size(Theta1)(1) - 1;
   Theta1 = Theta1';
-  hidden_layer_size = size(Theta2)(1)
+  hidden_layer_size = size(Theta2)(1) - 1;
   Theta2 = Theta2';
-  hidden_layer_2_size = size(Theta3)(1)
-  output_layer_size = size(Theta3)(2) - 1
+  hidden_layer_2_size = size(Theta3)(1) - 1;
+  output_layer_size = size(Theta3)(2);
   Theta3 = Theta3';
-  nn_params = [Theta1(:); Theta2(:); Theta3(:)]
+  nn_params = [Theta1(:); Theta2(:); Theta3(:)];
+  size(nn_params)
 
   y = y';
 
