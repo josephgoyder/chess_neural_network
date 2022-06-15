@@ -6,6 +6,7 @@ function[J] = back_prop(Theta, X, y, lambda)
   Theta1 = Theta1';
   Theta2 = Theta2';
   Theta3 = Theta3';
+  nn_params = (Theta1(:); Theta2(:); Theta3(:))
 
   X = X';
   y = y';
