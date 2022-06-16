@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 import pieces as pc
 import move_undo as mo_un
-from oct2py import octave
-import numpy as np
+# from oct2py import octave
+# import numpy as np
 import copy
 
 
@@ -34,114 +34,92 @@ def board_to_X(board, turn):
 @dataclass
 class History:
 
-    evals: list
-    evals_repeat_possible: list
+    states: list
+    states_repeat_possible: list
     moves: list
-    moves_repeat_possible: list
 
     def fifty_move(self):
-        return len(self.evals_repeat_possible) >= 51
-
-    def add_move(self, group, move):
-        if move[0] in group.keys():
-            group[move[0]].append(move[4:])
-        else:
-            group[move[0]] = [move[1:3]]
-
-    def is_repeat(self, group):
-        for move_group in group.values():
-            if len(move_group) == 1 or move_group[0] != move_group[-1]:
-                return False
-
-        return True
-
-    def indexes(self, eval):
-        indexes = []
-        for x in range(len(self.evals_repeat_possible)):
-            if eval == self.evals_repeat_possible[x]:
-                indexes.append(x)
-        
-        return indexes
-
-    def triad_state_repeat(self, i1, i2, i3):
-        for start, stop in [(i1, i2), (i2, i3)]:
-            moves = self.moves[start:stop]
-            group = {}
-            for move in moves:
-                self.add_move(group, move)
-
-            if not self.is_repeat(group):
-                return False
-
-        return True
-
-    def move_based_state_repeat(self, eval):
-        indexes = self.indexes(eval)
-        for i1 in indexes:
-            for i2 in indexes:
-                for i3 in indexes:
-                    if i1 < i2 and i2 < i3:
-                        if self.triad_state_repeat(i1, i2, i3):
-                            return True
-
-        return False
-
-    def eval_triple_repeats(self):
-        tier_1 = []
-        tier_2 = []
-        tier_3 = []
-
-        for eval in self.evals_repeat_possible:
-            if eval not in tier_1:
-                tier_1.append(eval)
-
-            elif eval not in tier_2:
-                tier_2.append(eval)
-
-            elif eval not in tier_3:
-                tier_3.append(eval)
-
-        return tier_3
+        return len(self.states_repeat_possible) >= 51
 
     def threefold(self):
-        for eval in self.eval_triple_repeats():
-            if self.move_based_state_repeat(eval):
+        for state in self.states_repeat_possible:
+            if self.states_repeat_possible.count(state) >= 3:
                 return True
 
         return False
 
-    def evals_repeat_possible_pull(self):
-        self.evals.reverse()
+    def states_repeat_possible_pull(self):
         self.moves.reverse()
-        for eval, move in zip(self.evals, self.moves):
-            self.evals_repeat_possible.append(eval)
-            self.moves_repeat_possible.append(move)
-            if move[2] == "-" or "x" in move:
+        self.states.reverse()
+
+        for move, state in zip(self.moves, self.states):
+            self.states_repeat_possible.insert(0, state)
+            if "x" in move or move[0] not in ["R", "K", "B", "Q"]:
                 break
 
-        self.evals.reverse()
         self.moves.reverse()
+        self.states.reverse()
 
-    def record(self, move, board, eval):
-        notation = mo_un.notation(move, board)
-        self.moves.append(notation)
-        self.evals.append(eval)
-        if (
-            move["piece_2"] is not None 
-            or type(move["piece_1"]) == pc.Pawn
-        ):
-            self.evals_repeat_possible.clear()
-            self.moves_repeat_possible.clear()
+    def location_sort_criteria(self, location):
+        if location is not None:
+            return location[0] * 8 + location[1]
+        else:
+            return -1
 
-        self.evals_repeat_possible.append(eval)
-        self.moves_repeat_possible.append(notation)
-        
-    def unrecord(self):
-        self.evals.pop(-1)
+    def state(self, board):
+        state = {
+            "w": [],
+            "wR": [],
+            "wKn": [],
+            "wB": [],
+            "wQ": [],
+            "wK": [],
+            "b": [],
+            "bR": [],
+            "bKn": [],
+            "bB": [],
+            "bQ": [],
+            "bK": [],
+        }
+
+        for pieces, abreviation in zip([board.white_pieces.values(), board.black_pieces.values()], ["w", "b"]):
+            for piece in pieces:
+                state[abreviation + piece.notation].append(piece.location)
+
+        for locations in state.values():
+            if len(locations) > 1:
+                locations.sort(key = self.location_sort_criteria)
+
+        return state
+
+    def initialize_state(self, board):
+        state = self.state(board)
+        self.states.append(state)
+        self.states_repeat_possible.append(state)
+
+    def record(self, move, board):
+        if move["piece_2"] is not None:
+            board.change_piece_num(-1, move["piece_2"].colour)
+            self.states_repeat_possible.clear()
+
+        elif move["piece_1"].notation == "":
+            self.states_repeat_possible.clear()
+
+        self.moves.append(mo_un.notation(move, board))
+        state = self.state(board)
+        self.states.append(state)
+        self.states_repeat_possible.append(state)
+
+    def unrecord(self, move, board):
+        if move["piece_2"] is not None:
+            board.change_piece_num(1, move["piece_2"].colour)
+
+        self.states_repeat_possible.pop(-1)
+        self.states.pop(-1)
         self.moves.pop(-1)
-        self.evals_repeat_possible.pop(-1)
-        if len(self.evals_repeat_possible) == 0:
-            self.evals_repeat_possible_pull()
+
+        if len(self.states_repeat_possible) == 0:
+            self.states_repeat_possible_pull()
 
 
 def initialize_centralization(board):
