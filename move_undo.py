@@ -39,7 +39,7 @@ def move_en_passant(board, move):
 
 def move_promotion(board, move):
     pieces = board.pieces(move["piece_1"].colour)
-    old_piece_key = pieces.keys()[pieces.values().index(move["piece_1"])]
+    old_piece_key = list(pieces.keys())[list(pieces.values()).index(move["piece_1"])]
     
     if move["promotion"] == "queen":
         move["piece_1"] = pc.Queen(move["location_1"], move["piece_1"].colour)
