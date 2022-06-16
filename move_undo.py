@@ -38,6 +38,9 @@ def move_en_passant(board, move):
 
 
 def move_promotion(board, move):
+    pieces = board.pieces(move["piece_1"].colour)
+    old_piece_key = pieces.keys()[pieces.values().index(move["piece_1"])]
+    
     if move["promotion"] == "queen":
         move["piece_1"] = pc.Queen(move["location_1"], move["piece_1"].colour)
 
@@ -49,6 +52,8 @@ def move_promotion(board, move):
 
     else:
         move["piece_1"] = pc.Rook(move["location_1"], move["piece_1"].colour)
+
+    pieces[old_piece_key] = move["piece_1"]
 
     move_regular(board, move)
 
@@ -117,9 +122,14 @@ def undo_en_passant(board, move):
 
 
 def undo_promotion(board, move):
+    pieces = board.pieces(move["piece_1"].colour)
+    old_piece_key = pieces.keys()[pieces.values().index(move["piece_1"])]
+    
     move["piece_1"] = pc.Pawn(
         move["piece_1"].location, move["piece_1"].colour, True, False
     )
+
+    pieces[old_piece_key] = move["piece_1"]
 
     undo_regular(board, move)
 
