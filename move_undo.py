@@ -42,16 +42,16 @@ def move_promotion(board, move):
     old_piece_key = list(pieces.keys())[list(pieces.values()).index(move["piece_1"])]
     
     if move["promotion"] == "queen":
-        move["piece_1"] = pc.Queen(move["location_1"], move["piece_1"].colour)
+        move["piece_1"] = pc.Queen(move["location_1"], move["piece_1"].colour, centralization=move["piece_1"].centralization, moved=move["piece_1"].moved)
 
     elif move["promotion"] == "knight":
-        move["piece_1"] = pc.Knight(move["location_1"], move["piece_1"].colour)
+        move["piece_1"] = pc.Knight(move["location_1"], move["piece_1"].colour, centralization=move["piece_1"].centralization, moved=move["piece_1"].moved)
 
     elif move["promotion"] == "bishop":
-        move["piece_1"] = pc.Bishop(move["location_1"], move["piece_1"].colour)
+        move["piece_1"] = pc.Bishop(move["location_1"], move["piece_1"].colour, centralization=move["piece_1"].centralization, moved=move["piece_1"].moved)
 
     else:
-        move["piece_1"] = pc.Rook(move["location_1"], move["piece_1"].colour)
+        move["piece_1"] = pc.Rook(move["location_1"], move["piece_1"].colour, centralization=move["piece_1"].centralization, moved=move["piece_1"].moved)
 
     pieces[old_piece_key] = move["piece_1"]
 
@@ -126,7 +126,7 @@ def undo_promotion(board, move):
     old_piece_key = list(pieces.keys())[list(pieces.values()).index(move["piece_1"])]
     
     move["piece_1"] = pc.Pawn(
-        move["piece_1"].location, move["piece_1"].colour, True, False
+        move["piece_1"].location, move["piece_1"].colour, centralization=move["piece_1"].centralization, en_passant_able=False, moved=move["piece_1"].moved
     )
 
     pieces[old_piece_key] = move["piece_1"]
