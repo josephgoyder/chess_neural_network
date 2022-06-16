@@ -193,7 +193,7 @@ def generation_sequence(heats, survivability, min_player, goal_population, mutat
 def main(init_population, descend_generations):
 
     tic = time.perf_counter()
-    theta_init(np.array([770, 25.]), np.array([26, 25.]), np.array([26, 1.]), init_population)
+    theta_init(np.array([770, 50.]), np.array([51, 50.]), np.array([51, 1.]), init_population)
     # octave.addpath("/home/joseph/Desktop/chess_neural_network")
     # for i in range(1):
     #     generation_sequence(2, 3, 10, 200, 5)
