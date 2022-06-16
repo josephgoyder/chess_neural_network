@@ -37,7 +37,7 @@ def train_assisted():
         game.engine.undo()
 
         move_n += 1
-        if move_n == 2:
+        if move_n == 200:
             game.draw = True
 
         print("Move: ", move_n)
