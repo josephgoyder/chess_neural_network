@@ -12,7 +12,6 @@ function[J] = back_prop(Theta, X, y, lambda)
   output_layer_size = size(Theta3)(2);
   Theta3 = Theta3';
   nn_params = [Theta1(:); Theta2(:); Theta3(:)];
-  size(nn_params)
 
   y = y';
 
@@ -20,9 +19,9 @@ function[J] = back_prop(Theta, X, y, lambda)
 
   costfunction = @(p)nnCostFunction(p, input_layer_size, hidden_layer_size, hidden_layer_2_size, output_layer_size, X, y, lambda);
 
-  newTheta1 = randInitializeWeights(input_layer_size, hidden_layer_size)
-  newTheta2 = randInitializeWeights(hidden_layer_size, hidden_layer_2_size)
-  newTheta3 = randInitializeWeights(hidden_layer_2_size, output_layer_size)
+  newTheta1 = randInitializeWeights(input_layer_size, hidden_layer_size);
+  newTheta2 = randInitializeWeights(hidden_layer_size, hidden_layer_2_size);
+  newTheta3 = randInitializeWeights(hidden_layer_2_size, output_layer_size);
 
   initial_nn_params = [newTheta1(:) ; newTheta2(:) ; newTheta3(:)];
 
