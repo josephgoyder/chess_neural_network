@@ -37,6 +37,7 @@ class History:
     evals: list
     evals_repeat_possible: list
     moves: list
+    moves_repeat_possible: list
 
     def fifty_move(self):
         return len(self.evals_repeat_possible) >= 51
@@ -56,8 +57,8 @@ class History:
 
     def indexes(self, eval):
         indexes = []
-        for x in range(len(self.evals)):
-            if eval == self.evals[x]:
+        for x in range(len(self.evals_repeat_possible)):
+            if eval == self.evals_repeat_possible[x]:
                 indexes.append(x)
         
         return indexes
@@ -114,6 +115,7 @@ class History:
         self.moves.reverse()
         for eval, move in zip(self.evals, self.moves):
             self.evals_repeat_possible.append(eval)
+            self.moves_repeat_possible.append(move)
             if move[2] == "-" or "x" in move:
                 break
 
@@ -121,15 +123,18 @@ class History:
         self.moves.reverse()
 
     def record(self, move, board, eval):
-        self.moves.append(mo_un.notation(move, board))
+        notation = mo_un.notation(move, board)
+        self.moves.append(notation)
         self.evals.append(eval)
         if (
             move["piece_2"] is not None 
             or type(move["piece_1"]) == pc.Pawn
         ):
             self.evals_repeat_possible.clear()
+            self.moves_repeat_possible.clear()
 
         self.evals_repeat_possible.append(eval)
+        self.moves_repeat_possible.append(notation)
         
     def unrecord(self):
         self.evals.pop(-1)
@@ -163,7 +168,6 @@ def regular_eval(material_value, centralization_value, board):
 
 
 def nn_eval(material_value, centralization_value, board, turn):
-
     return octave.feedforward_prop(board_to_X(board, turn), int(turn) + 1)
 
 

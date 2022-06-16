@@ -61,7 +61,7 @@ def train_assisted():
 
 
 def train():
-    game = gm.game_start_nn()
+    game = gm.game_start()
 
     game.engine.depth = 2
 
@@ -72,7 +72,7 @@ def train():
         game.engine_turn()
         X_nn.append(ev.board_to_X(game.engine.board, game.turn))
         move_n += 1
-        if move_n == 2:
+        if move_n == 200:
             game.draw = True
 
         print("Move: ", move_n)

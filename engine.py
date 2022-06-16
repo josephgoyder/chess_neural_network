@@ -268,7 +268,7 @@ class Engine_nn(Engine):
 def engine_setup(mode, depth = 4, top_lines_filters = [1, 1], material_value = 10.0, centralization_value = 1.0):
     if mode == "regular":
         engine = Engine_regular(
-            ev.History([], [], []), 
+            ev.History([], [], [], []), 
             Notebook([], [], []), 
             bd.Board({}, {}, []), 
             depth, 
@@ -279,7 +279,7 @@ def engine_setup(mode, depth = 4, top_lines_filters = [1, 1], material_value = 1
     
     elif mode == "chess 960":
         engine = Engine_960(
-            ev.History([], [], []), 
+            ev.History([], [], [], []), 
             Notebook([], [], []), 
             bd.Board({}, {}, []), 
             depth, 
@@ -290,7 +290,7 @@ def engine_setup(mode, depth = 4, top_lines_filters = [1, 1], material_value = 1
     
     elif mode == "reverse":
         engine = Engine_reverse(
-            ev.History([], [], []), 
+            ev.History([], [], [], []), 
             Notebook([], [], []), 
             bd.Board({}, {}, []), 
             depth, 
@@ -301,7 +301,7 @@ def engine_setup(mode, depth = 4, top_lines_filters = [1, 1], material_value = 1
     
     elif mode == "king of the hill":
         engine = Engine_koth(
-            ev.History([], [], []), 
+            ev.History([], [], [], []), 
             Notebook([], [], []), 
             bd.Board({}, {}, []), 
             depth, 
@@ -312,7 +312,7 @@ def engine_setup(mode, depth = 4, top_lines_filters = [1, 1], material_value = 1
 
     elif mode == "nn":
         engine = Engine_nn(
-            ev.History([], [], []), 
+            ev.History([], [], [], []), 
             Notebook([], [], []), 
             bd.Board({}, {}, []), 
             depth, 
