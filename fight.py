@@ -11,7 +11,7 @@ def train_assisted():
         game.engine.history, 
         game.engine.notebook, 
         game.engine.board, 
-        4,
+        2,
         [1, 1],
         10.0, 
         1.0
@@ -30,11 +30,11 @@ def train_assisted():
 
         engine_comb.explore(game.turn)
         move_comb = engine_comb.notebook.top_lines[0][1][0]
-        y_comb.append(int(game.turn))
-
-        game.engine.move(move_comb, game.turn)
-        X_comb.append(ev.board_to_X(game.engine.board, game.turn))
-        game.engine.undo()
+        for branch in game.engine.branches(game.turn):
+            game.engine.move(branch, game.turn)
+            X_comb.append(ev.board_to_X(game.engine.board, game.turn))
+            y_comb.append(int((branch == move_comb) == game.turn))
+            game.engine.undo()
 
         move_n += 1
         if move_n == 200:
