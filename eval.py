@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 import pieces as pc
 import move_undo as mo_un
-# from oct2py import octave
-# import numpy as np
+from oct2py import octave
+import numpy as np
 import copy
 
 

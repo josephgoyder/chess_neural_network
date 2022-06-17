@@ -61,7 +61,7 @@ def train_assisted():
 
 
 def train():
-    game = gm.game_start()
+    game = gm.game_start_nn()
 
     game.engine.depth = 2
 
