@@ -62,14 +62,14 @@ class Engine:
     def move(self, move, turn):
         mo_un.move(move, self.board)
         self.notebook.journey.append(move)
-        self.history.record(move, self.board, self.eval(turn))
+        self.history.record(move, self.board)
         self.update_centralization(move["piece_1"])
 
     def undo(self):
         move = self.notebook.journey[-1]
 
         mo_un.undo(move, self.board)
-        self.history.unrecord()
+        self.history.unrecord(move, self.board)
         self.notebook.journey.pop(-1)
         self.update_centralization(move["piece_1"])
         if move["piece_2"] is not None:
@@ -110,7 +110,7 @@ class Engine:
 
         elif level == depth:
             self.notebook.lines[level - 1].append(
-                [self.history.evals[-1], [self.notebook.journey[-1]]]
+                [self.eval(turn), [self.notebook.journey[-1]]]
             )
 
         else:
@@ -174,8 +174,8 @@ class Engine:
 
     def default_setup(self, turn):
         ev.initialize_centralization(self.board)
-        self.history.evals.append(self.eval(turn))
-        self.history.evals_repeat_possible.append(self.eval(turn))
+        self.history.states.append(self.history.state(self.board))
+        self.history.states_repeat_possible.append(self.history.state(self.board))
         self.notebook.setup_lines(self.depth)
         
 
@@ -268,7 +268,7 @@ class Engine_nn(Engine):
 def engine_setup(mode, depth = 4, top_lines_filters = [1, 1], material_value = 10.0, centralization_value = 1.0):
     if mode == "regular":
         engine = Engine_regular(
-            ev.History([], [], [], []), 
+            ev.History([], [], []), 
             Notebook([], [], []), 
             bd.Board({}, {}, []), 
             depth, 
@@ -279,7 +279,7 @@ def engine_setup(mode, depth = 4, top_lines_filters = [1, 1], material_value = 1
     
     elif mode == "chess 960":
         engine = Engine_960(
-            ev.History([], [], [], []), 
+            ev.History([], [], []), 
             Notebook([], [], []), 
             bd.Board({}, {}, []), 
             depth, 
@@ -290,7 +290,7 @@ def engine_setup(mode, depth = 4, top_lines_filters = [1, 1], material_value = 1
     
     elif mode == "reverse":
         engine = Engine_reverse(
-            ev.History([], [], [], []), 
+            ev.History([], [], []), 
             Notebook([], [], []), 
             bd.Board({}, {}, []), 
             depth, 
@@ -301,7 +301,7 @@ def engine_setup(mode, depth = 4, top_lines_filters = [1, 1], material_value = 1
     
     elif mode == "king of the hill":
         engine = Engine_koth(
-            ev.History([], [], [], []), 
+            ev.History([], [], []), 
             Notebook([], [], []), 
             bd.Board({}, {}, []), 
             depth, 
@@ -312,7 +312,7 @@ def engine_setup(mode, depth = 4, top_lines_filters = [1, 1], material_value = 1
 
     elif mode == "nn":
         engine = Engine_nn(
-            ev.History([], [], [], []), 
+            ev.History([], [], []), 
             Notebook([], [], []), 
             bd.Board({}, {}, []), 
             depth, 
