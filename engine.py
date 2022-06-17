@@ -161,14 +161,14 @@ class Engine:
                 eval += f"{len(line[1]) // 2 + len(line[1]) % 2}"
                 eval += "_black"
 
-            else:
+            # else:
                 # based on avg centralization and material value of a piece scaled down
-                eval_scale_factor = 0.42 / (
-                    0.42 * self.material_value + 0.58 * self.centralization_value
-                )
-                eval = round(
-                    line[0] * eval_scale_factor, 2
-                )
+                # eval_scale_factor = 0.42 / (
+                #     0.42 * self.material_value + 0.58 * self.centralization_value
+                # )
+                # eval = round(
+                #     line[0] * eval_scale_factor, 2
+                # )
 
             print(eval, notation)
 
