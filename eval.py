@@ -1,9 +1,10 @@
 from dataclasses import dataclass
 import pieces as pc
 import move_undo as mo_un
-# from oct2py import octave
-# import numpy as np
+from oct2py import octave
+import numpy as np
 import copy
+import random
 
 
 def board_to_X(board, turn):
@@ -146,6 +147,7 @@ def regular_eval(material_value, centralization_value, board):
 
 
 def nn_eval(material_value, centralization_value, board, turn):
+    return random.random()
     return octave.feedforward_prop(board_to_X(board, turn), int(turn) + 1)
 
 
