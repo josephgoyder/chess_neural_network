@@ -138,7 +138,7 @@ class Game:
         print("")
 
         if self.lines_on:
-            self.engine.top_lines_show(3)
+            self.engine.top_lines_show(1)
             print("")
 
 

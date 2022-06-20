@@ -12,15 +12,15 @@ function checkNNGradients(lambda)
         lambda = 0;
     end
     
-    input_layer_size = 97;
-    hidden_layer_size = 250;
-    num_labels = 850;
+    input_layer_size = 5;
+    hidden_layer_size = 5;
+    num_labels = 5;
     m = 5;
     
     % We generate some 'random' test data
     Theta1 = debugInitializeWeights(hidden_layer_size, input_layer_size);
-    Theta2 = debugInitializeWeights(250, hidden_layer_size);
-    Theta3 = debugInitializeWeights(num_labels, 250);
+    Theta2 = debugInitializeWeights(5, hidden_layer_size);
+    Theta3 = debugInitializeWeights(num_labels, 5);
     % Reusing debugInitializeWeights to generate X
     X  = debugInitializeWeights(m, input_layer_size - 1);
     y  = 1 + mod(1:m, num_labels)';
@@ -29,7 +29,7 @@ function checkNNGradients(lambda)
     nn_params = [Theta1(:) ; Theta2(:); Theta3(:)];
     
     % Short hand for cost function
-    costFunc = @(p) nnCostFunction(p, 1, X, y, lambda, 0);
+    costFunc = @(p) nnCostFunction(p, 5, 5, 5, 5, X, y, lambda, 0);
     
     [cost, grad] = costFunc(nn_params);
     numgrad = computeNumericalGradient(costFunc, nn_params);

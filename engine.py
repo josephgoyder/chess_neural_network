@@ -139,7 +139,7 @@ class Engine:
         moves = self.branches(turn)
         for depth in range(self.depth // 2):
             self.notebook.top_lines.clear()
-            self.search(turn, 2 * (depth + 1), round(len(moves) * self.top_lines_filters[depth]), moves)
+            self.search(turn, 2 * (depth + 1), self.top_lines_filters[depth], moves)
             moves = [top_line[1][0] for top_line in self.notebook.top_lines]
 
 
@@ -266,7 +266,7 @@ class Engine_nn(Engine):
         self.default_setup(turn)
 
 
-def engine_setup(mode, depth = 4, top_lines_filters = [1, 1], material_value = 10.0, centralization_value = 1.0):
+def engine_setup(mode, depth = 6, top_lines_filters = [1, 1, 1], material_value = 10.0, centralization_value = 1.0):
     if mode == "regular":
         engine = Engine_regular(
             ev.History([], [], []), 

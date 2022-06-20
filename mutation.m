@@ -3,8 +3,8 @@ function [n] = mutation(dataset, mutation_rate)
 disp(["Mutating dataset ", num2str(dataset)])
 
 
-# load(["/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_" num2str(dataset) ".mat"])
-load(["C:\\Users\\076-jgoyder\\Chess engine\\chess_neural_network\\engine_data\\neural_net_dataset_" num2str(dataset) ".mat"])
+load(["/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_" num2str(dataset) ".mat"])
+% load(["C:\\Users\\076-jgoyder\\Chess engine\\chess_neural_network\\engine_data\\neural_net_dataset_" num2str(dataset) ".mat"])
 
 new_theta_1 = reshape(Theta1, 1, []);
 new_theta_2 = reshape(Theta2, 1, []);
@@ -37,8 +37,8 @@ Theta1 = reshape(new_theta_1, [size(Theta1)]);
 Theta2 = reshape(new_theta_2, [size(Theta2)]);
 Theta3 = reshape(new_theta_3, [size(Theta3)]);
 tic
-# save(["/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_" num2str(dataset) ".mat"], "Theta1", "Theta2", "Theta3");
-save(["C:\\Users\\076-jgoyder\\Chess engine\\chess_neural_network\\engine_data\\neural_net_dataset_" num2str(dataset) ".mat"], "Theta1", "Theta2", "Theta3");
+save(["/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_" num2str(dataset) ".mat"], "Theta1", "Theta2", "Theta3");
+% save(["C:\\Users\\076-jgoyder\\Chess engine\\chess_neural_network\\engine_data\\neural_net_dataset_" num2str(dataset) ".mat"], "Theta1", "Theta2", "Theta3");
 toc
 n = 0;
 

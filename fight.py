@@ -5,13 +5,13 @@ import eval as ev
 import numpy as np
 
             
-def train_assisted():
+def train_assisted(depth):
     game = gm.game_start_nn()
     engine_comb = Engine_regular(
         game.engine.history, 
         game.engine.notebook, 
         game.engine.board, 
-        2,
+        depth,
         [1, 1],
         10.0, 
         1.0
@@ -19,16 +19,14 @@ def train_assisted():
 
     game.engine.depth = 2
 
-    X_nn = []
     X_comb = []
     y_comb = []
     move_n = 0
 
     while not game.concluded():
         game.engine_turn()
-        X_nn.append(ev.board_to_X(game.engine.board, game.turn))
 
-        engine_comb.explore(game.turn)
+        engine_comb.search(game.turn, depth, 1, engine_comb.branches(game.turn))
         move_comb = engine_comb.notebook.top_lines[0][1][0]
         for branch in game.engine.branches(game.turn):
             game.engine.move(branch, game.turn)
@@ -55,12 +53,10 @@ def train_assisted():
         print("Draw")
         eval = 0.5
 
-    y_nn = [eval] * move_n 
-
-    return np.array(X_nn + X_comb), np.array(y_nn + y_comb)
+    return X_comb, y_comb
 
 
-def train():
+def train_unassisted():
     game = gm.game_start_nn()
 
     game.engine.depth = 2
@@ -92,4 +88,4 @@ def train():
 
     y_nn = [eval] * move_n 
 
-    return np.array(X_nn), np.array(y_nn)
+    return X_nn, y_nn
