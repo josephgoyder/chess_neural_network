@@ -114,6 +114,16 @@ class Game:
                 user_move = self.user_move(user_input)
                 if user_move is not None:
                     return user_move
+                else:
+                    print(
+                        "Commands: engine on, engine off, stop, lines on, lines off, stop\n"
+                        + "Move format: {piece notation (Empty for pawn) }{piece's square}{- or x for capturing}{target square}\n" 
+                        + "   ex) Qd1-d3: Move queen from d1 to d3\n"
+                        + "       e6xf5: Pawn on e6 captures piece on f5\n"
+                        + "       0-0: castle short\n"
+                        + "       0-0-0: castle long\n"
+                        + "       h7-h8R: pawn on h7 reaches end rank and promotes to rook\n"
+                    )
 
     def user_turn(self):
         user_move = self.user_input()
