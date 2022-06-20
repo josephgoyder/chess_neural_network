@@ -8,6 +8,9 @@ import time
 #$env:path += ";C:\Users\076-jgoyder\AppData\Local\Programs\GNU Octave\Octave-7.1.0\mingw64\bin"
 
 def train(depth, games_per_step, theta):
+    '''
+    Trains the NN on the comb engine. {Depth} specifies the depth the comb engine runs on.
+    '''
     octave.addpath("/home/joseph/Desktop/chess_neural_network")
     for i in range(100000):
         print(f"gen: {i}")
