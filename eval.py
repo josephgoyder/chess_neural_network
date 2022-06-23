@@ -155,9 +155,9 @@ def regular_eval(material_value, centralization_value, board):
     return material * material_value + centralization * centralization_value
 
 
-def nn_eval(material_value, centralization_value, board, turn):
+def nn_eval(material_value, centralization_value, board, turn, thetaset):
     # return random.random()
-    return octave.feedforward_prop(board_to_X(board, turn), int(not turn) + 1)
+    return octave.feedforward_prop(board_to_X(board, turn), thetaset)
 
         
 def reverse_win_lose_draw(board, history):

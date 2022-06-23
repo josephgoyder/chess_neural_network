@@ -47,6 +47,7 @@ def train_assisted(depth):
 
         # increment move number and draw if move cap is reached
         move_n += 1
+        game.engine.thetaset = int(not bool(game.engine.thetaset - 1)) + 1
         if move_n == 200:
             game.draw = True
 
@@ -92,6 +93,7 @@ def train_unassisted():
 
         # increment move number and draw if move cap is reached
         move_n += 1
+        game.engine.thetaset = int(not bool(game.engine.thetaset - 1)) + 1
         if move_n == 200:
             game.draw = True
 
