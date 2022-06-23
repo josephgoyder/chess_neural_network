@@ -1,10 +1,13 @@
 function[J] = back_prop(Theta, X, y, lambda)
+  """This function take in X, y, and current Theta to conduct backward propagation"""
 
   load(["/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_" num2str(Theta) ".mat"])
   % load(["C:\\Users\\076-jgoyder\\Chess engine\\chess_neural_network\\engine_data\\neural_net_dataset_" num2str(Theta) ".mat"])
 
+  % Set max backprop iteration to 50
   options = optimset('MaxIter', 50);
 
+  % Configure Thetas into nn_params
   input_layer_size = size(Theta1)(1) - 1;
   Theta1 = Theta1';
   hidden_layer_size = size(Theta2)(1) - 1;
@@ -22,7 +25,7 @@ function[J] = back_prop(Theta, X, y, lambda)
   %Create short hand for NN_params in the cost function
   costfunction = @(p)nnCostFunction(p, input_layer_size, hidden_layer_size, hidden_layer_2_size, output_layer_size, X, y, lambda);
 
-  % 
+  % backprop
   [nn_params, cost] = fmincg(costfunction, nn_params, options);
 
   % reshaping Thetas

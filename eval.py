@@ -8,8 +8,16 @@ import random
 
 
 def board_to_X(board, turn):
+    '''
+    Translate the state of the board into an X for training data. 
+    Format: separate board for each type of piece with 1 on a square 
+    if that type of piece is there, 0 else. 1 or -1 for who's turn it is.
+    '''
+
+    # make 12 separate boards with nested lists
     X = [copy.copy([copy.copy([copy.copy(0) for x in range(8)]) for x in range(8)]) for x in range(12)]
 
+    # for each piece, put a 1 in their location in the board corresponding to their board type
     types = [pc.Pawn, pc.Rook, pc.Knight, pc.Bishop, pc.Queen, pc.King]
     for piece in board.white_pieces.values():
         if piece.location is not None:
@@ -19,6 +27,7 @@ def board_to_X(board, turn):
         if piece.location is not None:
             X[types.index(type(piece)) + 6][piece.location[1]][piece.location[0]] = 1
 
+    # unroll X into one long list
     X_unravel_1 = []
     for view in X:
         X_unravel_1 += view
@@ -151,9 +160,6 @@ def nn_eval(material_value, centralization_value, board, turn):
     return octave.feedforward_prop(board_to_X(board, turn), int(not turn) + 1)
 
         
-    
-
-
 def reverse_win_lose_draw(board, history):
     if board.white_piece_num == 0:
         return 1001
