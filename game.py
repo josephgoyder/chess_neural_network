@@ -138,9 +138,21 @@ class Game:
     def engine_turn(self):
         # self.engine.explore(self.turn)
         self.engine.notebook.top_lines.clear()
-        self.engine.search(self.turn, 1, 1, self.engine.branches(self.turn))
+        branches = self.engine.branches(self.turn)
+        self.engine.search(self.turn, 1, 5, branches)
 
-        engine_move = self.engine.notebook.top_lines[0][1][0]
+        p_total = 0
+        for line in self.engine.notebook.top_lines:
+            p_total += abs(line[0])
+
+        p_rand = random.uniform(0, p_total)
+        p = 0
+        for line in self.engine.notebook.top_lines:
+            p += abs(line[0])
+            if p > p_rand:
+                engine_move = line[1][0]
+                break
+
         self.move(engine_move)
         self.win_lose_draw_update()
         print(f"Engine: {mo_un.notation(engine_move, self.engine.board)}")
