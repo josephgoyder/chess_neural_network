@@ -126,7 +126,9 @@ class Game:
             print("")
 
     def engine_turn(self):
-        self.engine.explore(self.turn)
+        # self.engine.explore(self.turn)
+        self.engine.notebook.top_lines.clear()
+        self.engine.search(self.turn, 1, 1, self.engine.branches(self.turn))
 
         engine_move = self.engine.notebook.top_lines[0][1][0]
         self.move(engine_move)
