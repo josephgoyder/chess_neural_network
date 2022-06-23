@@ -147,11 +147,8 @@ def regular_eval(material_value, centralization_value, board):
 
 
 def nn_eval(material_value, centralization_value, board, turn):
-    # if turn:        
-    #     print(octave.feedforward_prop(board_to_X(board, turn), int(turn) + 1))
-    #     return octave.feedforward_prop(board_to_X(board, turn), int(turn) + 1)
-    # print("random")
-    return random.random()
+    # return random.random()
+    return octave.feedforward_prop(board_to_X(board, turn), int(not turn) + 1)
 
         
     
@@ -195,7 +192,7 @@ def regular_win_lose_draw(board, history):
         or history.threefold()
         or insufficient_material(board)
     ):
-        return 0
+        return 0.5
 
 
 def koth_win_lose_draw(board, history):
