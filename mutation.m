@@ -1,7 +1,5 @@
 function [n] = mutation(dataset, mutation_rate)
 
-  """This function take in a theta set and turn change a few values within"""
-
 disp(["Mutating dataset ", num2str(dataset)])
 
 #Load Theta

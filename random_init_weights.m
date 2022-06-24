@@ -1,6 +1,5 @@
 function [a] = random_init_weights(Theta1_size, Theta2_size, Theta3_size, n)
 
-  """This function generate a neural network with randomized value"""
 
 
 for i = 1 : n,
