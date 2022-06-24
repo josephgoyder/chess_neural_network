@@ -4,7 +4,7 @@ import game as gm
 print("Welcome to chess engine ui. For help at any stage, smash your head on the keyboard and press enter.")
 print("")
 
-game = gm.game_start()
+game = gm.game_start_nn()
 
 print("")
 game.illustrate()
