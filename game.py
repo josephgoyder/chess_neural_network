@@ -139,7 +139,7 @@ class Game:
         # self.engine.explore(self.turn)
         self.engine.notebook.top_lines.clear()
         branches = self.engine.branches(self.turn)
-        self.engine.search(self.turn, 1, 3, branches)
+        self.engine.search(self.turn, 1, 1, branches)
 
         p_total = 0
         for line in self.engine.notebook.top_lines:
@@ -153,7 +153,7 @@ class Game:
             i += 1
             if p > p_rand:
                 engine_move = line[1][0]
-                print(i)
+                print(f"engine_choice: {i}")
                 break
 
         self.move(engine_move)

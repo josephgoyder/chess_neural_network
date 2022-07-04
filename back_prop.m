@@ -19,7 +19,7 @@ function[J] = back_prop(Theta, X, y, lambda)
   y = y';
 
   % Compute cost function for evaluation
-  J = nnCostFunction(nn_params, input_layer_size, hidden_layer_size, hidden_layer_2_size, output_layer_size, X, y, lambda)
+  J = nnCostFunction(nn_params, input_layer_size, hidden_layer_size, hidden_layer_2_size, output_layer_size, X, y, lambda);
 
   %Create short hand for NN_params in the cost function
   costfunction = @(p)nnCostFunction(p, input_layer_size, hidden_layer_size, hidden_layer_2_size, output_layer_size, X, y, lambda);
