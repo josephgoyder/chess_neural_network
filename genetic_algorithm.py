@@ -223,4 +223,4 @@ def main(init_population, descend_generations):
     toc = time.perf_counter()
     print(toc - tic)
 
-main(3, 16)
+main(2, 16)
