@@ -45,7 +45,7 @@ function [J, grad] = nnCostFunction(nn_params, input_layer_size, hidden_layer_si
   
   % Regularize cost
   reg_term = (lambda/(2*m)) * (sum(sum(Theta1(:,2:end).^2)) + sum(sum(Theta2(:,2:end).^2)) + sum(sum(Theta3(:,2:end).^2)));
-  J = J + reg_term
+  J = J + reg_term;
   
   % Regularize grad
   Theta1_grad_reg_term = (lambda/m) * [zeros(size(Theta1, 1), 1) Theta1(:,2:end)]; 

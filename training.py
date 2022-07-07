@@ -7,7 +7,7 @@ import time
 
 #$env:path += ";C:\Users\076-jgoyder\AppData\Local\Programs\GNU Octave\Octave-7.1.0\mingw64\bin"
 
-def train(depth, games_per_step, theta):
+def train(depth, games_per_step, thetas, _lambda):
     '''
     Trains the NN on the comb engine. {Depth} specifies the depth the comb engine runs on.
     '''
@@ -25,8 +25,8 @@ def train(depth, games_per_step, theta):
             y += y_j
             # shutil.copyfile('/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_1.mat', '/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_2.mat')
 
-        n = octave.back_prop(theta, np.array(X), np.array(y), 0.000001)
-        # n = octave.back_prop(2, np.array(X), np.array(y), 1)
+        for theta in thetas:
+            n = octave.back_prop(theta, np.array(X), np.array(y), _lambda)
         # shutil.copyfile('C:\\Users\\076-jgoyder\\Chess engine\\chess_neural_network\\engine_data\\neural_net_dataset_1.mat', '/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_2.mat')
 
         # set dataset 2 to dataset 1
