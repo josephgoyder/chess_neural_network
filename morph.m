@@ -16,15 +16,15 @@ function [n] = morph(dataset, morph_rate)
     m3 = length(new_theta_3);
     
     for i = 1 : m1,
-        new_theta_1(i) += (rand(1) - 0.5) * morph_rate;
+        new_theta_1(i) *= 1 + randn() * morph_rate;
     endfor
 
     for i = 1 : m2,
-        new_theta_2(i) += (rand(1) - 0.5) * morph_rate;
+        new_theta_2(i) *= 1 + randn() * morph_rate;
     endfor
 
     for i = 1 : m3,
-        new_theta_3(i) += (rand(1) - 0.5) * morph_rate;
+        new_theta_3(i) *= 1 + randn() * morph_rate;
     endfor
     
     % Reshape Thetas
