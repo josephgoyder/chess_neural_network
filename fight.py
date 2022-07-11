@@ -5,7 +5,7 @@ import eval as ev
 import numpy as np
 
             
-def train_assisted(depth):
+def train_assisted(depth, thetas):
     '''
     Make the training set for the eval NN from one game. 
     Uses its own results and the move recommendation of the comb engine for the training set.
@@ -24,6 +24,7 @@ def train_assisted(depth):
     )
 
     game.engine.depth = 2
+    game.engine.thetaset = thetas[int(not game.turn)]
 
     # init training set and move count
     X_comb = []
@@ -47,7 +48,7 @@ def train_assisted(depth):
 
         # increment move number and draw if move cap is reached
         move_n += 1
-        game.engine.thetaset = int(not bool(game.engine.thetaset - 1)) + 1
+        game.engine.thetaset = thetas[int(not game.turn)]
         if move_n == 200:
             game.draw = True
 
@@ -70,7 +71,7 @@ def train_assisted(depth):
     return X_comb, y_comb
 
 
-def train_unassisted():
+def train_unassisted(thetas):
     '''
     Make the training set for the eval NN from one game. 
     Uses its own results for the training set.
@@ -80,6 +81,7 @@ def train_unassisted():
     game = gm.game_start_nn()
 
     game.engine.depth = 2
+    game.engine.thetaset = thetas[int(not game.turn)]
 
     # init X for the training set and move number
     X_nn = []
@@ -93,7 +95,7 @@ def train_unassisted():
 
         # increment move number and draw if move cap is reached
         move_n += 1
-        game.engine.thetaset = int(not bool(game.engine.thetaset - 1)) + 1
+        game.engine.thetaset = thetas[int(not game.turn)]
         if move_n == 200:
             game.draw = True
 
