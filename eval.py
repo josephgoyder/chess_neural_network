@@ -167,7 +167,7 @@ def reverse_win_lose_draw(board, history):
         return -1001
 
     if history.fifty_move() or history.threefold():
-        return 0
+        return 0.5
 
 
 def insufficient_material(board):
