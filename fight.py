@@ -5,7 +5,7 @@ import eval as ev
 import numpy as np
 
             
-def train_assisted(depth, thetas):
+def fight_assisted(depth, thetas):
     '''
     Make the training set for the eval NN from one game. 
     Uses its own results and the move recommendation of the comb engine for the training set.
@@ -71,12 +71,56 @@ def train_assisted(depth, thetas):
     return X_comb, y_comb
 
 
-def train_unassisted(thetas):
+def fight_unassisted(thetas):
     '''
     Make the training set for the eval NN from one game. 
     Uses its own results for the training set.
     '''
 
+    # init game and eval NN
+    game = gm.game_start_nn()
+
+    game.engine.depth = 2
+    game.engine.thetaset = thetas[int(not game.turn)]
+
+    # init X for the training set and move number
+    X_nn = []
+    move_n = 0
+
+    while not game.concluded():
+        game.engine_turn()
+
+        # add board state to training set
+        X_nn.append(ev.board_to_X(game.engine.board, game.turn))
+
+        # increment move number and draw if move cap is reached
+        move_n += 1
+        game.engine.thetaset = thetas[int(not game.turn)]
+        if move_n == 200:
+            game.draw = True
+
+        print("Move: ", move_n)
+
+    # show result of game and set eval for the NN training examples
+    print("")
+    if game.white_win:
+        print("White wins")
+        eval = 1
+
+    elif game.black_win:
+        print("Black wins")
+        eval = 0
+
+    elif game.draw:
+        print("Draw")
+        eval = 0.5
+    
+    y_nn = [eval] * move_n 
+
+    return X_nn, y_nn
+
+
+def fight_random_pos(thetas):
     # init game and eval NN
     game = gm.game_start_nn()
 

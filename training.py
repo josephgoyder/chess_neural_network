@@ -21,16 +21,11 @@ def train(depth, examples, steps, thetas, _lambda, morph_rate):
         y_lose = []
         X_draw = []
         y_draw = []
-        theta1 = thetas[0]
-        theta2 = thetas[1]
 
         while len(y_win) < examples[0] or len(y_lose) < examples[1] or len(y_draw) < examples[2]:
-            thetas.reverse()
-            n = octave.morph(thetas[1], morph_rate)
             print(f"gen: {i + 1}")
             print(f"examples (w, l, d): {(len(y_win), len(y_lose), len(y_draw))}")
-            X_j, y_j = ft.train_unassisted([theta1, theta2])
-            shutil.copyfile(f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{thetas[0]}.mat', f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{thetas[1]}.mat')
+            X_j, y_j = ft.fight_unassisted([thetas[0], thetas[1]])
             
             if y_j[0] == 1:
                 X_win += X_j
@@ -46,6 +41,6 @@ def train(depth, examples, steps, thetas, _lambda, morph_rate):
 
         for dataset in [X_win, X_lose, X_draw, y_win, y_lose, y_draw]:
             random.shuffle(dataset)
-            
+
         n = octave.back_prop(thetas[0], np.array(X_win[:examples[0]] + X_lose[:examples[1]] + X_draw[:examples[2]]), np.array(y_win[:examples[0]] + y_lose[:examples[1]] + y_draw[:examples[2]]), _lambda)
         shutil.copyfile(f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{thetas[0]}.mat', f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{thetas[1]}.mat')
