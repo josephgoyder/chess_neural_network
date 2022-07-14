@@ -3,6 +3,7 @@ import game as gm
 import pieces as pc
 import eval as ev
 import numpy as np
+import random
 
             
 def fight_assisted(depth, thetas):
@@ -125,7 +126,13 @@ def fight_random_pos(thetas):
     game = gm.game_start_nn()
 
     game.engine.depth = 2
+    game.engine.random_eval = True
+
+    for x in range(random.randint(0, 10)):
+        game.engine_turn()
+
     game.engine.thetaset = thetas[int(not game.turn)]
+    game.engine.random_eval = False
 
     # init X for the training set and move number
     X_nn = []
