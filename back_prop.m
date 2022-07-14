@@ -25,7 +25,7 @@ function[J] = back_prop(Theta, X, y, lambda)
   costfunction = @(p)nnCostFunction(p, input_layer_size, hidden_layer_size, hidden_layer_2_size, output_layer_size, X, y, lambda);
 
   % backprop
-  % [nn_params, cost] = fmincg(costfunction, nn_params, options);
+  [nn_params, cost] = fmincg(costfunction, nn_params, options);
 
   % reshaping Thetas
   Theta1 = reshape(nn_params(1:(size(Theta1)(1) * size(Theta1)(2))), size(Theta1));
