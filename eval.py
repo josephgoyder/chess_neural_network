@@ -155,8 +155,10 @@ def regular_eval(material_value, centralization_value, board):
     return material * material_value + centralization * centralization_value
 
 
-def nn_eval(material_value, centralization_value, board, turn, thetaset):
-    # return random.random()
+def nn_eval(material_value, centralization_value, board, turn, thetaset, random_eval):
+    if random_eval:
+        return (random.random() + 2000) * (2 * int(not turn) - 1)
+
     return octave.feedforward_prop(board_to_X(board, turn), thetaset)
 
         

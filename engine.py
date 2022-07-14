@@ -251,6 +251,7 @@ class Engine_koth(Engine):
 @dataclass
 class Engine_nn(Engine):
     thetaset: int = 1
+    random_eval: bool = False
 
     def branches(self, colour):
         return br.regular_branches(self.board, colour)
@@ -259,7 +260,7 @@ class Engine_nn(Engine):
         return ev.regular_win_lose_draw(self.board, self.history)
 
     def eval(self, turn):
-        return ev.nn_eval(self.material_value, self.centralization_value, self.board, turn, self.thetaset)
+        return ev.nn_eval(self.material_value, self.centralization_value, self.board, turn, self.thetaset, self.random_eval)
 
     def setup(self, turn):
         self.board.setup_regular()
