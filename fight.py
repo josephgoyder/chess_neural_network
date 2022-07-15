@@ -4,6 +4,7 @@ import pieces as pc
 import eval as ev
 import numpy as np
 import random
+from oct2py import octave
 
             
 def fight_assisted(depth, thetas):
@@ -25,7 +26,7 @@ def fight_assisted(depth, thetas):
     )
 
     game.engine.depth = 2
-    game.engine.thetaset = thetas[int(not game.turn)]
+    game.engine.random_eval = True
 
     # init training set and move count
     X_comb = []
@@ -36,21 +37,15 @@ def fight_assisted(depth, thetas):
         game.engine_turn()
 
         # get engine move recommendation {move_comb}
-        engine_comb.search(game.turn, depth, 1, engine_comb.branches(game.turn))
-        move_comb = engine_comb.notebook.top_lines[0][1][0]
-
-        # add each possible next position to the training set with a winning eval for 
-        # the engine's choice and losing eval for all others 
-        for branch in game.engine.branches(game.turn):
-            game.engine.move(branch, game.turn)
-            X_comb.append(ev.board_to_X(game.engine.board, game.turn))
-            y_comb.append(int((branch == move_comb) == game.turn))
-            game.engine.undo()
+        # engine_comb.notebook.top_lines.clear()
+        # engine_comb.search(game.turn, depth, 1, engine_comb.branches(game.turn))
+        
+        X_comb.append(ev.board_to_X(game.engine.board, game.turn))
+        y_comb.append(octave.sigmoid(engine_comb.eval(game.turn) / 100))
 
         # increment move number and draw if move cap is reached
         move_n += 1
-        game.engine.thetaset = thetas[int(not game.turn)]
-        if move_n == 200:
+        if move_n == 100:
             game.draw = True
 
         print("Move: ", move_n)
@@ -128,7 +123,7 @@ def fight_random_pos(thetas):
     game.engine.depth = 2
     game.engine.random_eval = True
 
-    for x in range(random.randint(0, 10)):
+    for x in range(random.randint(0, 20)):
         game.engine_turn()
 
     game.engine.thetaset = thetas[int(not game.turn)]
