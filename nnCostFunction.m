@@ -22,7 +22,7 @@ function [J, grad] = nnCostFunction(nn_params, input_layer_size, hidden_layer_si
   h_x = sigmoid(a_3 * Theta3');
 
   % Compute cost
-  J = (1/m) * sum(sum((-y.*log(h_x))-((1-y).*log(1-h_x))))
+  J = (1/m) * sum(sum((-y.*log(h_x))-((1-y).*log(1-h_x))));
 
   % Compute gradient
   A1 = X;
