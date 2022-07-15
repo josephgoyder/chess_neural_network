@@ -190,10 +190,10 @@ def generation_sequence(heats, survivability, min_player, goal_population, mutat
     for f in allfiles:
         shutil.move(source + f, destination + f)
     
-def main(init_population, descend_generations):
+def main(init_population, descend_generations, theta_size):
 
     tic = time.perf_counter()
-    theta_init(np.array([770, 100.]), np.array([101, 100.]), np.array([101, 1.]), init_population)
+    theta_init(np.array([770, theta_size]), np.array([theta_size + 1, theta_size]), np.array([theta_size + 1, 1.]), init_population)
     # octave.addpath("/home/joseph/Desktop/chess_neural_network")
     # for i in range(1):
     #     generation_sequence(2, 3, 10, 200, 5)
@@ -222,5 +222,3 @@ def main(init_population, descend_generations):
 
     toc = time.perf_counter()
     print(toc - tic)
-
-main(2, 16)
