@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from dataclasses import field
 import board as bd
 import branches as br
 import move_undo as mo_un
@@ -250,7 +251,7 @@ class Engine_koth(Engine):
 
 @dataclass
 class Engine_nn(Engine):
-    thetaset: int = 1
+    thetas: list = field(default_factory=list)
     random_eval: bool = False
 
     def branches(self, colour):
@@ -260,7 +261,7 @@ class Engine_nn(Engine):
         return ev.regular_win_lose_draw(self.board, self.history)
 
     def eval(self, turn):
-        return ev.nn_eval(self.material_value, self.centralization_value, self.board, turn, self.thetaset, self.random_eval)
+        return ev.nn_eval(self.material_value, self.centralization_value, self.board, turn, self.thetas[0][0], self.thetas[0][1], self.thetas[0][2], self.random_eval)
 
     def setup(self, turn):
         self.board.setup_regular()

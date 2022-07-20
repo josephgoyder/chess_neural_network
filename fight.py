@@ -76,8 +76,14 @@ def fight_unassisted(thetas):
     # init game and eval NN
     game = gm.game_start_nn()
 
+    for theta_num in thetas:
+        theta = []
+        for x in range(1, 4):
+            theta.append(np.array(octave.get_theta(theta_num, x)))
+
+        game.engine.thetas.append(theta)
+
     game.engine.depth = 2
-    game.engine.thetaset = thetas[int(not game.turn)]
 
     # init X for the training set and move number
     X_nn = []
@@ -85,13 +91,13 @@ def fight_unassisted(thetas):
 
     while not game.concluded():
         game.engine_turn()
+        game.engine.thetas.reverse()
 
         # add board state to training set
         X_nn.append(ev.board_to_X(game.engine.board, game.turn))
 
         # increment move number and draw if move cap is reached
         move_n += 1
-        game.engine.thetaset = thetas[int(not game.turn)]
         if move_n == 200:
             game.draw = True
 
@@ -120,13 +126,20 @@ def fight_random_pos(thetas):
     # init game and eval NN
     game = gm.game_start_nn()
 
+    for theta_num in thetas:
+        theta = []
+        for x in range(1, 4):
+            theta.append(np.array(octave.get_theta(theta_num, x)))
+
+        game.engine.thetas.append(theta)
+
     game.engine.depth = 2
     game.engine.random_eval = True
 
     for x in range(random.randint(0, 20)):
         game.engine_turn()
+        game.engine.thetas.reverse()
 
-    game.engine.thetaset = thetas[int(not game.turn)]
     game.engine.random_eval = False
 
     # init X for the training set and move number
@@ -135,13 +148,13 @@ def fight_random_pos(thetas):
 
     while not game.concluded():
         game.engine_turn()
-
+        game.engine.thetas.reverse()
         # add board state to training set
         X_nn.append(ev.board_to_X(game.engine.board, game.turn))
 
         # increment move number and draw if move cap is reached
         move_n += 1
-        game.engine.thetaset = thetas[int(not game.turn)]
+        
         if move_n == 200:
             game.draw = True
 
