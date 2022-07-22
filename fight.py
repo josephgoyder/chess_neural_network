@@ -1,3 +1,4 @@
+from zmq import THREAD_AFFINITY_CPU_ADD
 from engine import Engine_regular, engine_setup
 import game as gm
 import pieces as pc
@@ -6,7 +7,49 @@ import numpy as np
 import random
 from oct2py import octave
 
-            
+
+def fight(thetas):
+    # init game and eval NN
+    game = gm.game_start_nn()
+    game.engine.random_eval = True
+
+    for theta_num in thetas:
+        theta = []
+        for x in range(1, 4):
+            theta.append(np.array(octave.get_theta(theta_num, x)))
+
+        game.engine.thetas.append(theta)
+
+    game.engine.depth = 2
+
+    move_n = 0
+    while not game.concluded():
+        game.engine_turn()
+        game.engine.thetas.reverse()
+
+        # increment move number and draw if move cap is reached
+        move_n += 1
+        if move_n == 200:
+            game.draw = True
+
+        print("Move: ", move_n)
+
+    # show result of game and set eval for the NN training examples
+    print("")
+    if game.white_win:
+        print("White wins")
+        return thetas[0], thetas[1], True
+
+    elif game.black_win:
+        print("Black wins")
+        return thetas[1], thetas[0], True
+
+    elif game.draw:
+        print("Draw")
+        random.shuffle(thetas)
+        return thetas[0], thetas[1], True
+        
+
 def fight_assisted(depth, thetas):
     '''
     Make the training set for the eval NN from one game. 

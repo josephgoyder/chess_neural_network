@@ -58,7 +58,7 @@ def multi_tournament(heats, survivability, min_player):
             
             print(player_1, " vs ", player_2)
 
-            winner, loser, win_state = fight.fight(player_1, player_2)
+            winner, loser, win_state = fight.fight([player_1, player_2])
 
             if win_state:
                 fight_info[winner] += 1
@@ -81,8 +81,10 @@ def multi_tournament(heats, survivability, min_player):
         except Exception as e:
             print('Failed to delete %s. Reason: %s' % (file_path, e))
 
-
-    shutil.copyfile(f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{strongest}.mat', f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{1}.mat')
+    if strongest != 1:
+        shutil.copyfile(f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{strongest}.mat', 
+                        f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{1}.mat'
+    )
     survivors = []
     death = []
 
@@ -136,6 +138,8 @@ def multi_tournament(heats, survivability, min_player):
     for f in allfiles:
         shutil.move(source + f, destination + f)
 
+    return population
+
 def reproduction(population):
     octave.addpath("/home/joseph/Desktop/chess_neural_network")
     for datasets in range(population // 4):
@@ -143,7 +147,7 @@ def reproduction(population):
         dataset_2 = dataset_1 - 1
         n = octave.reproduction(dataset_1, dataset_2, dataset_1, dataset_2)
 
-def multi_reproduction(goal_population):
+def multi_reproduction(goal_population, population):
 
     current_population = 0
 
@@ -179,8 +183,8 @@ def mutation(mutation_rate):
         n = octave.mutation(dataset + 1, mutation_rate)
 
 def generation_sequence(heats, survivability, min_player, goal_population, mutation_rate):
-    multi_tournament(heats, survivability, min_player)
-    multi_reproduction(goal_population)
+    population = multi_tournament(heats, survivability, min_player)
+    multi_reproduction(goal_population, population)
     mutation(mutation_rate)
     source = '/home/joseph/Desktop/chess_neural_network/elite_data/'
     destination = '/home/joseph/Desktop/chess_neural_network/engine_data/'
@@ -194,31 +198,31 @@ def main(init_population, descend_generations, theta_size):
 
     tic = time.perf_counter()
     theta_init(np.array([770, theta_size]), np.array([theta_size + 1, theta_size]), np.array([theta_size + 1, 1.]), init_population)
-    # octave.addpath("/home/joseph/Desktop/chess_neural_network")
-    # for i in range(1):
-    #     generation_sequence(2, 3, 10, 200, 5)
+    octave.addpath("/home/joseph/Desktop/chess_neural_network")
+    for i in range(1):
+        generation_sequence(2, 3, 10, 200, 5)
     # Genetic algorithm sequence
 
-    # for i in range(4):
-    #     multi_tournament(3, 2, 10)
-    #     multi_reproduction(init_population)
+    for i in range(4):
+        multi_tournament(3, 2, 10)
+        multi_reproduction(init_population)
     
-    # multi_tournament(4, 3, 10)
+    multi_tournament(4, 3, 10)
 
-    # descend_init_population = 2 ** (descend_generations - 1)
-    # multi_reproduction(descend_init_population)
+    descend_init_population = 2 ** (descend_generations - 1)
+    multi_reproduction(descend_init_population)
     
-    # for generation in range(descend_generations - 2):
-    #     current_generation = descend_generations - generation
-    #     if current_generation > 4:
-    #         multi_tournament(3, 4, 6)
-    #         multi_reproduction(2 ** (current_generation - 1))
-    #     elif current_generation <= 4 and current_generation > 2:
-    #         multi_tournament(2, 2, 4)
-    #         multi_reproduction(2 ** (current_generation - 1))
+    for generation in range(descend_generations - 2):
+        current_generation = descend_generations - generation
+        if current_generation > 4:
+            multi_tournament(3, 4, 6)
+            multi_reproduction(2 ** (current_generation - 1))
+        elif current_generation <= 4 and current_generation > 2:
+            multi_tournament(2, 2, 4)
+            multi_reproduction(2 ** (current_generation - 1))
 
-    #     elif current_generation == 2:
-    #         tournament()
+        elif current_generation == 2:
+            tournament()
 
     toc = time.perf_counter()
     print(toc - tic)
