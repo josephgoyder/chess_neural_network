@@ -2,6 +2,7 @@ import fight as ft
 from oct2py import octave
 import shutil
 import numpy as np
+from statistical_significance import p
 import time
 import random
 
@@ -34,7 +35,7 @@ def train(depth, examples, steps, thetas, _lambda, morph_rate):
 
             thetas.reverse()
             n = octave.morph(theta_morph, morph_rate)
-            X_j, y_j = ft.fight_random_pos([thetas[0], thetas[1]])
+            X_j, y_j = ft.fight_unassisted([thetas[0], thetas[1]])
             shutil.copyfile(
             f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{theta_train}.mat', 
             f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{theta_morph}.mat'
@@ -55,12 +56,13 @@ def train(depth, examples, steps, thetas, _lambda, morph_rate):
         for dataset in [X_win, X_lose, X_draw, y_win, y_lose, y_draw]:
             random.shuffle(dataset)
 
-        n = octave.back_prop(
-            theta_train, 
-            np.array(X_win[:examples[0]] + X_lose[:examples[1]] + X_draw[:min(len(X_draw), examples[2])]), 
-            np.array(y_win[:examples[0]] + y_lose[:examples[1]] + y_draw[:min(len(y_draw), examples[2])]),
-             _lambda
-        )
+        for x in range(2, 11):
+            n = octave.back_prop(
+                x, 
+                np.array(X_win[:examples[0]] + X_lose[:examples[1]] + X_draw[:min(len(X_draw), examples[2])]), 
+                np.array(y_win[:examples[0]] + y_lose[:examples[1]] + y_draw[:min(len(y_draw), examples[2])]),
+                _lambda
+            )
         shutil.copyfile(
             f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{theta_train}.mat', 
             f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{theta_morph}.mat'
@@ -89,6 +91,10 @@ def compete(thetas):
             draw += 1
 
         print((win, lose, draw))
+        p(max(win, lose), min(win, lose), 0.5)
+        time.sleep(2)
+
+    return win
 
 
     
