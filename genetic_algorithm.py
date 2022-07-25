@@ -26,16 +26,17 @@ def theta_init(Theta_1_size, Theta_2_size, Theta_3_size, n):
     n = octave.random_init_weights(Theta_1_size, Theta_2_size, Theta_3_size, n)
 
 
-def tournament():
-    population = len(allfiles = os.listdir('/home/joseph/Desktop/chess_neural_network/engine_data'))
-    for i in range((population // 2)):
-        i = (i + 1) * 2
+def tournament(rounds):
+    for r in range(rounds):
+        population = len(os.listdir('/home/joseph/Desktop/chess_neural_network/engine_data'))
+        for i in range((population // 2)):
+            i = (i + 1) * 2
 
-        print(i, " vs ", (i - 1))
+            print(i, " vs ", (i - 1))
 
-        winner, loser, win_state = fight.fight(i, i - 1)
-        os.remove(f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{loser}.mat")
-        os.rename(f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{winner}.mat", f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{i//2}.mat")
+            winner, loser, win_state = fight.fight([i, i - 1])
+            os.remove(f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{loser}.mat")
+            os.rename(f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{winner}.mat", f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{i//2}.mat")
 
 
 def multi_tournament(heats, survivability, min_player):
@@ -96,8 +97,8 @@ def multi_tournament(heats, survivability, min_player):
             survivors.append(player)
             result_population += 1
     
+    n = 1
     while result_population < min_player:
-        n = 1
         for player in death:
             if fight_info[player] >= (survivability - n):
                 death.remove(player)
@@ -112,6 +113,7 @@ def multi_tournament(heats, survivability, min_player):
     for player in death:
         os.remove(f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{player}.mat")
     
+    survivors.sort()
     n = 1
     for player in survivors:
         os.rename(f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{player}.mat", f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{n}.mat")
@@ -138,7 +140,6 @@ def multi_tournament(heats, survivability, min_player):
     for f in allfiles:
         shutil.move(source + f, destination + f)
 
-    return population
 
 def reproduction(population):
     octave.addpath("/home/joseph/Desktop/chess_neural_network")
@@ -147,7 +148,7 @@ def reproduction(population):
         dataset_2 = dataset_1 - 1
         n = octave.reproduction(dataset_1, dataset_2, dataset_1, dataset_2)
 
-def multi_reproduction(goal_population, population):
+def multi_reproduction(goal_population):
 
     current_population = 0
 
@@ -162,6 +163,7 @@ def multi_reproduction(goal_population, population):
         except Exception as e:
             print('Failed to delete %s. Reason: %s' % (file_path, e))
     
+    population = len(os.listdir('/home/joseph/Desktop/chess_neural_network/parent_engine_data/'))
     while current_population < goal_population:
 
         parent_1 = random.randint(1, population)
@@ -183,8 +185,8 @@ def mutation(mutation_rate):
         n = octave.mutation(dataset + 1, mutation_rate)
 
 def generation_sequence(heats, survivability, min_player, goal_population, mutation_rate):
-    population = multi_tournament(heats, survivability, min_player)
-    multi_reproduction(goal_population, population)
+    multi_tournament(heats, survivability, min_player)
+    multi_reproduction(goal_population)
     mutation(mutation_rate)
     source = '/home/joseph/Desktop/chess_neural_network/elite_data/'
     destination = '/home/joseph/Desktop/chess_neural_network/engine_data/'
@@ -200,10 +202,10 @@ def main(init_population, descend_generations, theta_size):
     theta_init(np.array([770, theta_size]), np.array([theta_size + 1, theta_size]), np.array([theta_size + 1, 1.]), init_population)
     octave.addpath("/home/joseph/Desktop/chess_neural_network")
     for i in range(1):
-        generation_sequence(2, 3, 10, 200, 5)
+        generation_sequence(2, 3, 10, 20, 5) # 200
     # Genetic algorithm sequence
 
-    for i in range(4):
+    for i in range(1): # 4
         multi_tournament(3, 2, 10)
         multi_reproduction(init_population)
     
@@ -212,7 +214,7 @@ def main(init_population, descend_generations, theta_size):
     descend_init_population = 2 ** (descend_generations - 1)
     multi_reproduction(descend_init_population)
     
-    for generation in range(descend_generations - 2):
+    for generation in range(descend_generations):
         current_generation = descend_generations - generation
         if current_generation > 4:
             multi_tournament(3, 4, 6)
@@ -222,7 +224,7 @@ def main(init_population, descend_generations, theta_size):
             multi_reproduction(2 ** (current_generation - 1))
 
         elif current_generation == 2:
-            tournament()
+            tournament(2)
 
     toc = time.perf_counter()
     print(toc - tic)

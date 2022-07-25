@@ -1,4 +1,4 @@
-function [n] = reproduction(dataset_1, dataset_2, new_dataset)
+function [n] = reproduction_single(dataset_1, dataset_2, new_dataset)
 
 disp(["Reproducing between dataset ", num2str(dataset_1)," and dataset " num2str(dataset_2)])
 tic
