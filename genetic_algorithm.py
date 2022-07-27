@@ -196,35 +196,19 @@ def generation_sequence(heats, survivability, min_player, goal_population, mutat
     for f in allfiles:
         shutil.move(source + f, destination + f)
     
-def main(init_population, descend_generations, theta_size):
+def genetic_algorithm(population, min_player, generations, descend_generations, heats, survivability, mutation_rate, theta_size):
 
     tic = time.perf_counter()
-    theta_init(np.array([770, theta_size]), np.array([theta_size + 1, theta_size]), np.array([theta_size + 1, 1.]), init_population)
+    theta_init(np.array([770, theta_size]), np.array([theta_size + 1, theta_size]), np.array([theta_size + 1, 1.]), population)
     octave.addpath("/home/joseph/Desktop/chess_neural_network")
-    for i in range(1):
-        generation_sequence(2, 3, 10, 20, 5) # 200
-    # Genetic algorithm sequence
 
-    for i in range(1): # 4
-        multi_tournament(3, 2, 10)
-        multi_reproduction(init_population)
-    
-    multi_tournament(4, 3, 10)
+    for i in range(generations - 1):
+        generation_sequence(heats, survivability, min_player, population, mutation_rate) 
 
     descend_init_population = 2 ** (descend_generations - 1)
-    multi_reproduction(descend_init_population)
+    generation_sequence(heats, survivability, min_player, descend_init_population, mutation_rate)
     
-    for generation in range(descend_generations):
-        current_generation = descend_generations - generation
-        if current_generation > 4:
-            multi_tournament(3, 4, 6)
-            multi_reproduction(2 ** (current_generation - 1))
-        elif current_generation <= 4 and current_generation > 2:
-            multi_tournament(2, 2, 4)
-            multi_reproduction(2 ** (current_generation - 1))
-
-        elif current_generation == 2:
-            tournament(2)
+    tournament(descend_generations)
 
     toc = time.perf_counter()
     print(toc - tic)

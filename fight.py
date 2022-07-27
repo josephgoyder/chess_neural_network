@@ -11,7 +11,6 @@ from oct2py import octave
 def fight(thetas):
     # init game and eval NN
     game = gm.game_start_nn()
-    game.engine.random_eval = True
 
     for theta_num in thetas:
         theta = []
