@@ -39,25 +39,23 @@ def tournament(rounds):
             os.rename(f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{winner}.mat", f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{i//2}.mat")
 
 
-def multi_tournament(heats, survivability, min_player):
+def multi_tournament(heats, survivor_num):
 
     population = len(os.listdir('/home/joseph/Desktop/chess_neural_network/engine_data'))
     print("Current population: ", population)
 
-    fight_sequense = list(range(1, population + 1))
+    players = list(range(1, population + 1))
+    fight_sequense = list(players)
     random.shuffle(fight_sequense)
     fight_info = {fight_sequense[i]: 0 for i in range(len(fight_sequense))}
 
     for heat in range(heats):
         for round in range(population):
             player_1 = fight_sequense[round]
-            
-            if (round + (2 ** heat)) < population:
-                player_2 = fight_sequense[round + (2 ** heat)]
-            else:
-                player_2 = fight_sequense[round + (2 ** heat) - population]
+            player_2 = fight_sequense[(round + heat + 1) % population]
             
             print(player_1, " vs ", player_2)
+            print(f"Round: {round + 1} / {population}")
 
             winner, loser, win_state = fight.fight([player_1, player_2])
 
@@ -86,27 +84,11 @@ def multi_tournament(heats, survivability, min_player):
         shutil.copyfile(f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{strongest}.mat', 
                         f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{1}.mat'
     )
-    survivors = []
-    death = []
-
-    result_population = 0
-    for player in fight_info:
-        if fight_info[player] < survivability:
-            death.append(player)
-        else:
-            survivors.append(player)
-            result_population += 1
     
-    n = 1
-    while result_population < min_player:
-        for player in death:
-            if fight_info[player] >= (survivability - n):
-                death.remove(player)
-                survivors.append(player)
-                result_population += 1
-        n += 1
+    players.sort(key = lambda player: fight_info[player])
+    survivors = players[:survivor_num]
+    death = players[survivor_num:]
     
-    print(death)
     print(survivors)
     print("number of survivors: ", len(survivors))
 
@@ -184,8 +166,8 @@ def mutation(mutation_rate):
     for dataset in range(population//2):
         n = octave.mutation(dataset + 1, mutation_rate)
 
-def generation_sequence(heats, survivability, min_player, goal_population, mutation_rate):
-    multi_tournament(heats, survivability, min_player)
+def generation_sequence(heats, survivor_num, goal_population, mutation_rate):
+    multi_tournament(heats, survivor_num)
     multi_reproduction(goal_population)
     mutation(mutation_rate)
     source = '/home/joseph/Desktop/chess_neural_network/elite_data/'
@@ -196,17 +178,19 @@ def generation_sequence(heats, survivability, min_player, goal_population, mutat
     for f in allfiles:
         shutil.move(source + f, destination + f)
     
-def genetic_algorithm(population, min_player, generations, descend_generations, heats, survivability, mutation_rate, theta_size):
+def genetic_algorithm(population, survivor_num, generations, descend_generations, heats, mutation_rate, theta_size):
 
     tic = time.perf_counter()
     theta_init(np.array([770, theta_size]), np.array([theta_size + 1, theta_size]), np.array([theta_size + 1, 1.]), population)
     octave.addpath("/home/joseph/Desktop/chess_neural_network")
 
     for i in range(generations - 1):
-        generation_sequence(heats, survivability, min_player, population, mutation_rate) 
+        print(f"Gen: {i + 1} / {generations}")
+        generation_sequence(heats, survivor_num, population, mutation_rate) 
 
     descend_init_population = 2 ** (descend_generations - 1)
-    generation_sequence(heats, survivability, min_player, descend_init_population, mutation_rate)
+    print(f"Gen: {generations} / {generations}")
+    generation_sequence(heats, survivor_num, descend_init_population, mutation_rate)
     
     tournament(descend_generations)
 
