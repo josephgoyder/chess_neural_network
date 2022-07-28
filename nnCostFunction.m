@@ -11,20 +11,8 @@ function [J, grad] = nnCostFunction(nn_params, input_layer_size, hidden_layer_si
   Theta2_grad = zeros(size(Theta2));
   Theta3_grad = zeros(size(Theta3));
   
-  % Feedprop 
   m = size(X, 1);
-  p = zeros(1, 850);
   X = [ones(m, 1) X];
-  a_2 = sigmoid(X * Theta1');
-  a_2 = [ones(size(a_2), 1) a_2];
-  a_3 = sigmoid(a_2 * Theta2');
-  a_3 = [ones(size(a_3), 1) a_3];
-  h_x = sigmoid(a_3 * Theta3');
-
-  % Compute cost
-  J = (1/m) * sum(sum((-y.*log(h_x))-((1-y).*log(1-h_x))));
-
-  % Compute gradient
   A1 = X;
   Z2 = A1 * Theta1'; 
   A2 = sigmoid(Z2); 
@@ -34,6 +22,11 @@ function [J, grad] = nnCostFunction(nn_params, input_layer_size, hidden_layer_si
   A3 = [ones(size(A3,1),1), A3];
   Z4 = A3 * Theta3';
   A4 = sigmoid(Z4);
+
+  % Compute cost
+  J = (1/m) * sum(sum((-y.*log(A4))-((1-y).*log(1-A4))));
+
+  % Compute gradient
   DELTA4 = A4 - y;
   DELTA3 = (DELTA4 * Theta3) .* [ones(size(Z3,1),1) sigmoidGradient(Z3)];
   DELTA3 = DELTA3(:,2:end); 
