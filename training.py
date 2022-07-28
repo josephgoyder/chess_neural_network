@@ -56,13 +56,12 @@ def train(depth, examples, steps, thetas, _lambda, morph_rate):
         for dataset in [X_win, X_lose, X_draw, y_win, y_lose, y_draw]:
             random.shuffle(dataset)
 
-        for x in range(2, 11):
-            n = octave.back_prop(
-                x, 
-                np.array(X_win[:examples[0]] + X_lose[:examples[1]] + X_draw[:min(len(X_draw), examples[2])]), 
-                np.array(y_win[:examples[0]] + y_lose[:examples[1]] + y_draw[:min(len(y_draw), examples[2])]),
-                _lambda
-            )
+        n = octave.back_prop(
+            theta_train, 
+            np.array(X_win[:examples[0]] + X_lose[:examples[1]] + X_draw[:min(len(X_draw), examples[2])]), 
+            np.array(y_win[:examples[0]] + y_lose[:examples[1]] + y_draw[:min(len(y_draw), examples[2])]),
+            _lambda
+        )
         shutil.copyfile(
             f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{theta_train}.mat', 
             f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{theta_morph}.mat'
@@ -92,7 +91,6 @@ def compete(thetas):
 
         print((win, lose, draw))
         p(max(win, lose), min(win, lose), 0.5)
-        time.sleep(2)
 
     return win
 
