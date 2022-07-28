@@ -47,7 +47,7 @@ def multi_tournament(heats, survivor_num):
     players = list(range(1, population + 1))
     fight_sequense = list(players)
     random.shuffle(fight_sequense)
-    fight_info = {fight_sequense[i]: 0 for i in range(len(fight_sequense))}
+    fight_info = {players[i]: 0 for i in range(len(fight_sequense))}
 
     for heat in range(heats):
         for round in range(population):
@@ -55,6 +55,7 @@ def multi_tournament(heats, survivor_num):
             player_2 = fight_sequense[(round + heat + 1) % population]
             
             print(player_1, " vs ", player_2)
+            print(f"Heat: {heat + 1} / {heats}")
             print(f"Round: {round + 1} / {population}")
 
             winner, loser, win_state = fight.fight([player_1, player_2])
@@ -85,7 +86,7 @@ def multi_tournament(heats, survivor_num):
                         f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{1}.mat'
     )
     
-    players.sort(key = lambda player: fight_info[player])
+    players.sort(key = lambda player: fight_info[player], reverse = True)
     survivors = players[:survivor_num]
     death = players[survivor_num:]
     
