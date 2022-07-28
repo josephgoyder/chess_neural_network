@@ -3,6 +3,7 @@ import pieces as pc
 import move_undo as mo_un
 from oct2py import octave
 import numpy as np
+import feedforward_prop as fp
 import copy
 import random
 
@@ -159,7 +160,7 @@ def nn_eval(material_value, centralization_value, board, turn, theta1, theta2, t
     if random_eval:
         return (random.random() + 2000) * (2 * int(not turn) - 1)
 
-    return octave.feedforward_prop(board_to_X(board, turn), theta1, theta2, theta3)
+    return fp.feedforward_prop(board_to_X(board, turn), theta1, theta2, theta3)[0]
 
         
 def reverse_win_lose_draw(board, history):
