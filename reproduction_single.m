@@ -1,7 +1,7 @@
 function [n] = reproduction_single(dataset_1, dataset_2, new_dataset)
 
+  tic
 disp(["Reproducing between dataset ", num2str(dataset_1)," and dataset " num2str(dataset_2)])
-tic
 
 load(["/home/joseph/Desktop/chess_neural_network/parent_engine_data/neural_net_dataset_" num2str(dataset_1) ".mat"])
 Theta1_1 = reshape(Theta1, 1, []);
@@ -40,8 +40,8 @@ Theta3 = reshape(Theta3_1, [size(Theta3)]);
 
 save(["/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_" num2str(new_dataset) ".mat"], "Theta1", "Theta2", "Theta3");
 
-
-toc
 n = 0;
+toc
+
 end
 
