@@ -19,7 +19,7 @@ def fight(thetas):
 
         game.engine.thetas.append(theta)
 
-    game.engine.depth = 2
+    game.engine.depth = 1
 
     move_n = 0
     while not game.concluded():
@@ -67,7 +67,14 @@ def fight_assisted(depth, thetas):
         1.0
     )
 
-    game.engine.depth = 2
+    for theta_num in thetas:
+        theta = []
+        for x in range(1, 4):
+            theta.append(np.array(octave.get_theta(theta_num, x)))
+
+        game.engine.thetas.append(theta)
+
+    game.engine.depth = 1
     game.engine.random_eval = True
 
     # init training set and move count
@@ -83,7 +90,8 @@ def fight_assisted(depth, thetas):
         # engine_comb.search(game.turn, depth, 1, engine_comb.branches(game.turn))
         
         X_comb.append(ev.board_to_X(game.engine.board, game.turn))
-        y_comb.append(octave.sigmoid(engine_comb.eval(game.turn) / 100))
+        engine_comb.explore(game.turn)
+        y_comb.append(octave.sigmoid(engine_comb.notebook.top_lines[0][0] / 100))
 
         # increment move number and draw if move cap is reached
         move_n += 1
@@ -125,7 +133,7 @@ def fight_unassisted(thetas):
 
         game.engine.thetas.append(theta)
 
-    game.engine.depth = 2
+    game.engine.depth = 1
 
     # init X for the training set and move number
     X_nn = []
@@ -175,7 +183,7 @@ def fight_random_pos(thetas):
 
         game.engine.thetas.append(theta)
 
-    game.engine.depth = 2
+    game.engine.depth = 1
     game.engine.random_eval = True
 
     for x in range(random.randint(0, 20)):

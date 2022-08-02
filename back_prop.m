@@ -4,7 +4,7 @@ function[J] = back_prop(Theta, X, y, lambda)
   % load(["C:\\Users\\076-jgoyder\\Chess engine\\chess_neural_network\\engine_data\\neural_net_dataset_" num2str(Theta) ".mat"])
 
   % Set max backprop iteration to 50
-  options = optimset('MaxIter', 200);
+  options = optimset('MaxIter', 50);
 
   % Configure Thetas into nn_params
   input_layer_size = size(Theta1)(1) - 1;

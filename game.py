@@ -136,10 +136,14 @@ class Game:
             print("")
 
     def engine_turn(self):
-        # self.engine.explore(self.turn)
-        self.engine.notebook.top_lines.clear()
-        branches = self.engine.branches(self.turn)
-        self.engine.search(self.turn, 1, 1, branches)
+        if self.engine.depth == 1:
+            self.engine.notebook.top_lines.clear()
+            branches = self.engine.branches(self.turn)
+            self.engine.search(self.turn, 1, 1, branches)
+        
+        else:
+            self.engine.explore(self.turn)
+        
 
         # p_total = 0
         # for line in self.engine.notebook.top_lines:
