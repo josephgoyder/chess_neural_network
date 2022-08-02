@@ -1,10 +1,20 @@
 import game as gm
+import numpy as np
+from oct2py import octave
 
 
 print("Welcome to chess engine ui. For help at any stage, smash your head on the keyboard and press enter.")
 print("")
 
 game = gm.game_start_nn()
+
+theta = []
+for x in range(1, 4):
+    theta.append(np.array(octave.get_theta(1, x)))
+
+game.engine.thetas.append(theta)
+
+game.engine.depth = 1
 
 print("")
 game.illustrate()
