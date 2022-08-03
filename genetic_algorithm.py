@@ -29,14 +29,30 @@ def theta_init(Theta_1_size, Theta_2_size, Theta_3_size, n):
 def tournament(rounds):
     for r in range(rounds):
         population = len(os.listdir('/home/joseph/Desktop/chess_neural_network/engine_data'))
-        for i in range((population // 2)):
+        parity_bins = [[], []]
+        for i in range(population // 2):
             i = (i + 1) * 2
 
             print(i, " vs ", (i - 1))
 
             winner, loser, win_state = fight.fight([i, i - 1])
             os.remove(f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{loser}.mat")
-            os.rename(f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{winner}.mat", f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{i//2}.mat")
+            parity_bins[winner % 2].append(winner)
+
+        folder = '/home/joseph/Desktop/chess_neural_network/engine_data/'
+        if 1 in parity_bins[1]:
+            new_num = population + 1 + population % 2
+            os.rename(f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{1}.mat", f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{new_num}.mat")
+            parity_bins[1].remove(1)
+            parity_bins[1].append(new_num)
+
+        for x in range(population // 2):
+            bin = parity_bins[x % 2]
+            if len(bin) == 0:
+                bin = parity_bins[x % 2 - 1]
+            
+            os.rename(f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{bin[0]}.mat", f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{x + 1}.mat")
+            bin.pop(0)
 
 
 def multi_tournament(heats, survivor_num):
