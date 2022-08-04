@@ -104,15 +104,12 @@ def fight_assisted(depth, thetas):
     print("")
     if game.white_win:
         print("White wins")
-        eval = 1
 
     elif game.black_win:
         print("Black wins")
-        eval = 0
 
     elif game.draw:
         print("Draw")
-        eval = 0.5
 
     return X_comb, y_comb
 
@@ -157,17 +154,15 @@ def fight_unassisted(thetas):
     print("")
     if game.white_win:
         print("White wins")
-        eval = 1
+        y_nn = [x / (2 * move_n) for x in range(move_n, 2 * move_n)]
 
     elif game.black_win:
         print("Black wins")
-        eval = 0
+        y_nn = [x / (2 * move_n) for x in range(move_n, 0, -1)]
 
     elif game.draw:
         print("Draw")
-        eval = 0.5
-    
-    y_nn = [eval] * move_n 
+        y_nn = [0.5] * move_n 
 
     return X_nn, y_nn
 
@@ -214,16 +209,14 @@ def fight_random_pos(thetas):
     print("")
     if game.white_win:
         print("White wins")
-        eval = 1
+        y_nn = [x / (2 * move_n) for x in range(move_n, 2 * move_n)]
 
     elif game.black_win:
         print("Black wins")
-        eval = 0
+        y_nn = [x / (2 * move_n) for x in range(move_n, 0, -1)]
 
     elif game.draw:
         print("Draw")
-        eval = 0.5
-    
-    y_nn = [eval] * move_n 
+        y_nn = [0.5] * move_n 
 
     return X_nn, y_nn
