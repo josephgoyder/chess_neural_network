@@ -7,12 +7,13 @@ import fight
 import random
 
 
-# theta_size = 50
+# layer_1 = 150
+# layer_2 = 25
 # ga.theta_init(
-#     np.array([770, theta_size]), 
-#     np.array([theta_size + 1, theta_size]), 
-#     np.array([theta_size + 1, 1]), 
-#     8
+#     np.array([770, layer_1]), 
+#     np.array([layer_1 + 1, layer_2]), 
+#     np.array([layer_2 + 1, 1]), 
+#     2
 # )
 
 # wins = 0
@@ -25,6 +26,5 @@ import random
 #     p(wins, theta - wins, 0.5)
 
 tr.compete([1, 2])
-# ga.genetic_algorithm(60, 4, 30, 7, 3, 20, 50, self_training=True)
-
-# tr.train(1, (1000, 1000, 2000), 1, [theta1, theta2], 0.01, 0.3)
+ga.genetic_algorithm(20, 4, 10, 2, 2, 20, 150, 25)
+# tr.train(1, (1000, 1000, 2000), 5, [1, 2], 0.01, 0.3)

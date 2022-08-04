@@ -314,10 +314,10 @@ def generation_sequence(heats, survivor_num, goal_population, mutation_rate, sel
     for f in allfiles:
         shutil.move(source + f, destination + f)
     
-def genetic_algorithm(population, survivor_num, generations, descend_generations, heats, mutation_rate, theta_size, self_training = False, heat_size = 1):
+def genetic_algorithm(population, survivor_num, generations, descend_generations, heats, mutation_rate, layer_1, layer_2, self_training = False, heat_size = 1):
 
     tic = time.perf_counter()
-    theta_init(np.array([770, theta_size]), np.array([theta_size + 1, theta_size]), np.array([theta_size + 1, 1.]), population)
+    theta_init(np.array([770, layer_1]), np.array([layer_1 + 1, layer_2]), np.array([layer_2 + 1, 1.]), population)
     octave.addpath("/home/joseph/Desktop/chess_neural_network")
 
     for i in range(generations - 1):
