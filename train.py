@@ -26,5 +26,5 @@ import random
 #     p(wins, theta - wins, 0.5)
 
 tr.compete([1, 2])
-ga.genetic_algorithm(20, 4, 10, 2, 2, 20, 150, 25)
+ga.genetic_algorithm(20, 20, 10, 2, 2, 20, 150, 25, self_training=True)
 # tr.train(1, (1000, 1000, 2000), 5, [1, 2], 0.01, 0.3)
