@@ -169,13 +169,13 @@ def multi_tournament_self_train(heats, survivor_num, heat_size):
 
             X_j, y_j = fight.fight_unassisted([player_1, player_2])
             
-            if y_j[0] == 1:
+            if y_j[-1] > 0.5:
                 X_win += X_j
                 y_win += y_j
                 winner = player_1
                 loser = player_2
 
-            elif y_j[0] == 0:
+            elif y_j[-1] < 0.5:
                 X_lose += X_j
                 y_lose += y_j
                 winner = player_2
