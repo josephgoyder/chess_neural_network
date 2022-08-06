@@ -57,15 +57,9 @@ def fight_assisted(depth, thetas):
     
     # init comb engine and NN
     game = gm.game_start_nn()
-    engine_comb = Engine_regular(
-        game.engine.history, 
-        game.engine.notebook, 
-        game.engine.board, 
-        depth,
-        [1, 1],
-        10.0, 
-        1.0
-    )
+    
+    game.engine.depth = 1
+    game.engine.random_eval = True
 
     for theta_num in thetas:
         theta = []
@@ -74,8 +68,18 @@ def fight_assisted(depth, thetas):
 
         game.engine.thetas.append(theta)
 
-    game.engine.depth = 1
-    game.engine.random_eval = True
+    for x in range(random.randint(0, 20)):
+        game.engine_turn()
+
+    game.engine = Engine_regular(
+        game.engine.history,
+        game.engine.notebook,
+        game.engine.board,
+        depth,
+        game.engine.top_lines_filters,
+        10,
+        1
+    )
 
     # init training set and move count
     X_comb = []
@@ -84,18 +88,11 @@ def fight_assisted(depth, thetas):
 
     while not game.concluded():
         game.engine_turn()
-
-        # get engine move recommendation {move_comb}
-        # engine_comb.notebook.top_lines.clear()
-        # engine_comb.search(game.turn, depth, 1, engine_comb.branches(game.turn))
-        
         X_comb.append(ev.board_to_X(game.engine.board, game.turn))
-        engine_comb.explore(game.turn)
-        y_comb.append(octave.sigmoid(engine_comb.notebook.top_lines[0][0] / 100))
-
+        
         # increment move number and draw if move cap is reached
         move_n += 1
-        if move_n == 100:
+        if move_n == 200:
             game.draw = True
 
         print("Move: ", move_n)
@@ -104,12 +101,15 @@ def fight_assisted(depth, thetas):
     print("")
     if game.white_win:
         print("White wins")
+        y_comb = [x / (2 * move_n) for x in range(move_n, 2 * move_n)]
 
     elif game.black_win:
         print("Black wins")
+        y_comb = [x / (2 * move_n) for x in range(move_n, 0, -1)]
 
     elif game.draw:
         print("Draw")
+        y_comb = [0.5] * move_n 
 
     return X_comb, y_comb
 

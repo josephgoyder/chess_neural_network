@@ -35,7 +35,7 @@ def train(depth, examples, steps, thetas, _lambda, morph_rate):
 
             thetas.reverse()
             n = octave.morph(theta_morph, morph_rate)
-            X_j, y_j = ft.fight_random_pos([thetas[0], thetas[1]])
+            X_j, y_j = ft.fight_assisted(2, thetas)
             shutil.copyfile(
             f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{theta_train}.mat', 
             f'/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_{theta_morph}.mat'

@@ -209,3 +209,7 @@ def game_start():
 
 def game_start_nn():
     return Game(eg.engine_setup("nn"), get_colour("white"))
+
+
+def game_start_comb():
+    return Game(eg.engine_setup("regular"), get_colour("white"))
