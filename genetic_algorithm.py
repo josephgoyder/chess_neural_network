@@ -323,12 +323,17 @@ def genetic_algorithm(population, survivor_num, generations, descend_generations
     for i in range(generations - 1):
         print(f"Gen: {i + 1} / {generations}")
         generation_sequence(heats, survivor_num, population, mutation_rate, self_training, heat_size) 
+        shutil.move(
+            f"/home/joseph/Desktop/chess_neural_network/parent_engine_data/neural_net_dataset_1.mat", 
+            f"/home/joseph/Desktop/chess_neural_network/best_of_generations/neural_net_dataset_{i + 1}.mat"
+        )
 
-    descend_init_population = 2 ** (descend_generations - 1)
     print(f"Gen: {generations} / {generations}")
-    generation_sequence(heats, survivor_num, descend_init_population, mutation_rate, self_training, heat_size)
-    
-    tournament(descend_generations)
+    multi_tournament_self_train(heats, 1, heat_size)
+    shutil.move(
+        f"/home/joseph/Desktop/chess_neural_network/parent_engine_data/neural_net_dataset_1.mat", 
+        f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_1.mat"
+    )
 
     toc = time.perf_counter()
     print(toc - tic)
