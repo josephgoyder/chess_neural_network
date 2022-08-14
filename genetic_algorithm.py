@@ -304,9 +304,9 @@ def generation_sequence(heats, survivor_num, goal_population, mutation_rate, sel
     else:
         multi_tournament(heats, survivor_num)
     
-    multi_reproduction(goal_population)
-    mutation(mutation_rate)
-    source = '/home/joseph/Desktop/chess_neural_network/elite_data/'
+    # multi_reproduction(goal_population)
+    # mutation(mutation_rate)
+    source = '/home/joseph/Desktop/chess_neural_network/parent_engine_data/'
     destination = '/home/joseph/Desktop/chess_neural_network/engine_data/'
   
     allfiles = os.listdir(source)
@@ -323,16 +323,16 @@ def genetic_algorithm(population, survivor_num, generations, descend_generations
     for i in range(generations - 1):
         print(f"Gen: {i + 1} / {generations}")
         generation_sequence(heats, survivor_num, population, mutation_rate, self_training, heat_size) 
-        shutil.move(
-            f"/home/joseph/Desktop/chess_neural_network/parent_engine_data/neural_net_dataset_1.mat", 
+        shutil.copy(
+            f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_1.mat", 
             f"/home/joseph/Desktop/chess_neural_network/best_of_generations/neural_net_dataset_{i + 1}.mat"
         )
 
     print(f"Gen: {generations} / {generations}")
-    multi_tournament_self_train(heats, 1, heat_size)
-    shutil.move(
-        f"/home/joseph/Desktop/chess_neural_network/parent_engine_data/neural_net_dataset_1.mat", 
-        f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_1.mat"
+    generation_sequence(heats, 1, population, mutation_rate, self_training, heat_size) 
+    shutil.copy(
+        f"/home/joseph/Desktop/chess_neural_network/engine_data/neural_net_dataset_1.mat", 
+        f"/home/joseph/Desktop/chess_neural_network/best_of_generations/neural_net_dataset_{generations}.mat"    
     )
 
     toc = time.perf_counter()
