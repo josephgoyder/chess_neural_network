@@ -14,7 +14,7 @@ for x in range(1, 4):
 
 game.engine.thetas.append(theta)
 
-game.engine.depth = 1
+game.engine.depth = 4
 
 print("")
 game.illustrate()
